@@ -139,15 +139,17 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="source\ColorEffects\Singular\BaseSingularColor.cpp" />
-    <ClCompile Include="source\ColorEffects\Singular\Effect\PrimitiveTransition\PrimitiveTransition.cpp" />
-    <ClCompile Include="source\ColorEffects\Singular\Effect\RandomTransition\RandomTransition.cpp" />
+    <ClCompile Include="source\render\render.cpp" />
+    <ClCompile Include="source\input\inputHandler.cpp" />
     <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\window\window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\ColorEffects\Singular\BaseSingularColor.h" />
-    <ClInclude Include="source\ColorEffects\Singular\Effect\PrimitiveTransition\PrimitiveTransition.h" />
-    <ClInclude Include="source\ColorEffects\Singular\Effect\RandomTransition\RandomTransition.h" />
+    <ClInclude Include="Include\Glad\glad.h" />
+    <ClInclude Include="include\input\inputHandler.h" />
+    <ClInclude Include="Include\KHR\khrplatform.h" />
+    <ClInclude Include="include\render\render.h" />
+    <ClInclude Include="include\window\window.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

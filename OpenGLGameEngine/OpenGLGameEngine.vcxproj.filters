@@ -18,24 +18,30 @@
     <ClCompile Include="source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\ColorEffects\Singular\BaseSingularColor.cpp">
+    <ClCompile Include="source\window\window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\ColorEffects\Singular\Effect\RandomTransition\RandomTransition.cpp">
+    <ClCompile Include="source\input\inputHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\ColorEffects\Singular\Effect\PrimitiveTransition\PrimitiveTransition.cpp">
+    <ClCompile Include="source\render\render.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\ColorEffects\Singular\BaseSingularColor.h">
+    <ClInclude Include="include\window\window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\ColorEffects\Singular\Effect\RandomTransition\RandomTransition.h">
+    <ClInclude Include="Include\Glad\glad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\ColorEffects\Singular\Effect\PrimitiveTransition\PrimitiveTransition.h">
+    <ClInclude Include="Include\KHR\khrplatform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\input\inputHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\render.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
