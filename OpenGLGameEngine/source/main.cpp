@@ -9,6 +9,12 @@ const int width = 800;
 const int height = 600;
 const char* title = "OpenGL Game Engine";
 
+float verticesTriangle[] = {
+	-0.5f, -0.5f, 0.0f,
+	 0.5f, -0.5f, 0.0f,
+	 0.0f,  0.5f, 0.0f
+	};
+
 int main() {
 	MainWindow mainWindow(width, height, title);
 	InputHandler inputHandler(&mainWindow);
@@ -19,11 +25,18 @@ int main() {
 		return -1;
 	}
 
+	int success = render.setupRender(verticesTriangle, sizeof(verticesTriangle));
+	if (!success) {
+		return 1;
+	}
+
 	while (!mainWindow.shouldClose()) {
 		inputHandler.processInput();
+		
 		// rendering start
 		render.clear();
-		
+		render.render();
+
 		// render end
 		mainWindow.swapBuffers();
 		mainWindow.pollEvents();

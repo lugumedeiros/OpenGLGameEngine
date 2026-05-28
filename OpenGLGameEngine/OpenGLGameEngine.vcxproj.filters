@@ -27,6 +27,9 @@
     <ClCompile Include="source\render\render.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\render\shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\window\window.h">
@@ -42,6 +45,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\render\render.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
