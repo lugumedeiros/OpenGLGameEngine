@@ -3,9 +3,7 @@
 const char* getVertexShaderSource();
 const char* getFragmentShaderSource();
 
-Render::Render(MainWindow* mainWindow) {
-	window = mainWindow;
-	compiler = ShaderCompiler();
+Render::Render(MainWindow* mainWindow) : window(mainWindow){
 	setClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 }
 
@@ -26,12 +24,22 @@ void Render::clear() {
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Render::render() {
-	glDrawElements(GL_TRIANGLES, verticesToDraw, GL_UNSIGNED_INT, 0);
-}
+void Render::render(GLuint meshID, GLuint shaderProgramID) {
+	if (meshs.contains(meshID)) {
+		Mesh& mesh = meshs.at(meshID);
+		glBindVertexArray(mesh.VAO);
+		glUseProgram(shaderProgramID);
+		glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
+	}
+	else {
+		std::cout << "ERROR: RENDER OBJECT NOT FOUND" << std::endl;
+	}
+};
 
-bool Render::setupRender(float* vertices, size_t verticesSize, unsigned int* indices, size_t indicesSize) {
-	bool success;
+GLuint Render::newMesh(float* vertices, size_t verticesSize, unsigned int* indices, size_t indicesSize) {
+	GLuint VAO, VBO, EBO;
+	size_t verticesToDraw = indicesSize / sizeof(unsigned int);
+
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
@@ -42,38 +50,18 @@ bool Render::setupRender(float* vertices, size_t verticesSize, unsigned int* ind
 	glGenBuffers(1, &EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesSize, indices, GL_STATIC_DRAW);
-	verticesToDraw = indicesSize;
-
-	const char* vertexSource = getVertexShaderSource();
-	const char* fragmentSource = getFragmentShaderSource();
-
-	unsigned int shaderProgram;
-	success = compiler.createShaderProgram(&shaderProgram, vertexSource, fragmentSource);
-	if (!success) {
-		return false;
-	}
 	
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
 	glEnableVertexAttribArray(0);
-	glUseProgram(shaderProgram);
 
-	std::cout << "RENDER SETUP COMPLETE" << std::endl;
-	return true;
+	GLuint meshObjID = createMeshObj(VAO, VBO, EBO, verticesToDraw);
+	std::cout << "MESH '" << meshObjID << "' CREATED" << std::endl;
+
+	return meshObjID;
 }
 
-const char* getVertexShaderSource() {
-	const char* vertexShader = "#version 330 core\n"
-		"layout(location = 0) in vec3 pos;\n"
-		"void main(){\n"
-		"gl_Position = vec4(pos.x, pos.y, pos.z, 1.0);}\n\0";
-	
-	return vertexShader;
-}
-
-const char* getFragmentShaderSource() {
-	const char* fragmentShader = "#version 330 core\n"
-		"out vec4 FragColor;\n"
-		"void main(){\n"
-		"FragColor = vec4(1.0f, 0.5f, 0.5f, 1.0f);}\n\0";
-	return fragmentShader;
+GLuint Render::createMeshObj(GLuint VAO, GLuint VBO, GLuint EBO, GLuint verticesToDraw) {
+	Mesh mesh{verticesToDraw, VAO, VBO, EBO};
+	meshs.insert({ meshID, mesh });
+	return meshID++;
 }

@@ -139,11 +139,13 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\render\mesh.cpp" />
+    <ClCompile Include="include\render\mesh.h" />
     <ClCompile Include="source\input\keys.cpp" />
     <ClCompile Include="source\render\render.cpp" />
     <ClCompile Include="source\input\inputHandler.cpp" />
     <ClCompile Include="source\main.cpp" />
-    <ClCompile Include="source\render\shader.cpp" />
+    <ClCompile Include="source\render\shaderCompiler.cpp" />
     <ClCompile Include="source\window\window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -151,7 +153,7 @@
     <ClInclude Include="include\input\keys.h" />
     <ClInclude Include="include\input\inputHandler.h" />
     <ClInclude Include="Include\KHR\khrplatform.h" />
-    <ClInclude Include="include\render\shader.h" />
+    <ClInclude Include="include\render\shaderCompiler.h" />
     <ClInclude Include="include\render\render.h" />
     <ClInclude Include="include\window\window.h" />
   </ItemGroup>

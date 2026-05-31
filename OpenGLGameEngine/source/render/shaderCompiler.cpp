@@ -1,4 +1,4 @@
-#include "../../include/render/shader.h"
+#include "../../include/render/shaderCompiler.h"
 
 bool ShaderCompiler::compileShader(unsigned int* shader, int shaderType, const char* src) {
 	*shader = glCreateShader(shaderType);
@@ -33,28 +33,31 @@ bool ShaderCompiler::linkProgramShader(unsigned int* shaderProgram, unsigned int
 	return true;
 }
 
-bool ShaderCompiler::createShaderProgram(unsigned int* shaderProgram, const char* vertexSource, const char* fragmentSource) {
-	bool success;
+GLuint ShaderCompiler::createShaderProgram(const char* vertexSource, const char* fragmentSource) {
+	GLuint shaderProgram;
 	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	success = compileShader(&vertexShader, GL_VERTEX_SHADER, vertexSource);
 	if (!success) {
-		return false;
+		return 0;
 	}
 	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	success = compileShader(&fragmentShader, GL_FRAGMENT_SHADER, fragmentSource);
 	if (!success) {
-		return false;
+		return 0;
 	}
 	std::cout << "SHADERS COMPILATION SUCCESS" << std::endl;
 
 
-	success = linkProgramShader(shaderProgram, vertexShader, fragmentShader);
+	success = linkProgramShader(&shaderProgram, vertexShader, fragmentShader);
 	if (!success) {
-		return false;
+		return 0;
 	}
 	std::cout << "SHADER PROGRAM LINKING SUCCESS" << std::endl;
 
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
-	return true;
+	
+	programId = shaderProgram;
+	std::cout << "SHADER PROGRAM '" << programId << "' CREATED" << std::endl;
+	return programId;
 }

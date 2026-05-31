@@ -15,6 +15,7 @@ void InputHandler::processInput() {
 	if (glfwGetKey(window->getWindow(), GLFW_KEY_T) == GLFW_PRESS) {
 		if (key_t.press()) {
 			render->setTest(!render->isTest);
+			std::cout << "SET TEST: " << render->isTest << std::endl;
 		}
 	}
 	if (glfwGetKey(window->getWindow(), GLFW_KEY_T) == GLFW_RELEASE) {
