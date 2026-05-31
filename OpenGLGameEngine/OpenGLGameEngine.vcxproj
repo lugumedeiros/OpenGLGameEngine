@@ -139,6 +139,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\input\keys.cpp" />
     <ClCompile Include="source\render\render.cpp" />
     <ClCompile Include="source\input\inputHandler.cpp" />
     <ClCompile Include="source\main.cpp" />
@@ -147,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Glad\glad.h" />
+    <ClInclude Include="include\input\keys.h" />
     <ClInclude Include="include\input\inputHandler.h" />
     <ClInclude Include="Include\KHR\khrplatform.h" />
     <ClInclude Include="include\render\shader.h" />

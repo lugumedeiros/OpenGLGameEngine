@@ -1,5 +1,4 @@
 #include "../../include/window/window.h"
-#include "../../include/render/render.h"
 
 MainWindow::MainWindow(int width, int height, const char* title) {
 	glfwInit();

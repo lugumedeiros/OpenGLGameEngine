@@ -1,22 +1,28 @@
 #pragma once
-#include "../window/window.h"
-#include "../../include/render/shader.h"
-#include <GLFW/glfw3.h>
 #include <iostream>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include "../window/window.h"
+#include "shader.h"
 
 class Render {
 public:
 	Render(MainWindow*);
 	~Render();
 
-	void SetClearColor(float r, float g, float b, float a);
+	void setClearColor(float r, float g, float b, float a);
 	void clear();
+	void setTest(bool isTest);
 	void render();
-	bool setupRender(float* vertices, size_t verticesSize);
+	bool setupRender(float* vertices, size_t verticesSize, unsigned int* indices, size_t indicesSize);
+	
+	bool isTest;
 
 private:
 	ShaderCompiler compiler;
 	MainWindow* window;
-	unsigned int VAO;
-	unsigned int VBO;
+	GLuint VAO;
+	GLuint VBO;
+	GLuint EBO;
+	size_t verticesToDraw;
 };

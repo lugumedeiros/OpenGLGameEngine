@@ -6,15 +6,20 @@ const char* getFragmentShaderSource();
 Render::Render(MainWindow* mainWindow) {
 	window = mainWindow;
 	compiler = ShaderCompiler();
-	SetClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	setClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 }
 
 Render::~Render() {
 
 }
 
-void Render::SetClearColor(float r, float g, float b, float a){
+void Render::setClearColor(float r, float g, float b, float a){
 	glClearColor(r, g, b, a);
+}
+
+void Render::setTest(bool setTest) {
+	setTest ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	isTest = setTest;
 }
 
 void Render::clear() {
@@ -22,10 +27,10 @@ void Render::clear() {
 }
 
 void Render::render() {
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawElements(GL_TRIANGLES, verticesToDraw, GL_UNSIGNED_INT, 0);
 }
 
-bool Render::setupRender(float* vertices, size_t verticesSize) {
+bool Render::setupRender(float* vertices, size_t verticesSize, unsigned int* indices, size_t indicesSize) {
 	bool success;
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
@@ -33,6 +38,11 @@ bool Render::setupRender(float* vertices, size_t verticesSize) {
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, verticesSize, vertices, GL_STATIC_DRAW);
+
+	glGenBuffers(1, &EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesSize, indices, GL_STATIC_DRAW);
+	verticesToDraw = indicesSize;
 
 	const char* vertexSource = getVertexShaderSource();
 	const char* fragmentSource = getFragmentShaderSource();
@@ -46,7 +56,6 @@ bool Render::setupRender(float* vertices, size_t verticesSize) {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
 	glEnableVertexAttribArray(0);
 	glUseProgram(shaderProgram);
-	glBindVertexArray(VAO);
 
 	std::cout << "RENDER SETUP COMPLETE" << std::endl;
 	return true;
