@@ -139,7 +139,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="include\render\mesh.cpp" />
+    <ClCompile Include="source\render\mesh.cpp" />
     <ClCompile Include="include\render\mesh.h" />
     <ClCompile Include="source\input\keys.cpp" />
     <ClCompile Include="source\render\render.cpp" />

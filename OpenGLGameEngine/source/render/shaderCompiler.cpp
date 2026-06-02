@@ -1,6 +1,12 @@
 #include "../../include/render/shaderCompiler.h"
 
-bool ShaderCompiler::compileShader(unsigned int* shader, int shaderType, const char* src) {
+Vector4::Vector4(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {
+}
+
+Vector4::Vector4(): x(0.5f), y(0.5f), z(0.5f), w(0.5f) {
+}
+
+bool ShaderProgram::compileShader(unsigned int* shader, int shaderType, const char* src) {
 	*shader = glCreateShader(shaderType);
 	glShaderSource(*shader, 1, &src, NULL);
 	glCompileShader(*shader);
@@ -17,7 +23,7 @@ bool ShaderCompiler::compileShader(unsigned int* shader, int shaderType, const c
 	return true;
 }
 
-bool ShaderCompiler::linkProgramShader(unsigned int* shaderProgram, unsigned int vertexShader, unsigned int fragmentShader) {
+bool ShaderProgram::linkProgramShader(unsigned int* shaderProgram, unsigned int vertexShader, unsigned int fragmentShader) {
 	*shaderProgram = glCreateProgram();
 	glAttachShader(*shaderProgram, vertexShader);
 	glAttachShader(*shaderProgram, fragmentShader);
@@ -33,7 +39,11 @@ bool ShaderCompiler::linkProgramShader(unsigned int* shaderProgram, unsigned int
 	return true;
 }
 
-GLuint ShaderCompiler::createShaderProgram(const char* vertexSource, const char* fragmentSource) {
+ShaderProgram::ShaderProgram(const char* vertexSource, const char* fragmentSource) {
+	createShaderProgram(vertexSource, fragmentSource);
+}
+
+GLuint ShaderProgram::createShaderProgram(const char* vertexSource, const char* fragmentSource) {
 	GLuint shaderProgram;
 	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	success = compileShader(&vertexShader, GL_VERTEX_SHADER, vertexSource);
@@ -57,7 +67,19 @@ GLuint ShaderCompiler::createShaderProgram(const char* vertexSource, const char*
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 	
-	programId = shaderProgram;
-	std::cout << "SHADER PROGRAM '" << programId << "' CREATED" << std::endl;
-	return programId;
+	ID = shaderProgram;
+	std::cout << "SHADER PROGRAM '" << ID << "' CREATED" << std::endl;
+	return ID;
+}
+
+void ShaderProgram::setVec4(std::string name, Vector4 vec) {
+	uniformCache[name] = vec;
+}
+
+void ShaderProgram::loadUniformCache() {
+	int vertexLocation;
+	for (const auto& [name, vec4] : uniformCache){
+		vertexLocation = glGetUniformLocation(ID, name.c_str());
+		glUniform4f(vertexLocation, vec4.x, vec4.y, vec4.z, vec4.z);
+	}
 }

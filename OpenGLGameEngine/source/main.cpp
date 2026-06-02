@@ -39,19 +39,12 @@ const char* getVertexShaderSource() {
 	return vertexShader;
 }
 
-const char* getFragmentShaderSourceGreen() {
+const char* getFragmentShaderSource() {
 	const char* fragmentShader = "#version 330 core\n"
+		"uniform vec4 colorOut;\n"
 		"out vec4 FragColor;\n"
 		"void main(){\n"
-		"FragColor = vec4(0.0f, 1.0f, 0.0f, 1.0f);}\n\0";
-	return fragmentShader;
-}
-
-const char* getFragmentShaderSourceRed() {
-	const char* fragmentShader = "#version 330 core\n"
-		"out vec4 FragColor;\n"
-		"void main(){\n"
-		"FragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);}\n\0";
+		"FragColor = colorOut;}\n\0";
 	return fragmentShader;
 }
 
@@ -60,7 +53,6 @@ int main() {
 	MainWindow mainWindow(width, height, title);
 	Render render(&mainWindow);
 	InputHandler inputHandler(&mainWindow, &render);
-	ShaderCompiler compiler;
 
 	GLFWwindow* window = mainWindow.getWindow();
 	if (window == NULL) {
@@ -68,15 +60,19 @@ int main() {
 	}
 
 ////////////////// TEST AREA
-	GLuint shaderProgram_01 = compiler.createShaderProgram(getVertexShaderSource(), getFragmentShaderSourceRed());
-	if (!compiler.success) {
+	ShaderProgram shaderProgram_01 = ShaderProgram{ getVertexShaderSource(), getFragmentShaderSource() };
+	if (!shaderProgram_01.success) {
 		return 1;
 	}
 
-	GLuint shaderProgram_02 = compiler.createShaderProgram(getVertexShaderSource(), getFragmentShaderSourceGreen());
-	if (!compiler.success) {
+
+	ShaderProgram shaderProgram_02 = ShaderProgram{ getVertexShaderSource(), getFragmentShaderSource() };
+	if (!shaderProgram_02.success) {
 		return 1;
 	}
+	
+	shaderProgram_01.setVec4("colorOut", Vector4{ 0.3f, 0.3f, 0.3f, 1.0f });
+	shaderProgram_02.setVec4("colorOut", Vector4{ 0.0f, 0.3f, 0.7f, 1.0f });
 
 	GLuint meshIDLeft = render.newMesh(verticesTriangle, sizeof(verticesTriangle), verticesLeft, sizeof(verticesLeft));
 	GLuint meshIDRight = render.newMesh(verticesTriangle, sizeof(verticesTriangle), verticesRight, sizeof(verticesRight));

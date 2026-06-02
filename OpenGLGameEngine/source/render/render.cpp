@@ -24,16 +24,16 @@ void Render::clear() {
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Render::render(GLuint meshID, GLuint shaderProgramID) {
-	if (meshs.contains(meshID)) {
-		Mesh& mesh = meshs.at(meshID);
-		glBindVertexArray(mesh.VAO);
-		glUseProgram(shaderProgramID);
-		glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
-	}
-	else {
+void Render::render(GLuint meshID, ShaderProgram shaderProgram) {
+	if (!meshs.contains(meshID)) {
 		std::cout << "ERROR: RENDER OBJECT NOT FOUND" << std::endl;
+		return;
 	}
+	Mesh& mesh = meshs.at(meshID);
+	glBindVertexArray(mesh.VAO);
+	glUseProgram(shaderProgram.ID);
+	shaderProgram.loadUniformCache();
+	glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
 };
 
 GLuint Render::newMesh(float* vertices, size_t verticesSize, unsigned int* indices, size_t indicesSize) {

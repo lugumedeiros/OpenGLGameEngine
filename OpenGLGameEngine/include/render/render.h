@@ -1,20 +1,13 @@
 #pragma once
 #include <unordered_map>
+#include <string>
 #include <iostream>
+#include <vector>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "../window/window.h"
 #include "shaderCompiler.h"
 #include "mesh.h"
-
-struct RenderObj {
-	int RenderId;
-	GLuint ProgramId;
-	GLuint VBO;
-	GLuint VAO;
-	GLuint EBO;
-	size_t verticesToDraw;
-};
 
 class Render {
 public:
@@ -26,7 +19,7 @@ public:
 	void clear();
 	void setTest(bool isTest);
 
-	void render(GLuint meshID, GLuint shaderProgramID);
+	void render(GLuint meshID, ShaderProgram shaderProgram);
 	GLuint newMesh(float* vertices, size_t verticesSize, unsigned int* indices, size_t indicesSize);
 
 private:
