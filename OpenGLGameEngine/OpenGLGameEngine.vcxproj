@@ -139,6 +139,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\effecs\uniqueColorChange.cpp" />
     <ClCompile Include="source\render\mesh.cpp" />
     <ClCompile Include="include\render\mesh.h" />
     <ClCompile Include="source\input\keys.cpp" />
@@ -149,6 +150,7 @@
     <ClCompile Include="source\window\window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\effecs\uniqueColorChange.h" />
     <ClInclude Include="Include\Glad\glad.h" />
     <ClInclude Include="include\input\keys.h" />
     <ClInclude Include="include\input\inputHandler.h" />
@@ -159,6 +161,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+    <None Include="source\shaders\basic_frag.glsl" />
+    <None Include="source\shaders\basic_vert.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -3,6 +3,10 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <unordered_map>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <string_view>
 
 class Vector4 {
 public:
@@ -16,15 +20,18 @@ public:
 
 class ShaderProgram {
 public:
-	ShaderProgram(const char* vertexSource, const char* fragmentSource);
+	ShaderProgram(const std::string& vertexSourcePath, const std::string& fragmentSourcePath);
 	void setVec4(std::string name, Vector4 vec);
+	void loadUniformCache();
+	
 	bool success{false};
 	GLuint ID{ 0 };
-	void loadUniformCache();
 
 private:
-	GLuint createShaderProgram(const char* vertexSource, const char* fragmentSource);
+	std::string readShaderSource(const std::string& sourcePath);
+	GLuint createShaderProgram(const std::string& vertexSource, const std::string& fragmentSource);
 	static bool compileShader(unsigned int* shader, int shaderType, const char* src);
 	static bool linkProgramShader(unsigned int* shaderProgram, unsigned int vertexShader, unsigned int FragmentShader);
+	
 	std::unordered_map<std::string, Vector4> uniformCache;
 };

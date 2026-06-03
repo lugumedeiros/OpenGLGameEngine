@@ -39,6 +39,9 @@
     <ClCompile Include="source\render\mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\effecs\uniqueColorChange.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\window\window.h">
@@ -62,8 +65,13 @@
     <ClInclude Include="include\input\keys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\effecs\uniqueColorChange.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+    <None Include="source\shaders\basic_vert.glsl" />
+    <None Include="source\shaders\basic_frag.glsl" />
   </ItemGroup>
 </Project>

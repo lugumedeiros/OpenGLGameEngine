@@ -38,7 +38,7 @@ void Render::render(GLuint meshID, ShaderProgram shaderProgram) {
 
 GLuint Render::newMesh(float* vertices, size_t verticesSize, unsigned int* indices, size_t indicesSize) {
 	GLuint VAO, VBO, EBO;
-	size_t verticesToDraw = indicesSize / sizeof(unsigned int);
+	GLuint verticesToDraw = indicesSize / sizeof(unsigned int);
 
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
@@ -51,8 +51,10 @@ GLuint Render::newMesh(float* vertices, size_t verticesSize, unsigned int* indic
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesSize, indices, GL_STATIC_DRAW);
 	
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));
 	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
 
 	GLuint meshObjID = createMeshObj(VAO, VBO, EBO, verticesToDraw);
 	std::cout << "MESH '" << meshObjID << "' CREATED" << std::endl;
