@@ -1,82 +1,105 @@
+#pragma once
+#include <iostream>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
+
 #include "../include/window/window.h"
 #include "../include/input/inputHandler.h"
-#include "../include/render/render.h"
-#include "../include/render/shaderCompiler.h"
+#include "../include/render/engine.h"
 #include "../include/effecs/uniqueColorChange.h"
+
 
 const int width = 800;
 const int height = 600;
 const char* title = "OpenGL Game Engine";
 
 float verticesTriangle[] = {
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 1.0f,		// 0 left down back
-	-0.5f, 0.5f, -0.5f,  0.0f, 1.0f, 0.0f,		// 1 left up back
-	0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,		// 2 right down back
-	0.5f, 0.5f, -0.5f,  0.0f, 0.0f, 1.0f,		// 3 right up back
-	-0.5f, -0.5f, 0.5f,  0.0f, 0.0f, 1.0f,		// 4 left down front
-	-0.5f, 0.5f, 0.5f,  0.0f, 0.0f, 1.0f,		// 5 left up front
-	0.5f, -0.5f, 0.5f,  0.0f, 0.0f, 1.0f,		// 6 right down front
-	0.5f, 0.5f, 0.5f,  0.0f, 0.0f, 1.0f,			// 7 right up front
+	// position				// color			// texture coords
+	-1.0f, -1.0f, -1.0f,	0.0f, 0.0f, 1.0f,	0.0f, 0.0f,	// 0 left down back
+	-1.0f, 1.0f, -1.0f,		0.0f, 1.0f, 0.0f,	0.0f, 1.0f,	// 1 left up back
+	1.0f, -1.0f, -1.0f,		1.0f, 0.0f, 0.0f,	1.0f, 0.0f,	// 2 right down back
+	1.0f, 1.0f, -1.0f,		0.0f, 1.0f, 1.0f,	1.0f, 1.0f,	// 3 right up back
+
+	0.0f, -1.0f, -1.0f,		1.0f, 0.0f, 1.0f,	0.5f, 0.0f,	// 4 middle down back
+	0.0f, 1.0f, -1.0f,		1.0f, 1.0f, 0.0f,	0.5f, 1.0f,	// 5 middle up back
 	};
 
 unsigned int verticesLeft[] = {
-	1, 0, 2,
-	//2, 1, 3,
+	0, 4, 1,
 };
 
 unsigned int verticesRight[] = {
-	2, 1, 3,
+	4, 2, 3,
 };
 
-const char* vertexPath = "source/shaders/basic_vert.glsl";
-const char* fragmentPath = "source/shaders/basic_frag.glsl";
+unsigned int verticesMiddle[] = {
+	4, 3, 1,
+};
+
+std::string_view vertexPath = "source/shaders/vs_basic.glsl";
+std::string_view fragmentColorPath = "source/shaders/fs_color.glsl";
+std::string_view fragmentTexturePath = "source/shaders/fs_texture.glsl";
+std::string_view fragmentUniformColorPath = "source/shaders/fs_uniform_color.glsl";
+
+std::string_view texturePath = "assets/textures/woodcontainer.jpg";
 
 int main() {
 	MainWindow mainWindow(width, height, title);
-	Render render(&mainWindow);
-	InputHandler inputHandler(&mainWindow, &render);
+	Engine engine(&mainWindow);
 
 	GLFWwindow* window = mainWindow.getWindow();
 	if (window == NULL) {
 		return -1;
 	}
 
-////////////////// TEST AREA
-	UniqueColorChange colorEffect1{ 0.0f, 0.0f, 0.0f, 1.0f };
-	ShaderProgram shaderProgram_01 = ShaderProgram{ vertexPath, fragmentPath };
-	if (!shaderProgram_01.success) {
+	////////////////// TEST AREA
+	ShaderProgram* shaderProgram_color = engine.createShaderProgram( vertexPath, fragmentColorPath );
+	if (!engine.shaderCompilationSuccess) {
 		return 1;
 	}
 
-	UniqueColorChange colorEffect2{ 0.0f, 0.5f, 0.0f, 1.0f };
-	ShaderProgram shaderProgram_02 = ShaderProgram{ vertexPath, fragmentPath };
-	if (!shaderProgram_02.success) {
+	ShaderProgram* shaderProgram_uniColor = engine.createShaderProgram( vertexPath, fragmentUniformColorPath );
+	if (!engine.shaderCompilationSuccess) {
 		return 1;
 	}
+
+	ShaderProgram* shaderProgram_texture = engine.createShaderProgram( vertexPath, fragmentTexturePath );
+	if (!engine.shaderCompilationSuccess) {
+		return 1;
+	}
+
+	Mesh* meshIDLeft = engine.createMesh(verticesTriangle, sizeof(verticesTriangle), verticesLeft, sizeof(verticesLeft));
+	Mesh* meshIDRight = engine.createMesh(verticesTriangle, sizeof(verticesTriangle), verticesRight, sizeof(verticesRight));
+	Mesh* meshIDMiddle = engine.createMesh(verticesTriangle, sizeof(verticesTriangle), verticesMiddle, sizeof(verticesMiddle));
+
+	GLuint textureID = engine.createTexture(texturePath);
+	if (!engine.textureLoadSuccess) {
+		return 1;
+	}
+
+	Vector4 colorBlack(1.0f, 1.0f, 1.0f, 1.0f);
+	Material* materialIDColor = engine.createMaterial(colorBlack, textureID, shaderProgram_color);
+	Material* materialIDTexture = engine.createMaterial(colorBlack, textureID, shaderProgram_texture);
+	Material* materialIDUniColor = engine.createMaterial(colorBlack, textureID, shaderProgram_uniColor);
 	
-	shaderProgram_01.setVec4("colorOut", Vector4{ colorEffect1.r, colorEffect1.g, colorEffect1.b, colorEffect1.a });
-	shaderProgram_02.setVec4("colorOut", Vector4{ colorEffect2.r, colorEffect2.g, colorEffect2.b, colorEffect2.a });
+	UniqueColorChange effectColor(1.0f, 0.0f, 0.0f, 1.0f);
+	engine.setUniformVec4(shaderProgram_uniColor, "uniformColor", Vector4(effectColor.r, effectColor.g, effectColor.b, 1.0f));
 
-	GLuint meshIDLeft = render.newMesh(verticesTriangle, sizeof(verticesTriangle), verticesLeft, sizeof(verticesLeft));
-	GLuint meshIDRight = render.newMesh(verticesTriangle, sizeof(verticesTriangle), verticesRight, sizeof(verticesRight));
 //////////////////////////////
 
 	while (!mainWindow.shouldClose()) {
-		inputHandler.processInput();
+		engine.processInput();
 		
+		//effect update
+		engine.setUniformVec4(shaderProgram_uniColor, "uniformColor", Vector4(effectColor.r, effectColor.g, effectColor.b, 1.0f));
+		effectColor.advance();
 		// rendering start
-		render.clear();
-		
-		shaderProgram_01.setVec4("colorOut", Vector4{ colorEffect1.r, colorEffect1.g, colorEffect1.b, colorEffect1.a });
-		render.render(meshIDLeft, shaderProgram_01);
-		colorEffect1.advance();
 
-		shaderProgram_02.setVec4("colorOut", Vector4{ colorEffect2.r, colorEffect2.g, colorEffect2.b, colorEffect2.a });
-		render.render(meshIDRight, shaderProgram_02);
-		colorEffect2.advance();
+		engine.clearRender();
+		engine.renderMesh(meshIDLeft, materialIDColor);
+		engine.renderMesh(meshIDMiddle, materialIDTexture);
+		engine.renderMesh(meshIDRight, materialIDUniColor);
 
 		// render end
 		mainWindow.swapBuffers();

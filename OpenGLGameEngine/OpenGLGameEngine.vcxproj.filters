@@ -42,6 +42,21 @@
     <ClCompile Include="source\effecs\uniqueColorChange.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\render\textureService.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\libs\stb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="include\render\material.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\render\material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\render\engine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\window\window.h">
@@ -68,10 +83,29 @@
     <ClInclude Include="include\effecs\uniqueColorChange.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\render\vectors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\textureService.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\engine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
-    <None Include="source\shaders\basic_vert.glsl" />
-    <None Include="source\shaders\basic_frag.glsl" />
+    <None Include="source\shaders\vs_basic.glsl" />
+    <None Include="source\shaders\fs_color.glsl" />
+    <None Include="source\shaders\fs_texture.glsl" />
+    <None Include="source\shaders\fs_uniform_color.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\textures\woodcontainer.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\textures\brickwall.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

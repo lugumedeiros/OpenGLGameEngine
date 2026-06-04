@@ -1,13 +1,6 @@
 #include "../../include/render/shaderCompiler.h"
 
-Vector4::Vector4(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {
-}
-
-Vector4::Vector4(): x(0.5f), y(0.5f), z(0.5f), w(0.5f) {
-}
-
-
-ShaderProgram::ShaderProgram(const std::string& vertexSourcePath, const std::string& fragmentSourcePath) {
+ShaderProgram::ShaderProgram(std::string_view vertexSourcePath, std::string_view fragmentSourcePath) {
 	std::string vertexSource = readShaderSource(vertexSourcePath);
 	std::string fragmentSource = readShaderSource(fragmentSourcePath);
 	if (vertexSource.empty() || fragmentSource.empty()) {
@@ -17,27 +10,34 @@ ShaderProgram::ShaderProgram(const std::string& vertexSourcePath, const std::str
 	createShaderProgram(vertexSource, fragmentSource);
 }
 
-void ShaderProgram::setVec4(std::string name, Vector4 vec) {
-	uniformCache[name] = vec;
+void ShaderProgram::setUniformVec4(std::string_view name, const Vector4& vec) {
+	uniformCache.insert_or_assign(std::string{ name }, vec);
 }
 
 void ShaderProgram::loadUniformCache() {
 	int vertexLocation;
 	for (const auto& [name, vec4] : uniformCache){
 		vertexLocation = glGetUniformLocation(ID, name.c_str());
-		glUniform4f(vertexLocation, vec4.x, vec4.y, vec4.z, vec4.z);
+		glUniform4f(vertexLocation, vec4.x, vec4.y, vec4.z, vec4.w);
 	}
 }
 
-bool ShaderProgram::compileShader(unsigned int* shader, int shaderType, const char* src) {
+GLuint ShaderProgram::getID() const {
+	return ID;
+}
+
+bool ShaderProgram::compileShader(unsigned int* shader, int shaderType, std::string_view src) {
+	std::string source(src);
+	const char* srcCStr = source.c_str();
+	
 	*shader = glCreateShader(shaderType);
-	glShaderSource(*shader, 1, &src, NULL);
+	glShaderSource(*shader, 1, &srcCStr, NULL);
 	glCompileShader(*shader);
 
 	int success;
-	char infoLog[512];
 	glGetShaderiv(*shader, GL_COMPILE_STATUS, &success);
 	if (!success) {
+		char infoLog[512];
 		glGetShaderInfoLog(*shader, 512, NULL, infoLog);
 		const char* type = shaderType == GL_VERTEX_SHADER ? "VERTEX" : "FRAGMENT";
 		std::cerr << "ERROR: SHADER COMPILATION '" << type << "' FAILED\n" << infoLog << std::endl;
@@ -53,17 +53,18 @@ bool ShaderProgram::linkProgramShader(unsigned int* shaderProgram, unsigned int 
 	glLinkProgram(*shaderProgram);
 
 	int success;
-	char infoLog[512];
 	glGetProgramiv(*shaderProgram, GL_LINK_STATUS, &success);
 	if (!success) {
+		char infoLog[512];
+		glGetProgramInfoLog(*shaderProgram, 512, NULL, infoLog);
 		std::cerr << "ERROR: SHADER LINKING FAILED\n" << infoLog << std::endl;
 		return false;
 	}
 	return true;
 }
 
-std::string ShaderProgram::readShaderSource(const std::string& sourcePath) {
-	std::ifstream file(sourcePath);
+std::string ShaderProgram::readShaderSource(std::string_view sourcePath) {
+	std::ifstream file(std::string{ sourcePath });
 	if (!file.is_open()) {
 		std::cerr << "ERROR: UNABLE TO READ SHADER FILE '" << sourcePath << "'" << std::endl;
 		return "";
@@ -73,15 +74,15 @@ std::string ShaderProgram::readShaderSource(const std::string& sourcePath) {
 	return shaderStream.str();
 }
 
-GLuint ShaderProgram::createShaderProgram(const std::string& vertexSource, const std::string& fragmentSource) {
+GLuint ShaderProgram::createShaderProgram(std::string_view vertexSource, std::string_view fragmentSource) {
 	GLuint shaderProgram;
 	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	success = compileShader(&vertexShader, GL_VERTEX_SHADER, vertexSource.c_str());
+	success = compileShader(&vertexShader, GL_VERTEX_SHADER, vertexSource);
 	if (!success) {
 		return 0;
 	}
 	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	success = compileShader(&fragmentShader, GL_FRAGMENT_SHADER, fragmentSource.c_str());
+	success = compileShader(&fragmentShader, GL_FRAGMENT_SHADER, fragmentSource);
 	if (!success) {
 		return 0;
 	}

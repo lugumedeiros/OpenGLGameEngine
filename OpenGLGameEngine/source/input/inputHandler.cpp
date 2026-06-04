@@ -6,7 +6,6 @@ InputHandler::InputHandler(MainWindow* window, Render* render) : window(window),
 InputHandler::~InputHandler() {
 }
 
-
 void InputHandler::processInput() {
 	if (glfwGetKey(window->getWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		std::cout << "Window set to be closed." << std::endl;

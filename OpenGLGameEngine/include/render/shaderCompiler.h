@@ -2,36 +2,29 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include <unordered_map>
+#include <map>
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <string_view>
-
-class Vector4 {
-public:
-	Vector4(float x, float y, float z, float w);
-	Vector4();
-	float x;
-	float y;
-	float z;
-	float w;
-};
+#include "vectors.h"
 
 class ShaderProgram {
 public:
-	ShaderProgram(const std::string& vertexSourcePath, const std::string& fragmentSourcePath);
-	void setVec4(std::string name, Vector4 vec);
+	ShaderProgram(std::string_view vertexSourcePath, std::string_view fragmentSourcePath);
+	void setUniformVec4(std::string_view name, const Vector4& vec);
 	void loadUniformCache();
 	
 	bool success{false};
-	GLuint ID{ 0 };
+
+	GLuint getID() const;
 
 private:
-	std::string readShaderSource(const std::string& sourcePath);
-	GLuint createShaderProgram(const std::string& vertexSource, const std::string& fragmentSource);
-	static bool compileShader(unsigned int* shader, int shaderType, const char* src);
+	GLuint ID{ 0 };
+	std::string readShaderSource(std::string_view sourcePath);
+	GLuint createShaderProgram(std::string_view vertexSource, std::string_view fragmentSource);
+	static bool compileShader(unsigned int* shader, int shaderType, std::string_view src);
 	static bool linkProgramShader(unsigned int* shaderProgram, unsigned int vertexShader, unsigned int FragmentShader);
 	
-	std::unordered_map<std::string, Vector4> uniformCache;
+	std::map<std::string, Vector4> uniformCache;
 };

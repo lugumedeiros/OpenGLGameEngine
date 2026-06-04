@@ -9,7 +9,8 @@
 
 class Mesh {
 public:
-	Mesh(GLuint indexCount, GLuint VAO, GLuint VBO, GLuint EBO);
+	Mesh(GLuint meshID, GLuint indexCount, GLuint VAO, GLuint VBO, GLuint EBO);
+	GLuint meshID;
 	GLuint indexCount;
 	GLuint VAO;
 	GLuint VBO;

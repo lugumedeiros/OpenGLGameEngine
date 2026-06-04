@@ -70,6 +70,14 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ExternalIncludePath>C:\C Desktop\Sandbox\Cpp\OpenGLGameEngine\OpenGLGameEngine\lib;$(ExternalIncludePath)</ExternalIncludePath>
+    <IncludePath>$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ExternalIncludePath>C:\C Desktop\Sandbox\Cpp\OpenGLGameEngine\OpenGLGameEngine\lib;$(ExternalIncludePath)</ExternalIncludePath>
+    <IncludePath>$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -111,10 +119,12 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\C Desktop\Sandbox\Cpp\OpenGLGameEngine\OpenGLGameEngine\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\C Desktop\Sandbox\Cpp\OpenGLGameEngine\OpenGLGameEngine\OpenGLGameEngine\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Manifest>
       <EnableSegmentHeap>true</EnableSegmentHeap>
@@ -129,6 +139,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\C Desktop\Sandbox\Cpp\OpenGLGameEngine\OpenGLGameEngine\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -139,6 +150,10 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\render\engine.cpp" />
+    <ClCompile Include="source\render\material.cpp" />
+    <ClCompile Include="include\render\material.h" />
+    <ClCompile Include="source\render\textureService.cpp" />
     <ClCompile Include="source\effecs\uniqueColorChange.cpp" />
     <ClCompile Include="source\render\mesh.cpp" />
     <ClCompile Include="include\render\mesh.h" />
@@ -147,6 +162,12 @@
     <ClCompile Include="source\input\inputHandler.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\render\shaderCompiler.cpp" />
+    <ClCompile Include="source\libs\stb.cpp">
+      <DisableAnalyzeExternal Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DisableAnalyzeExternal>
+      <DisableAnalyzeExternal Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DisableAnalyzeExternal>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Level3</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Level3</WarningLevel>
+    </ClCompile>
     <ClCompile Include="source\window\window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -155,14 +176,35 @@
     <ClInclude Include="include\input\keys.h" />
     <ClInclude Include="include\input\inputHandler.h" />
     <ClInclude Include="Include\KHR\khrplatform.h" />
+    <ClInclude Include="include\render\engine.h" />
     <ClInclude Include="include\render\shaderCompiler.h" />
     <ClInclude Include="include\render\render.h" />
     <ClInclude Include="include\window\window.h" />
+    <ClInclude Include="include\render\vectors.h" />
+    <ClInclude Include="include\render\textureService.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
-    <None Include="source\shaders\basic_frag.glsl" />
-    <None Include="source\shaders\basic_vert.glsl" />
+    <None Include="source\shaders\fs_color.glsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="source\shaders\fs_texture.glsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="source\shaders\fs_uniform_color.glsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="source\shaders\vs_basic.glsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\textures\brickwall.jpg" />
+    <Image Include="assets\textures\woodcontainer.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
