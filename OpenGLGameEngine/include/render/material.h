@@ -4,13 +4,38 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "shaderCompiler.h"
+#include "textureService.h"
 #include "vectors.h"
+#include "map"
+
 
 class Material {
 public:
-	Material(GLuint materialID, const Vector4& color, GLuint textureID, GLuint shaderProgramID);
-	GLuint materialID{0};
-	Vector4 color{};
-	GLuint textureID{0};
-	GLuint shaderProgramID{0};
+	Material(GLuint materialID, GLuint shaderProgramID);
+	GLuint materialID{ 0 };
+	GLuint shaderProgramID{ 0 };
+
+	void setColorOverlay(Vector4 color, float factor);
+	void setBaseTexture(const Texture& texture, float factor);
+	void setOverlayTexture(const Texture& texture, float factor);
+
+	const Vector4& getColorOverlay() { return colorOverlay; }
+	float getColorOverlayFactor() { return colorOverlayFactor; }
+	GLuint getTextureBaseID() { return textureBaseID; }
+	float getTextureBaseFactor() { return textureBaseFactor; }
+	GLuint getTextureOverlayID() { return textureOverlayID; }
+	float getTextureOverlayFactor() { return textureOverlayFactor; }
+
+	void normalize();
+	bool uniformChanged{false};
+
+private:
+	Vector4 colorOverlay{};
+	float colorOverlayFactor{ 0.0f };
+
+	GLuint textureBaseID{ 0 };
+	float textureBaseFactor{ 0.0f };
+
+	GLuint textureOverlayID{ 0 };
+	float textureOverlayFactor{ 0.0f };
 };

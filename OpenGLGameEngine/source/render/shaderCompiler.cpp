@@ -8,22 +8,24 @@ ShaderProgram::ShaderProgram(std::string_view vertexSourcePath, std::string_view
 		return;
 	}
 	createShaderProgram(vertexSource, fragmentSource);
-}
 
-void ShaderProgram::setUniformVec4(std::string_view name, const Vector4& vec) {
-	uniformCache.insert_or_assign(std::string{ name }, vec);
-}
-
-void ShaderProgram::loadUniformCache() {
-	int vertexLocation;
-	for (const auto& [name, vec4] : uniformCache){
-		vertexLocation = glGetUniformLocation(ID, name.c_str());
-		glUniform4f(vertexLocation, vec4.x, vec4.y, vec4.z, vec4.w);
+	// load uniforms
+	for (const auto& name : uniformNamesToLoad) {
+		int vertexLocation = glGetUniformLocation(ID, name.c_str());
+		uniformCache.insert({ name, vertexLocation });
 	}
 }
 
 GLuint ShaderProgram::getID() const {
 	return ID;
+}
+
+GLuint ShaderProgram::getUniformID(std::string_view uniform) {
+	auto it = uniformCache.find(std::string{ uniform });
+	if (it != uniformCache.end()) {
+		return it->second;
+	}
+	return -1;
 }
 
 bool ShaderProgram::compileShader(unsigned int* shader, int shaderType, std::string_view src) {

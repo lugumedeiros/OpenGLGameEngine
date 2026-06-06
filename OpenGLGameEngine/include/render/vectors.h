@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 
 struct Vector2 {
 public:
@@ -39,5 +40,17 @@ public:
 
     explicit Vector4(const Vector3& v, float w = 1.0f)
         : x(v.x), y(v.y), z(v.z), w(w) {
+    }
+
+    void normalizeScale() {
+        float greater = std::max(std::abs(x), std::abs(y));
+        greater = std::max(greater, std::abs(z));
+        greater = std::max(greater, std::abs(w));
+        if (greater > 1.0f) {
+            x /= greater;
+            y /= greater;
+            z /= greater;
+            w /= greater;
+        }
     }
 };

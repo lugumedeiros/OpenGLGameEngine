@@ -21,14 +21,11 @@ void Render::clear() {
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Render::render(const Mesh& mesh, const Material& material, ShaderProgram& shaderProgram) {
+void Render::render(const Mesh& mesh, Material& material, ShaderProgram& shaderProgram) {
 	glBindVertexArray(mesh.VAO);
 	
-	// Texture
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, material.textureID);
-
 	glUseProgram(shaderProgram.getID());
-	shaderProgram.loadUniformCache();
+
+	// Draw
 	glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
 };

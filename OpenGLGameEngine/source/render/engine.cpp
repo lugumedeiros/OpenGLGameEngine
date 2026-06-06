@@ -47,9 +47,9 @@ ShaderProgram* Engine::createShaderProgram(std::string_view vertexSourcePath, st
 	return nullptr;
 }
 
-Material* Engine::createMaterial(const Vector4& color, GLuint textureID, ShaderProgram* shader) {
+Material* Engine::createMaterial(const ShaderProgram& shader) {
 	materialID++;
-	Material material{ materialID, color, textureID, shader->getID()};
+	Material material{ materialID, shader.getID()};
 	materials.insert({ materialID , material });
 	std::cout << "MATERIAL '" << materialID << "' CREATED" << std::endl;
 	return getMaterial(materialID);
@@ -63,11 +63,29 @@ Texture* Engine::getTexture(std::string_view textureName) {
 	return textureService.getTexture(textureName);
 }
 
-void Engine::setUniformVec4(ShaderProgram* shader, std::string_view name, const Vector4& vec) {
-		if (shader == nullptr) {
-		return;
-	}
-		shader->setUniformVec4(name, vec);
+void Engine::setUniforms(Material& mat) {
+	ShaderProgram* shader = getShaderProgram(mat.shaderProgramID);
+	//if (!mat.uniformChanged) {
+	//	return;
+	//}
+
+	glUniform1f(shader->getUniformID("colorOverlayFactor"), mat.getColorOverlayFactor());
+	glUniform1f(shader->getUniformID("baseTexFactor"), mat.getTextureBaseFactor());
+	glUniform1f(shader->getUniformID("overlayTexFactor"), mat.getTextureOverlayFactor());
+
+	const Vector4& color = mat.getColorOverlay();
+	glUniform4f(shader->getUniformID("colorOverlay"), color.x, color.y, color.z, color.w);
+	
+	glUniform1i(shader->getUniformID("baseTexture"), 0);
+	glUniform1i(shader->getUniformID("overlayTexture"), 1);
+	
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, mat.getTextureBaseID());
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, mat.getTextureOverlayID());
+
+	mat.uniformChanged = false;
 }
 
 void Engine::renderMesh(Mesh* mesh, Material* material) {
@@ -80,6 +98,7 @@ void Engine::renderMesh(Mesh* mesh, Material* material) {
 		std::cerr << "ERROR: SHADER PTR NULL FOR RENDERING" << std::endl;
 		return;
 	}
+	setUniforms(*material);
 	render.render(*mesh, *material, *shaderProgramPtr);
 }
 

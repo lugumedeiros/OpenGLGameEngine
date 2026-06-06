@@ -8,16 +8,25 @@
 #include <sstream>
 #include <string_view>
 #include "vectors.h"
+#include <vector>
+
+static const std::vector<std::string> uniformNamesToLoad{
+	"colorOverlayFactor",
+	"baseTexFactor",
+	"overlayTexFactor",
+	"colorOverlay",
+	"baseTexture",
+	"overlayTexture",
+};
 
 class ShaderProgram {
 public:
 	ShaderProgram(std::string_view vertexSourcePath, std::string_view fragmentSourcePath);
-	void setUniformVec4(std::string_view name, const Vector4& vec);
-	void loadUniformCache();
 	
 	bool success{false};
 
 	GLuint getID() const;
+	GLuint getUniformID(std::string_view uniform);
 
 private:
 	GLuint ID{ 0 };
@@ -26,5 +35,5 @@ private:
 	static bool compileShader(unsigned int* shader, int shaderType, std::string_view src);
 	static bool linkProgramShader(unsigned int* shaderProgram, unsigned int vertexShader, unsigned int FragmentShader);
 	
-	std::map<std::string, Vector4> uniformCache;
+	std::map<std::string, GLuint> uniformCache;
 };
