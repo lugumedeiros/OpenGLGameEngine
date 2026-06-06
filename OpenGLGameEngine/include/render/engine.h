@@ -20,9 +20,8 @@ public:
 	Mesh* createMesh(float* vertices, unsigned int verticesSize, unsigned int* indices, unsigned int indicesSize);
 	ShaderProgram* createShaderProgram(std::string_view vertexSourcePath, std::string_view fragmentSourcePath);
 	Material* createMaterial(const Vector4& color, GLuint textureID, ShaderProgram* shaderProgram);
-	GLuint createTexture(std::string_view texturePath);
-	bool textureLoadSuccess{ false };
-	bool shaderCompilationSuccess{ false };
+	Texture* createTexture(std::string_view texturePath);
+	Texture* getTexture(std::string_view textureName);
 
 	void setUniformVec4(ShaderProgram*, std::string_view name, const Vector4& vec);
 
@@ -47,5 +46,6 @@ private:
 	std::map<GLuint, Material> materials;
 	GLuint materialID{ 1 };
 
+	const std::string textureDir{ R"(C:\C Desktop\Sandbox\Cpp\OpenGLGameEngine\OpenGLGameEngine\OpenGLGameEngine\assets\textures)" };
 	TextureService textureService{};
 };

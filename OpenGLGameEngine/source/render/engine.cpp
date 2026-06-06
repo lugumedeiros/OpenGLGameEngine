@@ -3,6 +3,7 @@
 Engine::Engine(MainWindow* window):
 	render(Render(window)),
 	inputHandler(InputHandler(window, &render)) {
+	textureService.loadAllTextures(textureDir);
 }
 
 Mesh* Engine::createMesh(float* vertices, unsigned int verticesSize, unsigned int* indices, unsigned int indicesSize) {
@@ -38,8 +39,7 @@ Mesh* Engine::createMesh(float* vertices, unsigned int verticesSize, unsigned in
 ShaderProgram* Engine::createShaderProgram(std::string_view vertexSourcePath, std::string_view fragmentSourcePath)
 {
 	ShaderProgram shader{ vertexSourcePath, fragmentSourcePath };
-	shaderCompilationSuccess = shader.success;
-	if (shaderCompilationSuccess) {
+	if (shader.success) {
 		GLuint id = shader.getID();
 		shaderPrograms.insert({ id, shader});
 		return getShaderProgram(id);
@@ -55,10 +55,12 @@ Material* Engine::createMaterial(const Vector4& color, GLuint textureID, ShaderP
 	return getMaterial(materialID);
 }
 
-GLuint Engine::createTexture(std::string_view texturePath) {
-	GLuint id = textureService.get(texturePath);
-	textureLoadSuccess = id != 0;
-	return id;
+Texture* Engine::createTexture(std::string_view texturePath) {
+	return textureService.loadTexture(texturePath);
+}
+
+Texture* Engine::getTexture(std::string_view textureName) {
+	return textureService.getTexture(textureName);
 }
 
 void Engine::setUniformVec4(ShaderProgram* shader, std::string_view name, const Vector4& vec) {

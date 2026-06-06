@@ -11,8 +11,8 @@ public:
 
 private:
     // Basic config
-    int glfwCode;
-    char key;
+    int glfwCode{0};
+    char key{0};
     bool isPressed{false};
 
     // RepeatConfig

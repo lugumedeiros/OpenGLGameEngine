@@ -9,8 +9,8 @@
 class Material {
 public:
 	Material(GLuint materialID, const Vector4& color, GLuint textureID, GLuint shaderProgramID);
-	GLuint materialID;
-	Vector4 color;
-	GLuint textureID;
-	GLuint shaderProgramID;
+	GLuint materialID{0};
+	Vector4 color{};
+	GLuint textureID{0};
+	GLuint shaderProgramID{0};
 };

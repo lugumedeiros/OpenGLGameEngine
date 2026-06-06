@@ -23,7 +23,11 @@ void Render::clear() {
 
 void Render::render(const Mesh& mesh, const Material& material, ShaderProgram& shaderProgram) {
 	glBindVertexArray(mesh.VAO);
+	
+	// Texture
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, material.textureID);
+
 	glUseProgram(shaderProgram.getID());
 	shaderProgram.loadUniformCache();
 	glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);

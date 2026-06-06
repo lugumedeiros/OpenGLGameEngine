@@ -203,6 +203,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="assets\textures\awesomeface.png" />
     <Image Include="assets\textures\brickwall.jpg" />
     <Image Include="assets\textures\woodcontainer.jpg" />
   </ItemGroup>

@@ -107,5 +107,8 @@
     <Image Include="assets\textures\brickwall.jpg">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="assets\textures\awesomeface.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

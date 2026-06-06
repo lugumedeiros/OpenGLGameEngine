@@ -21,7 +21,7 @@ public:
 	void setTest(bool isTest);
 	void render(const Mesh& mesh, const Material& material, ShaderProgram& shaderProgram);
 
-	bool isTest;
+	bool isTest{ false };
 private:
 	MainWindow* window;
 };

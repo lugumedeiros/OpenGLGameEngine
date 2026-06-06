@@ -41,8 +41,10 @@ std::string_view vertexPath = "source/shaders/vs_basic.glsl";
 std::string_view fragmentColorPath = "source/shaders/fs_color.glsl";
 std::string_view fragmentTexturePath = "source/shaders/fs_texture.glsl";
 std::string_view fragmentUniformColorPath = "source/shaders/fs_uniform_color.glsl";
+std::string_view fragmentColoredTexturePath = "source/shaders/fs_colored_texture.glsl";
 
-std::string_view texturePath = "assets/textures/woodcontainer.jpg";
+std::string_view textureWallPath = "assets/textures/woodcontainer.jpg";
+std::string_view textureSmilePath = "assets/textures/awesomeface.png";
 
 int main() {
 	MainWindow mainWindow(width, height, title);
@@ -50,38 +52,38 @@ int main() {
 
 	GLFWwindow* window = mainWindow.getWindow();
 	if (window == NULL) {
-		return -1;
+		return 1;
 	}
 
 	////////////////// TEST AREA
 	ShaderProgram* shaderProgram_color = engine.createShaderProgram( vertexPath, fragmentColorPath );
-	if (!engine.shaderCompilationSuccess) {
-		return 1;
+	if (shaderProgram_color == nullptr) {
+		return 2;
 	}
 
 	ShaderProgram* shaderProgram_uniColor = engine.createShaderProgram( vertexPath, fragmentUniformColorPath );
-	if (!engine.shaderCompilationSuccess) {
-		return 1;
+	if (shaderProgram_uniColor == nullptr) {
+		return 3;
 	}
 
-	ShaderProgram* shaderProgram_texture = engine.createShaderProgram( vertexPath, fragmentTexturePath );
-	if (!engine.shaderCompilationSuccess) {
-		return 1;
+	ShaderProgram* shaderProgram_texture = engine.createShaderProgram( vertexPath, fragmentColoredTexturePath);
+	if (shaderProgram_texture == nullptr) {
+		return 4;
 	}
 
 	Mesh* meshIDLeft = engine.createMesh(verticesTriangle, sizeof(verticesTriangle), verticesLeft, sizeof(verticesLeft));
 	Mesh* meshIDRight = engine.createMesh(verticesTriangle, sizeof(verticesTriangle), verticesRight, sizeof(verticesRight));
 	Mesh* meshIDMiddle = engine.createMesh(verticesTriangle, sizeof(verticesTriangle), verticesMiddle, sizeof(verticesMiddle));
 
-	GLuint textureID = engine.createTexture(texturePath);
-	if (!engine.textureLoadSuccess) {
-		return 1;
+	Texture* textureWall = engine.getTexture("awesomeface");
+	if (textureWall == nullptr) {
+		return 5;
 	}
 
 	Vector4 colorBlack(1.0f, 1.0f, 1.0f, 1.0f);
-	Material* materialIDColor = engine.createMaterial(colorBlack, textureID, shaderProgram_color);
-	Material* materialIDTexture = engine.createMaterial(colorBlack, textureID, shaderProgram_texture);
-	Material* materialIDUniColor = engine.createMaterial(colorBlack, textureID, shaderProgram_uniColor);
+	Material* materialIDColor = engine.createMaterial(colorBlack, textureWall->ID, shaderProgram_color);
+	Material* materialIDTexture = engine.createMaterial(colorBlack, textureWall->ID, shaderProgram_texture);
+	Material* materialIDUniColor = engine.createMaterial(colorBlack, textureWall->ID, shaderProgram_uniColor);
 	
 	UniqueColorChange effectColor(1.0f, 0.0f, 0.0f, 1.0f);
 	engine.setUniformVec4(shaderProgram_uniColor, "uniformColor", Vector4(effectColor.r, effectColor.g, effectColor.b, 1.0f));
@@ -92,7 +94,7 @@ int main() {
 		engine.processInput();
 		
 		//effect update
-		engine.setUniformVec4(shaderProgram_uniColor, "uniformColor", Vector4(effectColor.r, effectColor.g, effectColor.b, 1.0f));
+		engine.setUniformVec4(shaderProgram_texture, "uniformColor", Vector4(effectColor.r, effectColor.g, effectColor.b, 1.0f));
 		effectColor.advance();
 		// rendering start
 

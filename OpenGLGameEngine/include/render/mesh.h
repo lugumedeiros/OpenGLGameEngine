@@ -10,9 +10,9 @@
 class Mesh {
 public:
 	Mesh(GLuint meshID, GLuint indexCount, GLuint VAO, GLuint VBO, GLuint EBO);
-	GLuint meshID;
-	GLuint indexCount;
-	GLuint VAO;
-	GLuint VBO;
-	GLuint EBO;
+	GLuint meshID{0};
+	GLuint indexCount{0};
+	GLuint VAO{0};
+	GLuint VBO{0};
+	GLuint EBO{0};
 };
