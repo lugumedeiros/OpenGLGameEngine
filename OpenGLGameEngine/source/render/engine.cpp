@@ -63,17 +63,18 @@ Texture* Engine::getTexture(std::string_view textureName) {
 	return textureService.getTexture(textureName);
 }
 
-void Engine::setUniforms(Material& mat) {
+void Engine::setUniforms(Mesh& mesh, Material& mat) {
 	ShaderProgram* shader = getShaderProgram(mat.shaderProgramID);
 	//if (!mat.uniformChanged) {
 	//	return;
 	//}
+	glUniformMatrix4fv(shader->getUniformID("uTransform"), 1, GL_FALSE, glm::value_ptr(mesh.getTransform()));
 
 	glUniform1f(shader->getUniformID("colorOverlayFactor"), mat.getColorOverlayFactor());
 	glUniform1f(shader->getUniformID("baseTexFactor"), mat.getTextureBaseFactor());
 	glUniform1f(shader->getUniformID("overlayTexFactor"), mat.getTextureOverlayFactor());
 
-	const Vector4& color = mat.getColorOverlay();
+	const glm::vec4& color = mat.getColorOverlay();
 	glUniform4f(shader->getUniformID("colorOverlay"), color.x, color.y, color.z, color.w);
 	
 	glUniform1i(shader->getUniformID("baseTexture"), 0);
@@ -98,7 +99,7 @@ void Engine::renderMesh(Mesh* mesh, Material* material) {
 		std::cerr << "ERROR: SHADER PTR NULL FOR RENDERING" << std::endl;
 		return;
 	}
-	setUniforms(*material);
+	setUniforms(*mesh, *material);
 	render.render(*mesh, *material, *shaderProgramPtr);
 }
 

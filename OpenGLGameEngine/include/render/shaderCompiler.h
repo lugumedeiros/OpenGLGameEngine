@@ -17,6 +17,7 @@ static const std::vector<std::string> uniformNamesToLoad{
 	"colorOverlay",
 	"baseTexture",
 	"overlayTexture",
+	"uTransform"
 };
 
 class ShaderProgram {

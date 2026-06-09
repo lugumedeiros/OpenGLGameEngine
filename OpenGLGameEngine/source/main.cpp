@@ -4,6 +4,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "../include/window/window.h"
 #include "../include/input/inputHandler.h"
 #include "../include/render/engine.h"
@@ -26,26 +30,11 @@ float verticesTriangle[] = {
 	};
 
 unsigned int verticesTriangleMiddle[] = {
-	0, 2, 5,
+	0, 2, 1, 1, 2, 3, 
 };
-
-//unsigned int verticesLeft[] = {
-//	0, 4, 1,
-//};
-//
-//unsigned int verticesRight[] = {
-//	4, 2, 3,
-//};
-//
-//unsigned int verticesMiddle[] = {
-//	4, 3, 1,
-//};
 
 std::string_view vertexPath = "source/shaders/vs_basic.glsl";
 std::string_view fragmentColorPath = "source/shaders/fs_complex.glsl";
-//std::string_view fragmentTexturePath = "source/shaders/fs_texture.glsl";
-//std::string_view fragmentUniformColorPath = "source/shaders/fs_uniform_color.glsl";
-//std::string_view fragmentColoredTexturePath = "source/shaders/fs_colored_texture.glsl";
 
 std::string_view textureWallPath = "assets/textures/woodcontainer.jpg";
 std::string_view textureSmilePath = "assets/textures/awesomeface.png";
@@ -77,7 +66,7 @@ int main() {
 		return 3;
 	}
 
-	Vector4 colorOverlay(0.0f, 1.0f, 0.0f, 1.0f);
+	glm::vec4 colorOverlay(0.0f, 1.0f, 0.0f, 1.0f);
 	float colorOverlayFactor = 1.0f;
 	float baseTextureFactor = 1.0f;
 	float ovelayTextureFactor = 1.0f;
@@ -89,14 +78,21 @@ int main() {
 	
 	UniqueColorChange effectColor(1.0f, 0.0f, 0.0f, 1.0f);
 
-//////////////////////////////
+	glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
+	glm::mat4 trans = glm::mat4(1.0f);
+
+	trans = glm::rotate(trans, glm::radians(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	trans = glm::translate(trans, glm::vec3(0.25f, 0.25f, 0.0f));
+	trans = glm::scale(trans, glm::vec3(0.25f, 0.25f, 0.25f));
+
+///////////////// END TEST AREA
 
 	while (!mainWindow.shouldClose()) {
 		engine.processInput();
 		
 		//effect update
 		effectColor.advance();
-		materiaMainTriangle->setColorOverlay(Vector4{ effectColor.r, effectColor.g, effectColor.b, 1.0f }, colorOverlayFactor);
+		materiaMainTriangle->setColorOverlay(glm::vec4( effectColor.r, effectColor.g, effectColor.b, 1.0f ), colorOverlayFactor);
 		materiaMainTriangle->setBaseTexture(*textureBase, baseTextureFactor);
 		materiaMainTriangle->setOverlayTexture(*textureOverlay, ovelayTextureFactor);
 		if (colorOverlayFactor < 1.0f) {
@@ -113,6 +109,11 @@ int main() {
 			baseTextureFactor = 0.0f;
 			ovelayTextureFactor = 0.0f;
 		}
+
+		//movement update
+
+		trans = glm::rotate(trans, glm::radians(1.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		meshTriangle->setTransform(trans);
 		
 		// rendering start
 		engine.clearRender();

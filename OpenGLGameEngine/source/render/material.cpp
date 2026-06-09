@@ -14,7 +14,7 @@ Material::Material(GLuint materialID, GLuint shaderProgramID):
 	shaderProgramID(shaderProgramID) {
 }
 
-void Material::setColorOverlay(Vector4 color, float factor) {
+void Material::setColorOverlay(glm::vec4 color, float factor) {
 	colorOverlay = color;
 	colorOverlayFactor = factor;
 	uniformChanged = true;
@@ -33,7 +33,6 @@ void Material::setOverlayTexture(const Texture& texture, float factor) {
 }
 
 void Material::normalize() {
-	colorOverlay.normalizeScale();
 	normalizeScale(colorOverlayFactor);
 	normalizeScale(textureBaseFactor);
 	normalizeScale(textureOverlayFactor);

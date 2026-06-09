@@ -83,9 +83,6 @@
     <ClInclude Include="include\effecs\uniqueColorChange.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\render\vectors.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\render\textureService.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -96,9 +93,6 @@
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="source\shaders\vs_basic.glsl" />
-    <None Include="source\shaders\fs_color.glsl" />
-    <None Include="source\shaders\fs_texture.glsl" />
-    <None Include="source\shaders\fs_uniform_color.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\textures\woodcontainer.jpg">

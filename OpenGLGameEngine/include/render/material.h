@@ -1,8 +1,11 @@
 #pragma once
 #include <string>
 #include <vector>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+
 #include "shaderCompiler.h"
 #include "textureService.h"
 #include "vectors.h"
@@ -15,11 +18,11 @@ public:
 	GLuint materialID{ 0 };
 	GLuint shaderProgramID{ 0 };
 
-	void setColorOverlay(Vector4 color, float factor);
+	void setColorOverlay(glm::vec4 color, float factor);
 	void setBaseTexture(const Texture& texture, float factor);
 	void setOverlayTexture(const Texture& texture, float factor);
 
-	const Vector4& getColorOverlay() { return colorOverlay; }
+	const glm::vec4& getColorOverlay() { return colorOverlay; }
 	float getColorOverlayFactor() { return colorOverlayFactor; }
 	GLuint getTextureBaseID() { return textureBaseID; }
 	float getTextureBaseFactor() { return textureBaseFactor; }
@@ -30,7 +33,7 @@ public:
 	bool uniformChanged{false};
 
 private:
-	Vector4 colorOverlay{};
+	glm::vec4 colorOverlay{};
 	float colorOverlayFactor{ 0.0f };
 
 	GLuint textureBaseID{ 0 };

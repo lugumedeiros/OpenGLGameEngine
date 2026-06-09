@@ -3,8 +3,12 @@
 #include <string>
 #include <iostream>
 #include <vector>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "../window/window.h"
 #include "shaderCompiler.h"
 #include "mesh.h"
@@ -31,7 +35,7 @@ public:
 	void processInput();
 
 private:
-	void setUniforms(Material& material);
+	void setUniforms(Mesh& mesh, Material& material);
 
 	InputHandler inputHandler;
 	Render render;
