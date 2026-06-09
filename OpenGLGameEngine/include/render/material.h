@@ -8,7 +8,6 @@
 
 #include "shaderCompiler.h"
 #include "textureService.h"
-#include "vectors.h"
 #include "map"
 
 

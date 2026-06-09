@@ -12,6 +12,7 @@
 #include "../include/input/inputHandler.h"
 #include "../include/render/engine.h"
 #include "../include/effecs/uniqueColorChange.h"
+#include "../include/render/camera.h"
 
 
 const int width = 800;
@@ -78,12 +79,17 @@ int main() {
 	
 	UniqueColorChange effectColor(1.0f, 0.0f, 0.0f, 1.0f);
 
-	glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
-	glm::mat4 trans = glm::mat4(1.0f);
+	// VIEW
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
-	trans = glm::rotate(trans, glm::radians(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	trans = glm::translate(trans, glm::vec3(0.25f, 0.25f, 0.0f));
-	trans = glm::scale(trans, glm::vec3(0.25f, 0.25f, 0.25f));
+	glm::mat4 view = glm::mat4(1.0f);
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));
+
+	Camera cam{45.0f, float(width), float(height), 0.1f, 100.0f};
+	cam.setView(view);
+
+	glm::mat4 projection = cam.getProjection();
 
 ///////////////// END TEST AREA
 
@@ -110,14 +116,12 @@ int main() {
 			ovelayTextureFactor = 0.0f;
 		}
 
-		//movement update
-
-		trans = glm::rotate(trans, glm::radians(1.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-		meshTriangle->setTransform(trans);
+		//transform update
+		meshTriangle->setTransform(model);
 		
 		// rendering start
 		engine.clearRender();
-		engine.renderMesh(meshTriangle, materiaMainTriangle);
+		engine.renderMesh(meshTriangle, materiaMainTriangle, &cam);
 
 		// render end
 		mainWindow.swapBuffers();

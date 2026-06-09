@@ -150,6 +150,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\render\camera.cpp" />
     <ClCompile Include="source\render\engine.cpp" />
     <ClCompile Include="source\render\material.cpp" />
     <ClCompile Include="include\render\material.h" />
@@ -177,6 +178,7 @@
     <ClInclude Include="include\input\inputHandler.h" />
     <ClInclude Include="Include\KHR\khrplatform.h" />
     <ClInclude Include="include\render\engine.h" />
+    <ClInclude Include="include\render\camera.h" />
     <ClInclude Include="include\render\shaderCompiler.h" />
     <ClInclude Include="include\render\render.h" />
     <ClInclude Include="include\window\window.h" />

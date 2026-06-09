@@ -9,12 +9,13 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../window/window.h"
 #include "shaderCompiler.h"
 #include "mesh.h"
 #include "textureService.h"
 #include "material.h"
 #include "render.h"
+#include "camera.h"
+#include "../window/window.h"
 #include "../input/inputHandler.h"
 
 class Engine {
@@ -28,14 +29,14 @@ public:
 	Texture* getTexture(std::string_view textureName);
 
 
-	void renderMesh(Mesh* mesh, Material* material);
+	void renderMesh(Mesh* mesh, Material* material, Camera* camera);
 	void clearRender();
 	void setTest(bool isTest);
 
 	void processInput();
 
 private:
-	void setUniforms(Mesh& mesh, Material& material);
+	void setUniforms(Mesh& mesh, Material& material, Camera& camera);
 
 	InputHandler inputHandler;
 	Render render;

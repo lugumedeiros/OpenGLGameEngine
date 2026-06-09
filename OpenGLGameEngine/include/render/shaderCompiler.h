@@ -7,7 +7,6 @@
 #include <fstream>
 #include <sstream>
 #include <string_view>
-#include "vectors.h"
 #include <vector>
 
 static const std::vector<std::string> uniformNamesToLoad{
@@ -17,7 +16,9 @@ static const std::vector<std::string> uniformNamesToLoad{
 	"colorOverlay",
 	"baseTexture",
 	"overlayTexture",
-	"uTransform"
+	"uModel",
+	"uView",
+	"uProjection",
 };
 
 class ShaderProgram {

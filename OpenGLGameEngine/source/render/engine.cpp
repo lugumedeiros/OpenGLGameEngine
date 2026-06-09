@@ -63,13 +63,20 @@ Texture* Engine::getTexture(std::string_view textureName) {
 	return textureService.getTexture(textureName);
 }
 
-void Engine::setUniforms(Mesh& mesh, Material& mat) {
+void Engine::setUniforms(Mesh& mesh, Material& mat, Camera& camera) {
 	ShaderProgram* shader = getShaderProgram(mat.shaderProgramID);
 	//if (!mat.uniformChanged) {
 	//	return;
 	//}
-	glUniformMatrix4fv(shader->getUniformID("uTransform"), 1, GL_FALSE, glm::value_ptr(mesh.getTransform()));
 
+	// View
+	glUniformMatrix4fv(shader->getUniformID("uProjection"), 1, GL_FALSE, glm::value_ptr(camera.getProjection()));
+	glUniformMatrix4fv(shader->getUniformID("uView"), 1, GL_FALSE, glm::value_ptr(camera.getView()));
+
+	// Mesh
+	glUniformMatrix4fv(shader->getUniformID("uModel"), 1, GL_FALSE, glm::value_ptr(mesh.getTransform()));
+
+	// Textures
 	glUniform1f(shader->getUniformID("colorOverlayFactor"), mat.getColorOverlayFactor());
 	glUniform1f(shader->getUniformID("baseTexFactor"), mat.getTextureBaseFactor());
 	glUniform1f(shader->getUniformID("overlayTexFactor"), mat.getTextureOverlayFactor());
@@ -89,7 +96,7 @@ void Engine::setUniforms(Mesh& mesh, Material& mat) {
 	mat.uniformChanged = false;
 }
 
-void Engine::renderMesh(Mesh* mesh, Material* material) {
+void Engine::renderMesh(Mesh* mesh, Material* material, Camera* camera) {
 	if (mesh == nullptr || material == nullptr) {
 		std::cerr << "ERROR: MESH OR MATERIAL PTR NULL FOR RENDERING" << std::endl;
 		return;
@@ -99,7 +106,7 @@ void Engine::renderMesh(Mesh* mesh, Material* material) {
 		std::cerr << "ERROR: SHADER PTR NULL FOR RENDERING" << std::endl;
 		return;
 	}
-	setUniforms(*mesh, *material);
+	setUniforms(*mesh, *material, *camera);
 	render.render(*mesh, *material, *shaderProgramPtr);
 }
 
