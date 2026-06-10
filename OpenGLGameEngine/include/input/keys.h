@@ -7,12 +7,13 @@ public:
     //~KeyObj();
     void setRepeat(bool shouldRepeat, int firstRepeatDelay, int repeatDelay);
     bool press();
-    bool release();    
+    bool release();
+    char getKey() { return key; };
 
 private:
     // Basic config
-    int glfwCode{0};
     char key{0};
+    int glfwCode{0};
     bool isPressed{false};
 
     // RepeatConfig

@@ -87,6 +87,7 @@ int main() {
 	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));
 
 	Camera cam{45.0f, float(width), float(height), 0.1f, 100.0f};
+	engine.setActiveCamera(&cam);
 	cam.setView(view);
 
 	glm::mat4 projection = cam.getProjection();
@@ -121,7 +122,7 @@ int main() {
 		
 		// rendering start
 		engine.clearRender();
-		engine.renderMesh(meshTriangle, materiaMainTriangle, &cam);
+		engine.renderMesh(meshTriangle, materiaMainTriangle);
 
 		// render end
 		mainWindow.swapBuffers();

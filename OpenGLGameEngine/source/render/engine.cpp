@@ -1,8 +1,9 @@
 #include "../../include/render/engine.h"
 
-Engine::Engine(MainWindow* window):
+Engine::Engine(MainWindow* window) :
+	window(window),
 	render(Render(window)),
-	inputHandler(InputHandler(window, &render)) {
+	inputHandler(InputHandler(*this)) {
 	textureService.loadAllTextures(textureDir);
 }
 
@@ -63,6 +64,10 @@ Texture* Engine::getTexture(std::string_view textureName) {
 	return textureService.getTexture(textureName);
 }
 
+void Engine::setActiveCamera(Camera* camera) {
+	selectedCamera = camera;
+}
+
 void Engine::setUniforms(Mesh& mesh, Material& mat, Camera& camera) {
 	ShaderProgram* shader = getShaderProgram(mat.shaderProgramID);
 	//if (!mat.uniformChanged) {
@@ -96,7 +101,7 @@ void Engine::setUniforms(Mesh& mesh, Material& mat, Camera& camera) {
 	mat.uniformChanged = false;
 }
 
-void Engine::renderMesh(Mesh* mesh, Material* material, Camera* camera) {
+void Engine::renderMesh(Mesh* mesh, Material* material) {
 	if (mesh == nullptr || material == nullptr) {
 		std::cerr << "ERROR: MESH OR MATERIAL PTR NULL FOR RENDERING" << std::endl;
 		return;
@@ -106,7 +111,7 @@ void Engine::renderMesh(Mesh* mesh, Material* material, Camera* camera) {
 		std::cerr << "ERROR: SHADER PTR NULL FOR RENDERING" << std::endl;
 		return;
 	}
-	setUniforms(*mesh, *material, *camera);
+	setUniforms(*mesh, *material, *selectedCamera);
 	render.render(*mesh, *material, *shaderProgramPtr);
 }
 
