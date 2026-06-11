@@ -2,6 +2,7 @@
 
 Render::Render(MainWindow* mainWindow) : window(mainWindow){
 	setClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glEnable(GL_DEPTH_TEST);
 }
 
 Render::~Render() {
@@ -18,7 +19,7 @@ void Render::setTest(bool setTest) {
 }
 
 void Render::clear() {
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Render::render(const Mesh& mesh, Material& material, ShaderProgram& shaderProgram) {

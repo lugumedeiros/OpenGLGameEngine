@@ -8,12 +8,15 @@ public:
 	Camera() = default;
 	Camera(float fov, float widht, float height, float near, float far);
 
-	void setView(glm::mat4 mat4);
+	void setView(glm::vec3 cameraPos, glm::vec3 targetPos);
+	void setView(glm::vec3 cameraPos, glm::vec3 targetPos, glm::vec3 upDirection);
+	void setView(glm::mat4 view);
+
 	void translateView(glm::vec3 vec3);
 	void resetView();
-	glm::mat4 getView();
-
-	glm::mat4 getProjection();
+	
+	const glm::mat4& getView();
+	const glm::mat4& getProjection();
 
 	void setFOV(float fov);
 	void setRes(float width, float height);
@@ -26,5 +29,10 @@ private:
 	float near{1.0f};
 	float far{10.0f};
 
-	glm::mat4 view{ glm::mat4(1.0f) };
+	glm::vec3 defaultCamUp{ 0.0f, 1.0f, 0.0f };
+	glm::mat4 defaultView{ glm::translate(glm::mat4{1.0f}, glm::vec3(0.0f, 0.0f, -5.0f)) };
+	glm::mat4 view{ defaultView };
+	glm::mat4 projection{ 1.0f };
+
+	void setProjection();
 };

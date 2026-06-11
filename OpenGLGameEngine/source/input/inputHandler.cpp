@@ -33,8 +33,6 @@ void InputHandler::processInput() {
 }
 
 void InputHandler::handleAction(Action action) {
-	std::cout << "action: " << int(action) << std::endl;
-
 	switch (action) {
 	case Action::MoveForward:
 		moveForward();
