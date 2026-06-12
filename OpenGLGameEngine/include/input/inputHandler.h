@@ -7,59 +7,29 @@
 #include <GLFW/glfw3.h>
 
 #include "keys.h"
-//#include "../render/engine.h"
 
 class Engine;
 
-enum class Action {
-	MoveForward,
-	MoveBackward,
-	MoveLeft,
-	MoveRight,
-	MoveUp,
-	MoveDown,
-	ToggleTestMode,
+struct KeyBinding {
+	KeyObj key;
+	std::function<void()> actionPress;
+	std::function<void()> actionRelease;
 };
 
 class InputHandler {
 public:
 	InputHandler(Engine& engine);
-	~InputHandler();
 	void processInput();
 
 private:
+	std::unordered_map<int, KeyBinding> keyMapping;
 	Engine& engine;
 	
-	void handleAction(Action action);
+	void setKeyPress();
+	void setKeyRelease();
 
-	std::unordered_map<int, KeyObj> keyMapping{
-		{GLFW_KEY_T, KeyObj('t', GLFW_KEY_T, true, 60, 5)},
-		{GLFW_KEY_W, KeyObj('w', GLFW_KEY_W, true, 20, 1)},
-		{GLFW_KEY_A, KeyObj('a', GLFW_KEY_A, true, 20, 1)},
-		{GLFW_KEY_S, KeyObj('s', GLFW_KEY_S, true, 20, 1)},
-		{GLFW_KEY_D, KeyObj('d', GLFW_KEY_D, true, 20, 1)},
-		{GLFW_KEY_LEFT_SHIFT, KeyObj(0, GLFW_KEY_D, true, 20, 1)},
-		{GLFW_KEY_LEFT_CONTROL, KeyObj(0, GLFW_KEY_D, true, 20, 1)},
-	};
-
-	std::unordered_map<int, Action> releaseActions{
-		//{GLFW_KEY_T, Action::ToggleTestMode},
-		//{GLFW_KEY_W, Action::MoveForward},
-		//{GLFW_KEY_S, Action::MoveBackward},
-		//{GLFW_KEY_A, Action::MoveLeft},
-		//{GLFW_KEY_D, Action::MoveRight}
-	};
-
-	std::unordered_map<int, Action > pressActions{
-		{GLFW_KEY_T, Action::ToggleTestMode},
-		{GLFW_KEY_W, Action::MoveForward},
-		{GLFW_KEY_S, Action::MoveBackward},
-		{GLFW_KEY_A, Action::MoveLeft},
-		{GLFW_KEY_D, Action::MoveRight},
-		{GLFW_KEY_LEFT_SHIFT, Action::MoveUp},
-		{GLFW_KEY_LEFT_CONTROL, Action::MoveDown},
-	};
-
+	///////////////////////////// MOVE TO ENGINE LATER ////////////////////////////////
+	float speed = -0.2f;
 	void toggleTestMode();
 	void moveForward();
 	void moveBackward();
@@ -67,4 +37,5 @@ private:
 	void moveRight();
 	void moveUp();
 	void moveDown();
+	void toggleLockCam();
 };

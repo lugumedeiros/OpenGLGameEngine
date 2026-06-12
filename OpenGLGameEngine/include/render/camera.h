@@ -15,15 +15,15 @@ public:
 	void setRes(float width, float height);
 	void setNearFarPlanes(float near, float far);
 
-	void setLockTarget(glm::vec3 targetPos) { lockTargetPos = targetPos; };
-	void lockTarget(bool isLocked) { isTargetLocked = isLocked;};
+	void setLockTargetPos(glm::vec3 targetPos) { lockTargetPos = targetPos; };
+	void lockTarget(bool isLocked);
+	bool getIsTargetLocked() { return isTargetLocked; };
 
 	void translate(glm::vec3 vec3);
 	void resetView();
 	
 	const glm::mat4& getView();
 	const glm::mat4& getProjection();
-
 
 private:
 	float fov{45.0f};
@@ -47,4 +47,5 @@ private:
 	glm::vec3 lockTargetPos{ 0.0f, 0.0f, 0.0f };
 
 	void setProjection();
+	void update();
 };

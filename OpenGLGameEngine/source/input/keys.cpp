@@ -1,9 +1,9 @@
 #include "../../include/input/keys.h"
 
-KeyObj::KeyObj(char key, int glfwCode) :key(key), glfwCode(glfwCode) {
+KeyObj::KeyObj(std::string_view key, int glfwCode) :key(key), glfwCode(glfwCode) {
 }
 
-KeyObj::KeyObj(char key, int glfwCode, bool shouldRepeat, int firstRepeatDelay, int repeatDelay) 
+KeyObj::KeyObj(std::string_view key, int glfwCode, bool shouldRepeat, int firstRepeatDelay, int repeatDelay) 
 	:key(key), glfwCode(glfwCode), shouldRepeat(shouldRepeat), firstRepeatDelay(firstRepeatDelay), repeatDelay(repeatDelay) {
 }
 

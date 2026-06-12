@@ -1,18 +1,20 @@
 #pragma once
+#include <string>
+
 
 class KeyObj {
 public:
-    KeyObj(char key, int glfwCode);
-    KeyObj(char key, int glfwCode, bool shouldRepeat, int firstRepeatDelay, int repeatDelay);
-    //~KeyObj();
+    KeyObj(std::string_view key, int glfwCode);
+    KeyObj(std::string_view key, int glfwCode, bool shouldRepeat, int firstRepeatDelay, int repeatDelay);
+
     void setRepeat(bool shouldRepeat, int firstRepeatDelay, int repeatDelay);
     bool press();
     bool release();
-    char getKey() { return key; };
+    const std::string& getKey() const { return key; };
 
 private:
     // Basic config
-    char key{0};
+    std::string key{""};
     int glfwCode{0};
     bool isPressed{false};
 

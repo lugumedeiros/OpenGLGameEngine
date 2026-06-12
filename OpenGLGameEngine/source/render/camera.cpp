@@ -17,7 +17,7 @@ void Camera::setView(glm::vec3 cameraPos, glm::vec3 targetPos, glm::vec3 upDirec
 	this->cameraPos = cameraPos;
 	this->targetPos = targetPos;
 	this->upDirection = upDirection;
-	this->view = glm::lookAt(cameraPos, targetPos, upDirection);
+	update();
 }
 
 // Translate camera into xyz direction, if tagetLocked then follow target
@@ -29,7 +29,7 @@ void Camera::translate(glm::vec3 deltaPos) {
 	else {
 		targetPos += deltaPos;
 	}
-	view = glm::lookAt(cameraPos, targetPos, upDirection);
+	update();
 	std::cout << "VIEW POS X:" << cameraPos[0] << " Y:" << cameraPos[1] << " Z:" << cameraPos[2] << std::endl;
 }
 
@@ -64,4 +64,14 @@ void Camera::setNearFarPlanes(float near, float far) {
 
 void Camera::setProjection() {
 	projection = glm::perspective(glm::radians(fov), width / height, near, far);
+}
+
+void Camera::update() {
+	this->view = glm::lookAt(cameraPos, targetPos, upDirection);
+}
+
+void Camera::lockTarget(bool isLocked) {
+	isTargetLocked = isLocked; 
+	std::cout << "CAMERA SET TO '" << (isLocked ? "TRUE" : "FALSE") << "'" << std::endl;
+	translate(glm::vec3{ 0.0f });
 }

@@ -115,7 +115,7 @@ int main() {
 	engine.setActiveCamera(&cam);
 	cam.translate(glm::vec3{ 0.0f, 0.0f, -5.0f });
 	//cam.lockTarget(true);
-	cam.setLockTarget(glm::vec3{ 0.0f, 0.0f, 0.0f });
+	cam.setLockTargetPos(glm::vec3{ 0.0f, 0.0f, 0.0f });
 
 ///////////////// END TEST AREA
 
