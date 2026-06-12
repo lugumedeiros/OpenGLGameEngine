@@ -10,11 +10,10 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "../include/window/window.h"
-#include "../include/input/inputHandler.h"
-#include "../include/render/engine.h"
+#include "../include/engine/input/inputHandler.h"
+#include "../include/engine/engine.h"
 #include "../include/effecs/uniqueColorChange.h"
-#include "../include/render/camera.h"
-
+#include "../include/engine/scene/camera.h"
 
 const int width = 800;
 const int height = 600;
@@ -113,7 +112,7 @@ int main() {
 	// VIEW
 	Camera cam{45.0f, float(width), float(height), 0.1f, 100.0f};
 	engine.setActiveCamera(&cam);
-	cam.translate(glm::vec3{ 0.0f, 0.0f, -5.0f });
+	cam.translateWorldSpace(glm::vec3{ 0.0f, 0.0f, -5.0f });
 	//cam.lockTarget(true);
 	cam.setLockTargetPos(glm::vec3{ 0.0f, 0.0f, 0.0f });
 

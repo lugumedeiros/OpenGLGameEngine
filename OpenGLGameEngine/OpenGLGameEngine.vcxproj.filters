@@ -21,43 +21,43 @@
     <ClCompile Include="source\window\window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\input\inputHandler.cpp">
+    <ClCompile Include="source\engine\input\inputHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\render\render.cpp">
+    <ClCompile Include="source\engine\render\render.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\render\shaderCompiler.cpp">
+    <ClCompile Include="source\engine\render\shaderCompiler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\input\keys.cpp">
+    <ClCompile Include="source\engine\input\keys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\render\mesh.h">
+    <ClCompile Include="include\engine\render\mesh.h">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\render\mesh.cpp">
+    <ClCompile Include="source\engine\render\mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\effecs\uniqueColorChange.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\render\textureService.cpp">
+    <ClCompile Include="source\engine\render\textureService.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\libs\stb.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\render\material.h">
+    <ClCompile Include="include\engine\render\material.h">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\render\material.cpp">
+    <ClCompile Include="source\engine\render\material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\render\engine.cpp">
+    <ClCompile Include="source\engine\engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\render\camera.cpp">
+    <ClCompile Include="source\engine\scene\camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -71,28 +71,28 @@
     <ClInclude Include="Include\KHR\khrplatform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\input\inputHandler.h">
+    <ClInclude Include="include\engine\input\inputHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\render\render.h">
+    <ClInclude Include="include\engine\render\render.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\render\shaderCompiler.h">
+    <ClInclude Include="include\engine\render\shaderCompiler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\input\keys.h">
+    <ClInclude Include="include\engine\input\keys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\effecs\uniqueColorChange.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\render\textureService.h">
+    <ClInclude Include="include\engine\render\textureService.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\render\engine.h">
+    <ClInclude Include="include\engine\engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\render\camera.h">
+    <ClInclude Include="include\engine\scene\camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

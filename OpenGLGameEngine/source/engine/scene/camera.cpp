@@ -1,4 +1,4 @@
-#include "../../include/render/camera.h"
+#include "../../../include/engine/scene/camera.h"
 #include <iostream>
 
 Camera::Camera(float fov, float width, float height, float near, float far) 
@@ -20,8 +20,8 @@ void Camera::setView(glm::vec3 cameraPos, glm::vec3 targetPos, glm::vec3 upDirec
 	update();
 }
 
-// Translate camera into xyz direction, if tagetLocked then follow target
-void Camera::translate(glm::vec3 deltaPos) {
+// Translate camera into xyz world direction, if tagetLocked then follow target
+void Camera::translateWorldSpace(glm::vec3 deltaPos) {
 	cameraPos += deltaPos;
 	if (isTargetLocked) {
 		targetPos = lockTargetPos;
@@ -31,6 +31,19 @@ void Camera::translate(glm::vec3 deltaPos) {
 	}
 	update();
 	std::cout << "VIEW POS X:" << cameraPos[0] << " Y:" << cameraPos[1] << " Z:" << cameraPos[2] << std::endl;
+}
+
+// Translate camere into xyz camera direction, if tagetLocked then follow target
+void Camera::translateLocalSpace(glm::vec3 deltaPos) {
+	glm::vec3 forward = glm::normalize(targetPos - cameraPos);
+	glm::vec3 right = glm::normalize(glm::cross(forward, upDirection));
+	glm::vec3 up = glm::normalize(glm::cross(right, forward));
+	glm::vec3 refDelta{
+		right * deltaPos.x
+		+ up * deltaPos.y
+		+ forward* deltaPos.z
+	};
+	translateWorldSpace(refDelta);
 }
 
 void Camera::resetView() {
@@ -73,5 +86,5 @@ void Camera::update() {
 void Camera::lockTarget(bool isLocked) {
 	isTargetLocked = isLocked; 
 	std::cout << "CAMERA SET TO '" << (isLocked ? "TRUE" : "FALSE") << "'" << std::endl;
-	translate(glm::vec3{ 0.0f });
+	translateWorldSpace(glm::vec3{ 0.0f });
 }

@@ -150,19 +150,19 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="source\render\camera.cpp" />
-    <ClCompile Include="source\render\engine.cpp" />
-    <ClCompile Include="source\render\material.cpp" />
-    <ClCompile Include="include\render\material.h" />
-    <ClCompile Include="source\render\textureService.cpp" />
+    <ClCompile Include="source\engine\scene\camera.cpp" />
+    <ClCompile Include="source\engine\engine.cpp" />
+    <ClCompile Include="source\engine\render\material.cpp" />
+    <ClCompile Include="include\engine\render\material.h" />
+    <ClCompile Include="source\engine\render\textureService.cpp" />
     <ClCompile Include="source\effecs\uniqueColorChange.cpp" />
-    <ClCompile Include="source\render\mesh.cpp" />
-    <ClCompile Include="include\render\mesh.h" />
-    <ClCompile Include="source\input\keys.cpp" />
-    <ClCompile Include="source\render\render.cpp" />
-    <ClCompile Include="source\input\inputHandler.cpp" />
+    <ClCompile Include="source\engine\render\mesh.cpp" />
+    <ClCompile Include="include\engine\render\mesh.h" />
+    <ClCompile Include="source\engine\input\keys.cpp" />
+    <ClCompile Include="source\engine\render\render.cpp" />
+    <ClCompile Include="source\engine\input\inputHandler.cpp" />
     <ClCompile Include="source\main.cpp" />
-    <ClCompile Include="source\render\shaderCompiler.cpp" />
+    <ClCompile Include="source\engine\render\shaderCompiler.cpp" />
     <ClCompile Include="source\libs\stb.cpp">
       <DisableAnalyzeExternal Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DisableAnalyzeExternal>
       <DisableAnalyzeExternal Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DisableAnalyzeExternal>
@@ -174,15 +174,15 @@
   <ItemGroup>
     <ClInclude Include="include\effecs\uniqueColorChange.h" />
     <ClInclude Include="Include\Glad\glad.h" />
-    <ClInclude Include="include\input\keys.h" />
-    <ClInclude Include="include\input\inputHandler.h" />
+    <ClInclude Include="include\engine\input\keys.h" />
+    <ClInclude Include="include\engine\input\inputHandler.h" />
     <ClInclude Include="Include\KHR\khrplatform.h" />
-    <ClInclude Include="include\render\engine.h" />
-    <ClInclude Include="include\render\camera.h" />
-    <ClInclude Include="include\render\shaderCompiler.h" />
-    <ClInclude Include="include\render\render.h" />
+    <ClInclude Include="include\engine\engine.h" />
+    <ClInclude Include="include\engine\scene\camera.h" />
+    <ClInclude Include="include\engine\render\shaderCompiler.h" />
+    <ClInclude Include="include\engine\render\render.h" />
     <ClInclude Include="include\window\window.h" />
-    <ClInclude Include="include\render\textureService.h" />
+    <ClInclude Include="include\engine\render\textureService.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

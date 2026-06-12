@@ -19,7 +19,8 @@ public:
 	void lockTarget(bool isLocked);
 	bool getIsTargetLocked() { return isTargetLocked; };
 
-	void translate(glm::vec3 vec3);
+	void translateWorldSpace(glm::vec3 vec3);
+	void translateLocalSpace(glm::vec3 deltaPos);
 	void resetView();
 	
 	const glm::mat4& getView();
