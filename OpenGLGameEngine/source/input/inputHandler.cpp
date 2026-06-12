@@ -74,32 +74,32 @@ void InputHandler::toggleTestMode() {
 
 void InputHandler::moveForward() {
 	Camera* cam = engine.getCamera();
-	cam->translateView(glm::vec3(0.0f, 0.0f, speed));
+	cam->translate(glm::vec3(0.0f, 0.0f, speed));
 }
 
 void InputHandler::moveBackward() {
 	Camera* cam = engine.getCamera();
-	cam->translateView(glm::vec3(0.0f, 0.0f, -speed));
+	cam->translate(glm::vec3(0.0f, 0.0f, -speed));
 }
 
 void InputHandler::moveLeft() {
 	Camera* cam = engine.getCamera();
-	cam->translateView(glm::vec3(speed, 0.0f, 0.0f));
+	cam->translate(glm::vec3(speed, 0.0f, 0.0f));
 }
 
 void InputHandler::moveRight() {
 	Camera* cam = engine.getCamera();
-	cam->translateView(glm::vec3(-speed, 0.0f, 0.0f));
+	cam->translate(glm::vec3(-speed, 0.0f, 0.0f));
 }
 
 void InputHandler::moveUp() {
 	Camera* cam = engine.getCamera();
-	cam->translateView(glm::vec3(0.0f, -speed, 0.0f));
+	cam->translate(glm::vec3(0.0f, -speed, 0.0f));
 }
 
 void InputHandler::moveDown() {
 	Camera* cam = engine.getCamera();
-	cam->translateView(glm::vec3(0.0f, speed, 0.0f));
+	cam->translate(glm::vec3(0.0f, speed, 0.0f));
 }
 
 

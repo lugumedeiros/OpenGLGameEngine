@@ -113,8 +113,9 @@ int main() {
 	// VIEW
 	Camera cam{45.0f, float(width), float(height), 0.1f, 100.0f};
 	engine.setActiveCamera(&cam);
-
-	glm::mat4 projection = cam.getProjection();
+	cam.translate(glm::vec3{ 0.0f, 0.0f, -5.0f });
+	//cam.lockTarget(true);
+	cam.setLockTarget(glm::vec3{ 0.0f, 0.0f, 0.0f });
 
 ///////////////// END TEST AREA
 

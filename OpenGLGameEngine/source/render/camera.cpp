@@ -3,32 +3,38 @@
 
 Camera::Camera(float fov, float width, float height, float near, float far) 
 	: fov(fov), width(width), height(height), near(near), far(far) {
+	resetView();
 	setProjection();
 }
 
 // Set view to target without rotation (default)
 void Camera::setView(glm::vec3 cameraPos, glm::vec3 targetPos) {
-	setView(cameraPos, targetPos, defaultCamUp);
+	setView(cameraPos, targetPos, defaultUpDirection);
 }
 
 // Set view to target with camera rotation
 void Camera::setView(glm::vec3 cameraPos, glm::vec3 targetPos, glm::vec3 upDirection) {
+	this->cameraPos = cameraPos;
+	this->targetPos = targetPos;
+	this->upDirection = upDirection;
 	this->view = glm::lookAt(cameraPos, targetPos, upDirection);
 }
 
-// Set view directly
-void Camera::setView(glm::mat4 view) {
-	this->view = view;
-}
-
-// Translate camera into xyz direction 
-void Camera::translateView(glm::vec3 vec3) {
-	view = glm::translate(view, vec3);
-	std::cout << "VIEW POS X:" << view[3][0] << " Y:" << view[3][1] << " Z:" << view[3][2] << std::endl;
+// Translate camera into xyz direction, if tagetLocked then follow target
+void Camera::translate(glm::vec3 deltaPos) {
+	cameraPos += deltaPos;
+	if (isTargetLocked) {
+		targetPos = lockTargetPos;
+	}
+	else {
+		targetPos += deltaPos;
+	}
+	view = glm::lookAt(cameraPos, targetPos, upDirection);
+	std::cout << "VIEW POS X:" << cameraPos[0] << " Y:" << cameraPos[1] << " Z:" << cameraPos[2] << std::endl;
 }
 
 void Camera::resetView() {
-	view = defaultView;
+	setView(defaultCameraPos, defaultTargetPos, defaultUpDirection);
 }
 
 const glm::mat4& Camera::getView() {

@@ -10,29 +10,41 @@ public:
 
 	void setView(glm::vec3 cameraPos, glm::vec3 targetPos);
 	void setView(glm::vec3 cameraPos, glm::vec3 targetPos, glm::vec3 upDirection);
-	void setView(glm::mat4 view);
-
-	void translateView(glm::vec3 vec3);
-	void resetView();
-	
-	const glm::mat4& getView();
-	const glm::mat4& getProjection();
 
 	void setFOV(float fov);
 	void setRes(float width, float height);
 	void setNearFarPlanes(float near, float far);
 
-private:
-	float fov{80.0f};
-	float width{400.0f};
-	float height{400.0f};
-	float near{1.0f};
-	float far{10.0f};
+	void setLockTarget(glm::vec3 targetPos) { lockTargetPos = targetPos; };
+	void lockTarget(bool isLocked) { isTargetLocked = isLocked;};
 
-	glm::vec3 defaultCamUp{ 0.0f, 1.0f, 0.0f };
-	glm::mat4 defaultView{ glm::translate(glm::mat4{1.0f}, glm::vec3(0.0f, 0.0f, -5.0f)) };
-	glm::mat4 view{ defaultView };
+	void translate(glm::vec3 vec3);
+	void resetView();
+	
+	const glm::mat4& getView();
+	const glm::mat4& getProjection();
+
+
+private:
+	float fov{45.0f};
+	float width{800.0f};
+	float height{600};
+	float near{1.0f};
+	float far{100.0f};
+
+	glm::vec3 defaultUpDirection{ 0.0f, 1.0f, 0.0f };
+	glm::vec3 defaultCameraPos{ 0.0f, 0.0f, 10.0f };
+	glm::vec3 defaultTargetPos{ 0.0f };
+
+	glm::vec3 cameraPos{ defaultCameraPos };
+	glm::vec3 targetPos { defaultTargetPos };
+	glm::vec3 upDirection{ defaultUpDirection };
+
+	glm::mat4 view{};
 	glm::mat4 projection{ 1.0f };
+
+	bool isTargetLocked{ false };
+	glm::vec3 lockTargetPos{ 0.0f, 0.0f, 0.0f };
 
 	void setProjection();
 };
