@@ -15,6 +15,10 @@
 #include "../include/effecs/uniqueColorChange.h"
 #include "../include/engine/scene/camera.h"
 
+// test
+#include <thread>
+#include <chrono>
+
 const int width = 800;
 const int height = 600;
 const char* title = "OpenGL Game Engine";
@@ -49,7 +53,9 @@ std::string_view textureSmilePath = "assets/textures/awesomeface.png";
 
 int main() {
 	MainWindow mainWindow(width, height, title);
-	Engine engine(&mainWindow);
+	Camera cam{ 45.0f, float(width), float(height), 0.1f, 100.0f };
+	Engine engine(&mainWindow, cam);
+	//engine.setActiveCamera(cam);
 
 	GLFWwindow* window = mainWindow.getWindow();
 	if (window == NULL) {
@@ -110,10 +116,9 @@ int main() {
 	UniqueColorChange effectColor(1.0f, 0.0f, 0.0f, 1.0f);
 
 	// VIEW
-	Camera cam{45.0f, float(width), float(height), 0.1f, 100.0f};
-	engine.setActiveCamera(&cam);
-	cam.translateWorldSpace(glm::vec3{ 0.0f, 0.0f, -5.0f });
-	//cam.lockTarget(true);
+	engine.setActiveCamera(cam);
+	cam.setIsWorldSpace(false);
+	cam.translateSpace(glm::vec3{ 0.0f, 0.0f, -5.0f });
 	cam.setLockTargetPos(glm::vec3{ 0.0f, 0.0f, 0.0f });
 
 ///////////////// END TEST AREA
@@ -148,6 +153,8 @@ int main() {
 		for (auto& cube : cubes) {
 			engine.renderMesh(cube, materiaMainTriangle);
 		}
+
+		//std::this_thread::sleep_for(std::chrono::milliseconds(60));
 
 		// render end
 		mainWindow.swapBuffers();

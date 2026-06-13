@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-
+// TODO: DELAY IS LINKED TO FRAMERATE
 class KeyObj {
 public:
     KeyObj(std::string_view key, int glfwCode);

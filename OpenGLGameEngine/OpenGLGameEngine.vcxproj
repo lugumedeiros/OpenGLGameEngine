@@ -161,6 +161,7 @@
     <ClCompile Include="source\engine\input\keys.cpp" />
     <ClCompile Include="source\engine\render\render.cpp" />
     <ClCompile Include="source\engine\input\inputHandler.cpp" />
+    <ClCompile Include="source\engine\scene\camInputController.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\engine\render\shaderCompiler.cpp" />
     <ClCompile Include="source\libs\stb.cpp">
@@ -173,6 +174,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\effecs\uniqueColorChange.h" />
+    <ClInclude Include="include\engine\scene\camInputController.h" />
     <ClInclude Include="Include\Glad\glad.h" />
     <ClInclude Include="include\engine\input\keys.h" />
     <ClInclude Include="include\engine\input\inputHandler.h" />
@@ -181,6 +183,7 @@
     <ClInclude Include="include\engine\scene\camera.h" />
     <ClInclude Include="include\engine\render\shaderCompiler.h" />
     <ClInclude Include="include\engine\render\render.h" />
+    <ClInclude Include="include\support\supportFuncions.h" />
     <ClInclude Include="include\window\window.h" />
     <ClInclude Include="include\engine\render\textureService.h" />
   </ItemGroup>

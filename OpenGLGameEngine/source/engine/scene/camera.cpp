@@ -1,4 +1,5 @@
 #include "../../../include/engine/scene/camera.h"
+#include "../../../include/support/supportFuncions.h"
 #include <iostream>
 
 Camera::Camera(float fov, float width, float height, float near, float far) 
@@ -20,8 +21,17 @@ void Camera::setView(glm::vec3 cameraPos, glm::vec3 targetPos, glm::vec3 upDirec
 	update();
 }
 
-// Translate camera into xyz world direction, if tagetLocked then follow target
-void Camera::translateWorldSpace(glm::vec3 deltaPos) {
+void Camera::translateSpace(glm::vec3 deltaPos) {
+	if (!isWorldSpace) {
+		glm::vec3 forward = glm::normalize(targetPos - cameraPos);
+		glm::vec3 right = glm::normalize(glm::cross(forward, upDirection));
+		glm::vec3 up = glm::normalize(glm::cross(right, forward));
+		deltaPos = glm::vec3{
+			right * deltaPos.x
+			+ up * deltaPos.y
+			+ forward * deltaPos.z
+		};
+	}
 	cameraPos += deltaPos;
 	if (isTargetLocked) {
 		targetPos = lockTargetPos;
@@ -33,21 +43,22 @@ void Camera::translateWorldSpace(glm::vec3 deltaPos) {
 	std::cout << "VIEW POS X:" << cameraPos[0] << " Y:" << cameraPos[1] << " Z:" << cameraPos[2] << std::endl;
 }
 
-// Translate camere into xyz camera direction, if tagetLocked then follow target
-void Camera::translateLocalSpace(glm::vec3 deltaPos) {
-	glm::vec3 forward = glm::normalize(targetPos - cameraPos);
-	glm::vec3 right = glm::normalize(glm::cross(forward, upDirection));
-	glm::vec3 up = glm::normalize(glm::cross(right, forward));
-	glm::vec3 refDelta{
-		right * deltaPos.x
-		+ up * deltaPos.y
-		+ forward* deltaPos.z
-	};
-	translateWorldSpace(refDelta);
+void Camera::translateBuffer(float deltaTime) {
+	if (glm::length(bufferInputPos) == 0.0f) {
+		return;
+	}
+	glm::vec3 clamped = clampVec3Magnitude(bufferInputPos, 1.0f);
+	translateSpace(clamped * InputBufferSpeed * deltaTime);
+	bufferInputPos = glm::vec3{ 0.0f };
+}
+
+void Camera::addTranslationToBuffer(glm::vec3 deltaPos) {
+	bufferInputPos += deltaPos;
 }
 
 void Camera::resetView() {
 	setView(defaultCameraPos, defaultTargetPos, defaultUpDirection);
+	bufferInputPos = glm::vec3{ 0.0f };
 }
 
 const glm::mat4& Camera::getView() {
@@ -86,5 +97,5 @@ void Camera::update() {
 void Camera::lockTarget(bool isLocked) {
 	isTargetLocked = isLocked; 
 	std::cout << "CAMERA SET TO '" << (isLocked ? "TRUE" : "FALSE") << "'" << std::endl;
-	translateWorldSpace(glm::vec3{ 0.0f });
+	translateSpace(glm::vec3{ 0.0f });
 }

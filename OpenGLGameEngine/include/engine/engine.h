@@ -17,35 +17,50 @@
 #include "render/textureService.h"
 #include "input/inputHandler.h"
 #include "scene/camera.h"
+#include "scene/camInputController.h"
 
 class Engine {
 public:
-	Engine(MainWindow* window);
+	Engine(MainWindow* window, Camera& cam);
+
+	// ----------- RENDER -----------  //
 
 	Mesh* createMesh(float* vertices, unsigned int verticesSize, unsigned int* indices, unsigned int indicesSize);
 	ShaderProgram* createShaderProgram(std::string_view vertexSourcePath, std::string_view fragmentSourcePath);
 	Material* createMaterial(const ShaderProgram& shaderProgram);
 	Texture* createTexture(std::string_view texturePath);
 	Texture* getTexture(std::string_view textureName);
-	void setActiveCamera(Camera* camera);
+	void setActiveCamera(Camera& camera);
+
+	// ----------- INPUT -----------  //
+
+	void processInput();
+	void configKeyInput(int glfwKey, bool shouldRepeat, int firstRepeatDelay, int repeatDelay);
+	void setKeyInputAction(int glfwKey, int glfwPressType, std::function<void(float)> action);
+	void setDefaultKeyInputs();
+
+	// ----------- CAMERA -----------  //
 
 	void renderMesh(Mesh* mesh, Material* material);
 	void clearRender();
 	void setTest(bool isTest);
 
-	// Input Related
-	void processInput();
-	Camera* getCamera() { return selectedCamera; }
+	//TODO: REnder and Camera pass as REF
+
+	Camera* getCamera() { return &selectedCamera; }
 	Render* getRender() { return &render; }
+
+	// ----------- WINDOW -----------  //
+
 	MainWindow* getWindow() { return window; }
 
 private:
-	void setUniforms(Mesh& mesh, Material& material, Camera& camera);
 
-	InputHandler inputHandler;
+	// ----------- RENDER -----------  //
+
 	Render render;
-	Camera* selectedCamera;
-	MainWindow* window;
+	void setUniforms(Mesh& mesh, Material& material, Camera& camera);
+	double lastFrameTime{ glfwGetTime() };
 
 	ShaderProgram* getShaderProgram(GLuint shaderProgramID);
 	std::map<GLuint, ShaderProgram> shaderPrograms;
@@ -61,4 +76,18 @@ private:
 	const std::string textureDir{ R"(C:\C Desktop\Sandbox\Cpp\OpenGLGameEngine\OpenGLGameEngine\OpenGLGameEngine\assets\textures)" };
 	TextureService textureService{};
 
+	// ----------- INPUT -----------  //
+
+	InputHandler inputHandler;
+	CameraInputControl camInputControl{ selectedCamera };
+	void configKeyInput();
+	void setKeyInputAction();
+
+	// ----------- CAMERA -----------  //
+
+	Camera& selectedCamera;
+
+	// ----------- WINDOW -----------  //
+
+	MainWindow* window;
 };

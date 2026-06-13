@@ -17,7 +17,7 @@ public:
 	GLuint VBO{0};
 	GLuint EBO{0};
 
-	glm::mat4 getTransform();
+	const glm::mat4 getTransform() const { return transform; }
 	void setTransform(glm::mat4 transform);
 private:
 	glm::mat4 transform{glm::mat4(1.0f)};

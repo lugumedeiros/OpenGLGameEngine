@@ -8,34 +8,22 @@
 
 #include "keys.h"
 
-class Engine;
-
 struct KeyBinding {
 	KeyObj key;
-	std::function<void()> actionPress;
-	std::function<void()> actionRelease;
+	std::function<void(float)> actionPress;
+	std::function<void(float)> actionRelease;
 };
 
 class InputHandler {
 public:
-	InputHandler(Engine& engine);
-	void processInput();
+	InputHandler() = default;
+	void processInput(GLFWwindow* window);
+
+	void setNewKey(int glfwKey, std::string_view keyName);
+	void configKey(int glfwKey, bool shouldRepeat, int firstRepeatDelay, int repeatDelay);
+	void setKeyPress(int glfwKey, std::function<void(float)> action);
+	void setKeyRelease(int glfwKey, std::function<void(float)> action);
 
 private:
 	std::unordered_map<int, KeyBinding> keyMapping;
-	Engine& engine;
-	
-	void setKeyPress();
-	void setKeyRelease();
-
-	///////////////////////////// MOVE TO ENGINE LATER ////////////////////////////////
-	float speed = 0.2f;
-	void toggleTestMode();
-	void moveForward();
-	void moveBackward();
-	void moveLeft();
-	void moveRight();
-	void moveUp();
-	void moveDown();
-	void toggleLockCam();
 };
