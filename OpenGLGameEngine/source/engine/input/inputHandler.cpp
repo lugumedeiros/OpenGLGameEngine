@@ -1,12 +1,13 @@
 #include "../../../include/engine/input/inputHandler.h"
 
-void InputHandler::processInput(GLFWwindow* window) {
+void InputHandler::processInput(GLFWwindow* window, double eventTime) {
 	static const float keyBoardPressure = 1.0f; // For now this only supports keyboard
 	for (auto& [key, keyBinding] : keyMapping) {
 		//const KeyObj& keyObj = keyBinding;
 		int keyStatus = glfwGetKey(window, key);
 		if (keyStatus == GLFW_PRESS) {
-			if (keyBinding.key.press()) {
+			if (keyBinding.key.press(eventTime)) {
+				std::cout << eventTime << std::endl;
 				if (keyBinding.actionPress != nullptr) {
 					keyBinding.actionPress(keyBoardPressure);
 				}
@@ -23,10 +24,10 @@ void InputHandler::processInput(GLFWwindow* window) {
 }
 
 void InputHandler::setNewKey(int glfwKey, std::string_view keyName) {
-	keyMapping.try_emplace(glfwKey, KeyBinding{ KeyObj{keyName, glfwKey, true, 60, 5}, nullptr, nullptr });
+	keyMapping.try_emplace(glfwKey, KeyBinding{ KeyObj{keyName, glfwKey, true, 60.0, 5.0}, nullptr, nullptr });
 }
 
-void InputHandler::configKey(int glfwKey, bool shouldRepeat, int firstRepeatDelay, int repeatDelay) {
+void InputHandler::configKey(int glfwKey, bool shouldRepeat, double firstRepeatDelay, double repeatDelay) {
 	auto keyBind = keyMapping.find(glfwKey);
 	if (keyBind != keyMapping.end()) {
 		KeyObj& key = keyBind->second.key;

@@ -165,10 +165,10 @@ void Engine::setTest(bool isTest) {
 // ------------ INPUT ------------ 
 
 void Engine::processInput() {
-	inputHandler.processInput(window->getWindow());
-	double newFrameTime = glfwGetTime();
-	selectedCamera.translateBuffer(static_cast<float>(newFrameTime - lastFrameTime));
-	lastFrameTime = newFrameTime;
+	double olderTime = getLastFrameTime();
+	double newFrameTime = setLastFrameTime();
+	inputHandler.processInput(window->getWindow(), newFrameTime);
+	selectedCamera.translateBuffer(static_cast<float>(newFrameTime - olderTime));
 }
 
 void Engine::configKeyInput(int glfwKey, bool shouldRepeat, int firstRepeatDelay, int repeatDelay) {
@@ -193,13 +193,13 @@ void Engine::setDefaultKeyInputs() {
 	inputHandler.setNewKey(GLFW_KEY_LEFT_SHIFT, "LSHIFT");
 	inputHandler.setNewKey(GLFW_KEY_T, "T");
 
-	inputHandler.configKey(GLFW_KEY_A, true, 10, 0);
-	inputHandler.configKey(GLFW_KEY_D, true, 10, 0);
-	inputHandler.configKey(GLFW_KEY_S, true, 10, 0);
-	inputHandler.configKey(GLFW_KEY_W, true, 10, 0);
-	inputHandler.configKey(GLFW_KEY_LEFT_CONTROL, true, 10, 0);
-	inputHandler.configKey(GLFW_KEY_LEFT_SHIFT, true, 10, 0);
-	inputHandler.configKey(GLFW_KEY_T, false, 60, 10);
+	inputHandler.configKey(GLFW_KEY_A, true, 0.01, 0);
+	inputHandler.configKey(GLFW_KEY_D, true, 0.01, 0);
+	inputHandler.configKey(GLFW_KEY_S, true, 0.01, 0);
+	inputHandler.configKey(GLFW_KEY_W, true, 0.01, 0);
+	inputHandler.configKey(GLFW_KEY_LEFT_CONTROL, true, 0.1, 0);
+	inputHandler.configKey(GLFW_KEY_LEFT_SHIFT, true, 0.1, 0);
+	inputHandler.configKey(GLFW_KEY_T, true, 2, 0.1);
 
 	setKeyInputAction(GLFW_KEY_A, GLFW_PRESS, [this](float v) { camInputControl.movXNegative(v); });
 	setKeyInputAction(GLFW_KEY_D, GLFW_PRESS, [this](float v) { camInputControl.movXPositive(v); });
@@ -207,5 +207,5 @@ void Engine::setDefaultKeyInputs() {
 	setKeyInputAction(GLFW_KEY_W, GLFW_PRESS, [this](float v) { camInputControl.movZPositive(v); });
 	setKeyInputAction(GLFW_KEY_LEFT_CONTROL, GLFW_PRESS, [this](float v) { camInputControl.movYNegative(v); });
 	setKeyInputAction(GLFW_KEY_LEFT_SHIFT, GLFW_PRESS, [this](float v) { camInputControl.movYPositive(v); });
-	setKeyInputAction(GLFW_KEY_T, GLFW_PRESS, [this](float v) { camInputControl.movYPositive(v); });
+	setKeyInputAction(GLFW_KEY_T, GLFW_PRESS, [this](float v) { render.setTest(v); });
 }

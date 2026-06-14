@@ -60,7 +60,6 @@ private:
 
 	Render render;
 	void setUniforms(Mesh& mesh, Material& material, Camera& camera);
-	double lastFrameTime{ glfwGetTime() };
 
 	ShaderProgram* getShaderProgram(GLuint shaderProgramID);
 	std::map<GLuint, ShaderProgram> shaderPrograms;
@@ -90,4 +89,13 @@ private:
 	// ----------- WINDOW -----------  //
 
 	MainWindow* window;
+
+	// ----------- INTERNAL -----------  //
+	
+	double lastFrameTime{ glfwGetTime() };
+	double setLastFrameTime() {
+		lastFrameTime = glfwGetTime();
+		return lastFrameTime;
+	}
+	double getLastFrameTime() { return lastFrameTime; }
 };

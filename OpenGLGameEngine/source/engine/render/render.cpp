@@ -18,6 +18,11 @@ void Render::setTest(bool setTest) {
 	isTest = setTest;
 }
 
+// For input controller only
+void Render::setTest(float pres) {
+	setTest(!isTest);
+}
+
 void Render::clear() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }

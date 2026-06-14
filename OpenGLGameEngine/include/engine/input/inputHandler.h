@@ -17,10 +17,10 @@ struct KeyBinding {
 class InputHandler {
 public:
 	InputHandler() = default;
-	void processInput(GLFWwindow* window);
+	void processInput(GLFWwindow* window, double eventTime);
 
 	void setNewKey(int glfwKey, std::string_view keyName);
-	void configKey(int glfwKey, bool shouldRepeat, int firstRepeatDelay, int repeatDelay);
+	void configKey(int glfwKey, bool shouldRepeat, double firstRepeatDelay, double repeatDelay);
 	void setKeyPress(int glfwKey, std::function<void(float)> action);
 	void setKeyRelease(int glfwKey, std::function<void(float)> action);
 

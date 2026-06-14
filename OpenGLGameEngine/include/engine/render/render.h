@@ -20,8 +20,9 @@ public:
 	~Render();
 
 	void setClearColor(float r, float g, float b, float a);
-	void clear();
+	void setTest(float pres);
 	void setTest(bool isTest);
+	void clear();
 	void render(const Mesh& mesh, Material& material, ShaderProgram& shaderProgram);
 
 	bool isTest{ false };
