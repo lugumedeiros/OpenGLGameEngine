@@ -4,62 +4,22 @@
 
 Camera::Camera(float fov, float width, float height, float near, float far) 
 	: fov(fov), width(width), height(height), near(near), far(far) {
-	resetView();
 	setProjection();
 }
 
-// Set view to target without rotation (default)
-void Camera::setView(glm::vec3 cameraPos, glm::vec3 targetPos) {
-	setView(cameraPos, targetPos, defaultUpDirection);
-}
-
-// Set view to target with camera rotation
-void Camera::setView(glm::vec3 cameraPos, glm::vec3 targetPos, glm::vec3 upDirection) {
-	this->cameraPos = cameraPos;
-	this->targetPos = targetPos;
-	this->upDirection = upDirection;
-	update();
-}
-
-void Camera::translateSpace(glm::vec3 deltaPos) {
-	if (!isWorldSpace) {
-		glm::vec3 forward = glm::normalize(targetPos - cameraPos);
-		glm::vec3 right = glm::normalize(glm::cross(forward, upDirection));
-		glm::vec3 up = glm::normalize(glm::cross(right, forward));
-		deltaPos = glm::vec3{
-			right * deltaPos.x
-			+ up * deltaPos.y
-			+ forward * deltaPos.z
-		};
-	}
-	cameraPos += deltaPos;
-	if (isTargetLocked) {
-		targetPos = lockTargetPos;
-	}
-	else {
-		targetPos += deltaPos;
-	}
-	update();
-	std::cout << "VIEW POS X:" << cameraPos[0] << " Y:" << cameraPos[1] << " Z:" << cameraPos[2] << std::endl;
-}
-
-void Camera::translateBuffer(float deltaTime) {
-	if (glm::length(bufferInputPos) == 0.0f) {
-		return;
-	}
-	glm::vec3 clamped = clampVec3Magnitude(bufferInputPos, 1.0f);
-	translateSpace(clamped * InputBufferSpeed * deltaTime);
-	bufferInputPos = glm::vec3{ 0.0f };
-}
+// MOVEMENT
 
 void Camera::addTranslationToBuffer(glm::vec3 deltaPos) {
-	bufferInputPos += deltaPos;
+	inputBufferTranslation += deltaPos;
 }
 
-void Camera::resetView() {
-	setView(defaultCameraPos, defaultTargetPos, defaultUpDirection);
-	bufferInputPos = glm::vec3{ 0.0f };
+// ROTATIONS
+
+void Camera::addRotationToBuffer(glm::vec3 rotation) {
+	inputBufferRotation += rotation;
 }
+
+// VIEW
 
 const glm::mat4& Camera::getView() {
 	return view;
@@ -67,6 +27,66 @@ const glm::mat4& Camera::getView() {
 
 const glm::mat4& Camera::getProjection() {
 	return projection;
+}
+
+void Camera::setProjection() {
+	projection = glm::perspective(glm::radians(fov), width / height, near, far);
+}
+
+void Camera::movePosCam(float deltaTime) {
+	glm::vec3 movement{ 0.0f };
+	movement += front * inputBufferTranslation.z;
+	movement += right * inputBufferTranslation.x;
+	movement += up * inputBufferTranslation.y;
+	pos += movement * deltaTime * inputBufferMovSpeed;
+}
+
+void Camera::rotateCam(float deltaTime) {
+	pitch += inputBufferRotation.x * inputBufferRotSpeed * deltaTime;
+	yaw += inputBufferRotation.y * inputBufferRotSpeed * deltaTime;
+	
+	pitch = glm::clamp(pitch, -89.9f, 89.f);
+
+	front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	front.y = sin(glm::radians(pitch));
+	front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	front = glm::normalize(front);
+
+	right = glm::normalize(glm::cross(front, glm::vec3{ 0.0f, 1.0f, 0.0f }));
+	up = glm::normalize(glm::cross(right, front));
+}
+
+void Camera::rotateToTarget() {
+	glm::vec3 direction {glm::normalize(lockTargetPos - pos )};
+	pitch = glm::degrees(asin((direction.y)));
+	yaw = glm::degrees(atan2(direction.z, direction.x));
+	
+	front = direction;
+	right = glm::normalize(glm::cross(front, glm::vec3(0.0f, 1.0f, 0.0f)));
+	up = glm::normalize(glm::cross(right, front));
+}
+
+void Camera::update(float deltaTime) {
+	if (isBufferEmpty() && deltaTime != 0.0f) { //deltaTime = 0 is always an internal call
+		return;
+	}
+	movePosCam(deltaTime);
+	if (isTargetLocked) {
+		rotateToTarget();
+	} else {
+		rotateCam(deltaTime);
+	}
+	view = glm::lookAt(pos, pos + front, up);
+	clearBuffer();
+	std::cout << "POS: X:" << pos.x << " Y:" << pos.y << " Z:" << pos.z << " - ROT: Pitch:" << pitch << " Yaw:" << yaw << std::endl;
+}
+
+// CONFIG
+
+void Camera::lockTarget(bool isLocked) {
+	isTargetLocked = isLocked;
+	std::cout << "CAMERA LOCK SET TO '" << (isLocked ? "TRUE" : "FALSE") << "'" << std::endl;
+	update(0.0f);
 }
 
 void Camera::setFOV(float fov) {
@@ -86,16 +106,13 @@ void Camera::setNearFarPlanes(float near, float far) {
 	setProjection();
 }
 
-void Camera::setProjection() {
-	projection = glm::perspective(glm::radians(fov), width / height, near, far);
+// INTERNAL
+
+bool Camera::isBufferEmpty() {
+	return inputBufferRotation == glm::vec3{ 0.0f } && inputBufferTranslation == glm::vec3{ 0.0f };
 }
 
-void Camera::update() {
-	this->view = glm::lookAt(cameraPos, targetPos, upDirection);
-}
-
-void Camera::lockTarget(bool isLocked) {
-	isTargetLocked = isLocked; 
-	std::cout << "CAMERA SET TO '" << (isLocked ? "TRUE" : "FALSE") << "'" << std::endl;
-	translateSpace(glm::vec3{ 0.0f });
+void Camera::clearBuffer() {
+	inputBufferRotation = glm::vec3{ 0.0f };
+	inputBufferTranslation = glm::vec3{ 0.0f };
 }

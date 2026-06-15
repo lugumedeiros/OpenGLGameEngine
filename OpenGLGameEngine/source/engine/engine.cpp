@@ -168,7 +168,7 @@ void Engine::processInput() {
 	double olderTime = getLastFrameTime();
 	double newFrameTime = setLastFrameTime();
 	inputHandler.processInput(window->getWindow(), newFrameTime);
-	selectedCamera.translateBuffer(static_cast<float>(newFrameTime - olderTime));
+	selectedCamera.update(static_cast<float>(newFrameTime - olderTime));
 }
 
 void Engine::configKeyInput(int glfwKey, bool shouldRepeat, int firstRepeatDelay, int repeatDelay) {
@@ -185,27 +185,21 @@ void Engine::setKeyInputAction(int glfwKey, int glfwPressType, std::function<voi
 }
 
 void Engine::setDefaultKeyInputs() {
-	inputHandler.setNewKey(GLFW_KEY_A, "A");
-	inputHandler.setNewKey(GLFW_KEY_D, "D");
-	inputHandler.setNewKey(GLFW_KEY_S, "S");
-	inputHandler.setNewKey(GLFW_KEY_W, "W");
-	inputHandler.setNewKey(GLFW_KEY_LEFT_CONTROL, "LCTRL");
-	inputHandler.setNewKey(GLFW_KEY_LEFT_SHIFT, "LSHIFT");
-	inputHandler.setNewKey(GLFW_KEY_T, "T");
+	// MOVEMENT
+	inputHandler.setNewKey(GLFW_KEY_A, "A", true, 0.01, 0, [this](float v) { camInputControl.movXNegative(v); }, nullptr);
+	inputHandler.setNewKey(GLFW_KEY_D, "D", true, 0.01, 0, [this](float v) { camInputControl.movXPositive(v); }, nullptr);
+	inputHandler.setNewKey(GLFW_KEY_S, "S", true, 0.01, 0, [this](float v) { camInputControl.movZNegative(v); }, nullptr);
+	inputHandler.setNewKey(GLFW_KEY_W, "W", true, 0.01, 0, [this](float v) { camInputControl.movZPositive(v); }, nullptr);
+	inputHandler.setNewKey(GLFW_KEY_LEFT_CONTROL, "LCTRL", true, 0.1, 0, [this](float v) { camInputControl.movYNegative(v); }, nullptr);
+	inputHandler.setNewKey(GLFW_KEY_LEFT_SHIFT, "LSHIFT", true, 0.1, 0, [this](float v) { camInputControl.movYPositive(v); }, nullptr);
+	
+	// CAMERA ROTATION
+	inputHandler.setNewKey(GLFW_KEY_KP_8, "n8", true, 0.01, 0, [this](float v) { camInputControl.pitchPositive(v); }, nullptr);
+	inputHandler.setNewKey(GLFW_KEY_KP_4, "n4", true, 0.01, 0, [this](float v) { camInputControl.yawNegative(v); }, nullptr);
+	inputHandler.setNewKey(GLFW_KEY_KP_6, "n6", true, 0.01, 0, [this](float v) { camInputControl.yawPositive(v); }, nullptr);
+	inputHandler.setNewKey(GLFW_KEY_KP_5, "n5", true, 0.01, 0, [this](float v) { camInputControl.pitchNegative(v); }, nullptr);
 
-	inputHandler.configKey(GLFW_KEY_A, true, 0.01, 0);
-	inputHandler.configKey(GLFW_KEY_D, true, 0.01, 0);
-	inputHandler.configKey(GLFW_KEY_S, true, 0.01, 0);
-	inputHandler.configKey(GLFW_KEY_W, true, 0.01, 0);
-	inputHandler.configKey(GLFW_KEY_LEFT_CONTROL, true, 0.1, 0);
-	inputHandler.configKey(GLFW_KEY_LEFT_SHIFT, true, 0.1, 0);
-	inputHandler.configKey(GLFW_KEY_T, true, 2, 0.1);
-
-	setKeyInputAction(GLFW_KEY_A, GLFW_PRESS, [this](float v) { camInputControl.movXNegative(v); });
-	setKeyInputAction(GLFW_KEY_D, GLFW_PRESS, [this](float v) { camInputControl.movXPositive(v); });
-	setKeyInputAction(GLFW_KEY_S, GLFW_PRESS, [this](float v) { camInputControl.movZNegative(v); });
-	setKeyInputAction(GLFW_KEY_W, GLFW_PRESS, [this](float v) { camInputControl.movZPositive(v); });
-	setKeyInputAction(GLFW_KEY_LEFT_CONTROL, GLFW_PRESS, [this](float v) { camInputControl.movYNegative(v); });
-	setKeyInputAction(GLFW_KEY_LEFT_SHIFT, GLFW_PRESS, [this](float v) { camInputControl.movYPositive(v); });
-	setKeyInputAction(GLFW_KEY_T, GLFW_PRESS, [this](float v) { render.setTest(v); });
+	// CONFIG
+	inputHandler.setNewKey(GLFW_KEY_T, "T", true, 2, 0.1, [this](float v) { render.setTest(v); }, nullptr);
+	inputHandler.setNewKey(GLFW_KEY_L, "L", true, 2, 0.1, [this](float v) { camInputControl.toggleLock(v); }, nullptr);
 }

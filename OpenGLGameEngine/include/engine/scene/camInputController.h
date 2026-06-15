@@ -4,15 +4,16 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../../../include/engine/render/mesh.h"
 #include "camera.h";
+#include "../../../include/engine/render/mesh.h"
 
 class CameraInputControl {
 public:
 	CameraInputControl(Camera& camera);
 	void setCamera(Camera& camera);
 
-	// INPUT CONTROLS
+	// CAM INPUT CONTROLS
+	
 	void movXPositive(float press);
 	void movYPositive(float press);
 	void movZPositive(float press);
@@ -21,11 +22,18 @@ public:
 	void movYNegative(float press);
 	void movZNegative(float press);
 
+	void pitchPositive(float press);
+	void yawPositive(float press);
+	void rollPositive(float press);
+
+	void pitchNegative(float press);
+	void yawNegative(float press);
+	void rollNegative(float press);
+	
+	// CAM CONFIG CONTROLS
+
 	void lock(float none) { cam.lockTarget(true); }
 	void unlock(float none) { cam.lockTarget(false); }
-
-	void setToWorld(float none) { cam.setIsWorldSpace(true); }
-	void setToLocal(float none) { cam.setIsWorldSpace(false); }
 
 	void incSpeed(float press);
 	void decSpeed(float press);
@@ -34,5 +42,6 @@ public:
 
 private:
 	Camera& cam;
+	void rot(glm::vec3 rot);
 	void mov(glm::vec3 dir);
 };

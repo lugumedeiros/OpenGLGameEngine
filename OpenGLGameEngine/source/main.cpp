@@ -117,8 +117,6 @@ int main() {
 
 	// VIEW
 	engine.setActiveCamera(cam);
-	cam.setIsWorldSpace(false);
-	cam.translateSpace(glm::vec3{ 0.0f, 0.0f, -5.0f });
 	cam.setLockTargetPos(glm::vec3{ 0.0f, 0.0f, 0.0f });
 
 ///////////////// END TEST AREA

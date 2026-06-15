@@ -20,6 +20,7 @@ public:
 	void processInput(GLFWwindow* window, double eventTime);
 
 	void setNewKey(int glfwKey, std::string_view keyName);
+	void setNewKey(int glfwKey, std::string_view keyName, bool shouldRepeat, double firstRepeatDelay, double repeatDelay, std::function<void(float)> pressAction, std::function<void(float)> releaseAction);
 	void configKey(int glfwKey, bool shouldRepeat, double firstRepeatDelay, double repeatDelay);
 	void setKeyPress(int glfwKey, std::function<void(float)> action);
 	void setKeyRelease(int glfwKey, std::function<void(float)> action);
