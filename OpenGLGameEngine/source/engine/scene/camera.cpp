@@ -42,28 +42,26 @@ void Camera::movePosCam(float deltaTime) {
 }
 
 void Camera::rotateCam(float deltaTime) {
-	pitch += inputBufferRotation.x * inputBufferRotSpeed * deltaTime;
-	yaw += inputBufferRotation.y * inputBufferRotSpeed * deltaTime;
-	
-	pitch = glm::clamp(pitch, -89.9f, 89.f);
+	float pitchDelta = inputBufferRotation.x * inputBufferRotSpeed * deltaTime;
+	float yawDelta = inputBufferRotation.y * inputBufferRotSpeed * deltaTime;
 
-	front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	front.y = sin(glm::radians(pitch));
-	front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-	front = glm::normalize(front);
+	glm::quat yawRotation = glm::angleAxis(glm::radians(-yawDelta), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::quat pitchRotation = glm::angleAxis(glm::radians(pitchDelta), right);
 
-	right = glm::normalize(glm::cross(front, glm::vec3{ 0.0f, 1.0f, 0.0f }));
-	up = glm::normalize(glm::cross(right, front));
+	orientation = glm::normalize(yawRotation * pitchRotation * orientation);
 }
 
 void Camera::rotateToTarget() {
 	glm::vec3 direction {glm::normalize(lockTargetPos - pos )};
-	pitch = glm::degrees(asin((direction.y)));
-	yaw = glm::degrees(atan2(direction.z, direction.x));
-	
-	front = direction;
-	right = glm::normalize(glm::cross(front, glm::vec3(0.0f, 1.0f, 0.0f)));
-	up = glm::normalize(glm::cross(right, front));
+	glm::vec3 forward(0.0f, 0.0f, -1.0f);
+	float dot = glm::dot(forward, direction);
+	if (dot < -0.99999f) {
+		orientation = glm::angleAxis(glm::pi<float>(), glm::vec3(0.0f, 1.0f, 0.0f));
+		return;
+	}
+	glm::vec3 axis = glm::normalize(glm::cross(forward, direction));
+	float angle = acos(glm::clamp(dot, -1.0f, 1.0f));
+	orientation = glm::angleAxis(angle, glm::normalize(axis));
 }
 
 void Camera::update(float deltaTime) {
@@ -76,9 +74,10 @@ void Camera::update(float deltaTime) {
 	} else {
 		rotateCam(deltaTime);
 	}
+	updateAxis();
 	view = glm::lookAt(pos, pos + front, up);
 	clearBuffer();
-	std::cout << "POS: X:" << pos.x << " Y:" << pos.y << " Z:" << pos.z << " - ROT: Pitch:" << pitch << " Yaw:" << yaw << std::endl;
+	printPosInfo();
 }
 
 // CONFIG
@@ -115,4 +114,19 @@ bool Camera::isBufferEmpty() {
 void Camera::clearBuffer() {
 	inputBufferRotation = glm::vec3{ 0.0f };
 	inputBufferTranslation = glm::vec3{ 0.0f };
+}
+
+void Camera::updateAxis() {
+	front = glm::normalize(orientation * glm::vec3(0, 0, -1));
+	right = glm::normalize(orientation * glm::vec3(1, 0, 0));
+	up = glm::normalize(orientation * glm::vec3(0, 1, 0));
+}
+
+void Camera::printPosInfo() {
+	float pitch{glm::degrees(asin(front.y))};
+	float yaw{glm::degrees(atan2(front.x, -front.z))};
+	float roll{0.0};
+
+	std::cout << "POS:(" << pos.x << ", " << pos.y << ", " << pos.z << " )";
+	std::cout << " - ROT:(" << pitch << ", " << yaw << ", " << roll << ")" << std::endl;
 }

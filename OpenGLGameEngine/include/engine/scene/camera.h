@@ -2,6 +2,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+//#include <glm/gtc/quaternion.hpp>
+//#include <glm/gtx/quaternion.hpp>
 
 // TODO: CONVERT TO QUARTERION
 
@@ -48,11 +50,9 @@ private:
 
 	void setProjection();
 
+	glm::quat orientation{ 1.0f, 0.0f, 0.0f, 0.0f };
 
 	//ROTATION
-	float yaw = { 0.0f };
-	float pitch = { 0.0f };
-	float roll = { 0.0f };
 	float inputBufferRotSpeed{ 60.0f };
 	float inputBufferRotSpeedInc{ 1.0f };
 	glm::vec3 inputBufferRotation{ 0.0f };
@@ -70,9 +70,10 @@ private:
 	glm::vec3 lockTargetPos{ 0.0f, 0.0f, 0.0f };
 	bool isTargetLocked{ false };
 	
-
 	// INTERNAL
 	void clearBuffer();
+	void updateAxis();
+	void printPosInfo();
 	void movePosCam(float deltaTime);
 	void rotateCam(float deltaTime);
 	void rotateToTarget();
