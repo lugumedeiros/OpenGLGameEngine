@@ -51,14 +51,30 @@ void Camera::rotateCam(float deltaTime) {
 	orientation = glm::normalize(yawRotation * pitchRotation * orientation);
 }
 
-void Camera::rotateToTarget() {
-	glm::vec3 direction {glm::normalize(lockTargetPos - pos )};
+void Camera::rotateToTarget(glm::vec3 target) {
+	glm::vec3 offset{ target - pos };
+	glm::vec3 direction {glm::normalize(offset)};
+	
+	// IF targetPOS == camPos
+	if (glm::length(offset) < 1e-8f) {
+		direction = front;
+	}
+	
 	glm::vec3 forward(0.0f, 0.0f, -1.0f);
 	float dot = glm::dot(forward, direction);
+	
+	// IF new orientation is the invers of current orientation
 	if (dot < -0.99999f) {
 		orientation = glm::angleAxis(glm::pi<float>(), glm::vec3(0.0f, 1.0f, 0.0f));
 		return;
 	}
+
+	// IF new orientation is equal to current orientation}
+	if (dot > 0.99999f) {
+		orientation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+		return;
+	}
+
 	glm::vec3 axis = glm::normalize(glm::cross(forward, direction));
 	float angle = acos(glm::clamp(dot, -1.0f, 1.0f));
 	orientation = glm::angleAxis(angle, glm::normalize(axis));
@@ -70,7 +86,7 @@ void Camera::update(float deltaTime) {
 	}
 	movePosCam(deltaTime);
 	if (isTargetLocked) {
-		rotateToTarget();
+		rotateToTarget(lockTargetPos);
 	} else {
 		rotateCam(deltaTime);
 	}
@@ -78,6 +94,13 @@ void Camera::update(float deltaTime) {
 	view = glm::lookAt(pos, pos + front, up);
 	clearBuffer();
 	printPosInfo();
+}
+
+void Camera::setView(glm::vec3 camPos, glm::vec3 lookPos) {
+	pos = camPos;
+	rotateToTarget(lookPos);
+	updateAxis();
+	view = glm::lookAt(pos, pos + front, up);
 }
 
 // CONFIG

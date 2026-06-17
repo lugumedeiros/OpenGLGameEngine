@@ -63,11 +63,11 @@ void CameraInputControl::rollNegative(float press) {
 // CONFIG
 
 void CameraInputControl::incSpeed(float press) {
-	cam.addTranslateBufferSpeed(press);
+	cam.incrementTranslateBufferSpeed(press);
 }
 
 void CameraInputControl::decSpeed(float press) {
-	cam.addTranslateBufferSpeed(-press);
+	cam.incrementTranslateBufferSpeed(-press);
 }
 
 void CameraInputControl::toggleLock(float press){

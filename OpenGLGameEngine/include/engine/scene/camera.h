@@ -20,18 +20,18 @@ public:
 	// TRANSLATION
 	void addTranslationToBuffer(glm::vec3 deltaPos);
 	void setTranslateBufferSpeed(float speed) { inputBufferMovSpeed = speed; }
-	void addTranslateBufferSpeed(float inc) { inputBufferMovSpeed += inc * inputBufferMovSpeed; }
+	void incrementTranslateBufferSpeed(float inc) { inputBufferMovSpeed += inc * inputBufferMovSpeed; }
 
 	// ROTATION
 	void addRotationToBuffer(glm::vec3 rotation);
-	void setRotBufferSpeed(float speed) { inputBufferRotSpeed = speed; }
-	void addRotBufferSpeed(float inc) { inputBufferRotSpeed += inc * inputBufferRotSpeedInc; }
+	void setRotationBufferSpeed(float speed) { inputBufferRotSpeed = speed; }
+	void incrementRotationBufferSpeed(float inc) { inputBufferRotSpeed += inc * inputBufferRotSpeedInc; }
 
 	// VIEW
 	const glm::mat4& getView();
 	const glm::mat4& getProjection();
 	void update(float deltaTime);
-	//void setView();
+	void setView(glm::vec3 CamPos, glm::vec3 targetPos);
 
 	// LOCK
 	void setLockTargetPos(glm::vec3 targetPos) { lockTargetPos = targetPos; };
@@ -76,6 +76,6 @@ private:
 	void printPosInfo();
 	void movePosCam(float deltaTime);
 	void rotateCam(float deltaTime);
-	void rotateToTarget();
+	void rotateToTarget(glm::vec3 targetPos);
 	bool isBufferEmpty();
 };
