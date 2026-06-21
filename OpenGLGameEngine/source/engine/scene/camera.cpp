@@ -44,11 +44,13 @@ void Camera::movePosCam(float deltaTime) {
 void Camera::rotateCam(float deltaTime) {
 	float pitchDelta = inputBufferRotation.x * inputBufferRotSpeed * deltaTime;
 	float yawDelta = inputBufferRotation.y * inputBufferRotSpeed * deltaTime;
+	float rollDelta = inputBufferRotation.z * inputBufferRotSpeed * deltaTime;
 
-	glm::quat yawRotation = glm::angleAxis(glm::radians(-yawDelta), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::quat yawRotation = glm::angleAxis(glm::radians(-yawDelta), up);
 	glm::quat pitchRotation = glm::angleAxis(glm::radians(pitchDelta), right);
+	glm::quat rollRotation = glm::angleAxis(glm::radians(rollDelta), front);
 
-	orientation = glm::normalize(yawRotation * pitchRotation * orientation);
+	orientation = glm::normalize(yawRotation * pitchRotation * rollRotation * orientation);
 }
 
 void Camera::rotateToTarget(glm::vec3 target) {

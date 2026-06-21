@@ -198,6 +198,8 @@ void Engine::setDefaultKeyInputs() {
 	inputHandler.setNewKey(GLFW_KEY_KP_4, "n4", true, 0.01, 0, [this](float v) { camInputControl.yawNegative(v); }, nullptr);
 	inputHandler.setNewKey(GLFW_KEY_KP_6, "n6", true, 0.01, 0, [this](float v) { camInputControl.yawPositive(v); }, nullptr);
 	inputHandler.setNewKey(GLFW_KEY_KP_5, "n5", true, 0.01, 0, [this](float v) { camInputControl.pitchNegative(v); }, nullptr);
+	inputHandler.setNewKey(GLFW_KEY_KP_9, "n9", true, 0.01, 0, [this](float v) { camInputControl.rollPositive(v); }, nullptr);
+	inputHandler.setNewKey(GLFW_KEY_KP_7, "n7", true, 0.01, 0, [this](float v) { camInputControl.rollNegative(v); }, nullptr);
 
 	// CONFIG
 	inputHandler.setNewKey(GLFW_KEY_T, "T", true, 2, 0.1, [this](float v) { render.setTest(v); }, nullptr);
