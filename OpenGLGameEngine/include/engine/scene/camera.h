@@ -31,7 +31,7 @@ public:
 	const glm::mat4& getView();
 	const glm::mat4& getProjection();
 	void update(float deltaTime);
-	void setView(glm::vec3 CamPos, glm::vec3 targetPos);
+	void setView(glm::vec3 CamPos, glm::vec3 targetPos, float roll);
 
 	// LOCK
 	void setLockTargetPos(glm::vec3 targetPos) { lockTargetPos = targetPos; };
@@ -80,6 +80,7 @@ private:
 	void movePosCam(float deltaTime);
 	void rotateCam(float deltaTime);
 	void rotateToTarget(float deltaTime, glm::vec3 targetPos);
+	void rotateToTargetWithRoll(float deltaTime, glm::vec3 target, float roll);
 	void rollCamera(float roll);
 	bool isBufferEmpty();
 };

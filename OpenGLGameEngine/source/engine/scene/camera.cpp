@@ -66,6 +66,22 @@ void Camera::rotateToTarget(float deltaTime, glm::vec3 target) {
 	orientation = glm::normalize(rollQuat * lookAtQuat);
 }
 
+void Camera::rotateToTargetWithRoll(float deltaTime, glm::vec3 target, float roll) {
+	glm::vec3 offset = target - pos;
+	glm::vec3 direction;
+
+	if (glm::length(offset) < 0.001f) {
+		direction = front;
+	}
+	else {
+		direction = glm::normalize(offset);
+	}
+
+	glm::quat rollQuat = glm::angleAxis(glm::radians(roll), direction);
+	glm::vec3 rolledUp = glm::normalize(rollQuat * glm::vec3(0.0f, 1.0f, 0.0f));
+	orientation = glm::normalize(glm::quatLookAt(direction, rolledUp));
+}
+
 void Camera::rollCamera(float roll) {
 	glm::quat rollQuat = glm::angleAxis(glm::radians(roll), front);
 	orientation = glm::normalize(rollQuat * orientation);
@@ -87,9 +103,9 @@ void Camera::update(float deltaTime) {
 	printPosInfo();
 }
 
-void Camera::setView(glm::vec3 camPos, glm::vec3 lookPos) {
+void Camera::setView(glm::vec3 camPos, glm::vec3 lookPos, float roll) {
 	pos = camPos;
-	rotateToTarget(0.0f, lookPos);
+	rotateToTargetWithRoll(0.0, lookPos, roll);
 	updateAxis();
 	view = glm::lookAt(pos, pos + front, up);
 }
