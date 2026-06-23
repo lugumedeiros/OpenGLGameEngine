@@ -29,6 +29,9 @@ public:
 	void pitchNegative(float press);
 	void yawNegative(float press);
 	void rollNegative(float press);
+
+	void pitch(float press);
+	void yaw(float press);
 	
 	// CAM CONFIG CONTROLS
 
@@ -42,6 +45,7 @@ public:
 
 private:
 	Camera& cam;
+	double mouseSensitivity{ 0.1f };
 	void rot(glm::vec3 rot);
 	void mov(glm::vec3 dir);
 };

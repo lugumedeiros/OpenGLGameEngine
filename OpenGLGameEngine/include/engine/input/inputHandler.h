@@ -25,6 +25,16 @@ public:
 	void setKeyPress(int glfwKey, std::function<void(float)> action);
 	void setKeyRelease(int glfwKey, std::function<void(float)> action);
 
+	// MOUSE MOV
+	void setMouseMovX(std::function<void(float)> action);
+	void setMouseMovY(std::function<void(float)> action);
+
 private:
 	std::unordered_map<int, KeyBinding> keyMapping;
+	std::function<void(float)> movXAction{ nullptr };
+	std::function<void(float)> movYAction{ nullptr };
+
+	// MOUSE MOV
+	double xMov{ 0.0 };
+	double yMov{ 0.0 };
 };

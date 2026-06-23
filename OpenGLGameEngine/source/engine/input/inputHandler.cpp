@@ -1,20 +1,35 @@
 #include "../../../include/engine/input/inputHandler.h"
 
 void InputHandler::processInput(GLFWwindow* window, double eventTime) {
-	static const float keyBoardPressure = 1.0f; // For now this only supports keyboard
+	
+	// MOUSE
+	double newXMov;
+	double newYMov;
+	glfwGetCursorPos(window, &newXMov, &newYMov);
+	if (movXAction != nullptr) {
+		movXAction(xMov - newXMov);
+	}
+	if (movYAction != nullptr) {
+		movYAction(yMov - newYMov);
+	}
+	xMov = newXMov;
+	yMov = newYMov;
+
+	// KEYS
+	static const float keyPressure = 1.0f; // For now this only supports keyboard
 	for (auto& [key, keyBinding] : keyMapping) {
 		int keyStatus = glfwGetKey(window, key);
 		if (keyStatus == GLFW_PRESS) {
 			if (keyBinding.key.press(eventTime)) {
 				if (keyBinding.actionPress != nullptr) {
-					keyBinding.actionPress(keyBoardPressure);
+					keyBinding.actionPress(keyPressure);
 				}
 			}
 		}
 		if (keyStatus == GLFW_RELEASE) {
 			if (keyBinding.key.release()) {
 				if (keyBinding.actionRelease != nullptr) {
-					keyBinding.actionRelease(keyBoardPressure);
+					keyBinding.actionRelease(keyPressure);
 				}
 			}
 		}
@@ -52,4 +67,12 @@ void InputHandler::setKeyRelease(int glfwKey, std::function<void(float)> action)
 		keyBind->second.actionRelease = action;
 	}
 	std::cerr << "ERROR: GLFWKEY '" << glfwKey << "' NOT FOUND FOR RELEASE CONFIGURATION" << std::endl;
+}
+
+void InputHandler::setMouseMovY(std::function<void(float)> action) {
+	 movYAction = action;
+}
+
+void InputHandler::setMouseMovX(std::function<void(float)> action) {
+	movXAction = action;
 }

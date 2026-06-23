@@ -185,8 +185,12 @@ void Engine::setKeyInputAction(int glfwKey, int glfwPressType, std::function<voi
 }
 
 void Engine::setDefaultKeyInputs() {
-	//DISABLE MOUSE
-	window->enableCursor(false);
+	// MOUSE
+	window->enableCursor(false); //disable mouse
+	//inputHandler.setNewKey(GLFW_MOUSE_BUTTON_LEFT, "mLeft", true, 0.01, 0, [this](float v) { camInputControl.movXNegative(v); }, nullptr);
+	//inputHandler.setNewKey(GLFW_MOUSE_BUTTON_RIGHT, "mRight", true, 0.01, 0, [this](float v) { camInputControl.movXPositive(v); }, nullptr);
+	inputHandler.setMouseMovX([this](float v) {camInputControl.yaw(v); });
+	inputHandler.setMouseMovY([this](float v) {camInputControl.pitch(v); });
 
 	// MOVEMENT
 	inputHandler.setNewKey(GLFW_KEY_A, "A", true, 0.01, 0, [this](float v) { camInputControl.movXNegative(v); }, nullptr);

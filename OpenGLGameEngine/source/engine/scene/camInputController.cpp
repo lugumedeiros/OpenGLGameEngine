@@ -60,6 +60,14 @@ void CameraInputControl::rollNegative(float press) {
 	rot(glm::vec3{ 0.0f, 0.0f, -press });
 }
 
+void CameraInputControl::pitch(float press) {
+	rot(glm::vec3{ press * mouseSensitivity, 0.0f, 0.0f });
+}
+
+void CameraInputControl::yaw(float press) {
+	rot(glm::vec3{ 0.0f, -press * mouseSensitivity, 0.0f });
+}
+
 // CONFIG
 
 void CameraInputControl::incSpeed(float press) {
