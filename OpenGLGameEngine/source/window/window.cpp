@@ -54,6 +54,15 @@ void MainWindow::setClose(){
 	glfwSetWindowShouldClose(window, true);
 }
 
+void MainWindow::enableCursor(bool enable) {
+	if (enable) {
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	}
+	else {
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	}
+}
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	std::cout << "DISPLAY CHANGED: " << width << " " << height << std::endl;
 	glViewport(0, 0, width, height);

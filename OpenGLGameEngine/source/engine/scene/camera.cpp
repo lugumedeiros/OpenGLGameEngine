@@ -53,33 +53,22 @@ void Camera::rotateCam(float deltaTime) {
 	orientation = glm::normalize(yawRotation * pitchRotation * rollRotation * orientation);
 }
 
-void Camera::rotateToTarget(glm::vec3 target) {
-	glm::vec3 offset{ target - pos };
-	glm::vec3 direction {glm::normalize(offset)};
-	
-	// IF targetPOS == camPos
-	if (glm::length(offset) < 1e-8f) {
+void Camera::rotateToTarget(float deltaTime, glm::vec3 target) {
+	glm::vec3 offset = target - pos;
+	glm::vec3 direction = glm::normalize(offset);
+	if (glm::length(offset) < 0.001f) {
 		direction = front;
 	}
-	
-	glm::vec3 forward(0.0f, 0.0f, -1.0f);
-	float dot = glm::dot(forward, direction);
-	
-	// IF new orientation is the invers of current orientation
-	if (dot < -0.99999f) {
-		orientation = glm::angleAxis(glm::pi<float>(), glm::vec3(0.0f, 1.0f, 0.0f));
-		return;
-	}
 
-	// IF new orientation is equal to current orientation}
-	if (dot > 0.99999f) {
-		orientation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
-		return;
-	}
+	glm::quat lookAtQuat = glm::quatLookAt(direction, up);
+	float rollDelta = inputBufferRotation.z * inputBufferRotSpeed * deltaTime;
+	glm::quat rollQuat = glm::angleAxis(glm::radians(rollDelta), direction);
+	orientation = glm::normalize(rollQuat * lookAtQuat);
+}
 
-	glm::vec3 axis = glm::normalize(glm::cross(forward, direction));
-	float angle = acos(glm::clamp(dot, -1.0f, 1.0f));
-	orientation = glm::angleAxis(angle, glm::normalize(axis));
+void Camera::rollCamera(float roll) {
+	glm::quat rollQuat = glm::angleAxis(glm::radians(roll), front);
+	orientation = glm::normalize(rollQuat * orientation);
 }
 
 void Camera::update(float deltaTime) {
@@ -88,7 +77,7 @@ void Camera::update(float deltaTime) {
 	}
 	movePosCam(deltaTime);
 	if (isTargetLocked) {
-		rotateToTarget(lockTargetPos);
+		rotateToTarget(deltaTime, lockTargetPos);
 	} else {
 		rotateCam(deltaTime);
 	}
@@ -100,7 +89,7 @@ void Camera::update(float deltaTime) {
 
 void Camera::setView(glm::vec3 camPos, glm::vec3 lookPos) {
 	pos = camPos;
-	rotateToTarget(lookPos);
+	rotateToTarget(0.0f, lookPos);
 	updateAxis();
 	view = glm::lookAt(pos, pos + front, up);
 }
@@ -148,10 +137,20 @@ void Camera::updateAxis() {
 }
 
 void Camera::printPosInfo() {
-	float pitch{glm::degrees(asin(front.y))};
-	float yaw{glm::degrees(atan2(front.x, -front.z))};
-	float roll{0.0};
-
 	std::cout << "POS:(" << pos.x << ", " << pos.y << ", " << pos.z << " )";
-	std::cout << " - ROT:(" << pitch << ", " << yaw << ", " << roll << ")" << std::endl;
+	std::cout << " - ROT:(" << getPitch() << ", " << getYaw() << ", " << getRoll() << ")" << std::endl;
 }
+
+float Camera::getPitch() {
+	return glm::degrees(asin(front.y));
+}
+
+float Camera::getYaw() {
+	return glm::degrees(atan2(front.x, -front.z));
+}
+
+float Camera::getRoll() {
+	return glm::degrees(atan2(glm::dot(right, glm::vec3(0, 1, 0)), glm::dot(up, glm::vec3(0, 1, 0))));
+}
+
+

@@ -16,6 +16,7 @@ public:
 	void pollEvents();
 	void swapBuffers();
 	void setClose();
+	void enableCursor(bool enable);
 
 private:
 	GLFWwindow* window;

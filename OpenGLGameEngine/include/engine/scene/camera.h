@@ -74,8 +74,12 @@ private:
 	void clearBuffer();
 	void updateAxis();
 	void printPosInfo();
+	float getPitch();
+	float getYaw();
+	float getRoll();
 	void movePosCam(float deltaTime);
 	void rotateCam(float deltaTime);
-	void rotateToTarget(glm::vec3 targetPos);
+	void rotateToTarget(float deltaTime, glm::vec3 targetPos);
+	void rollCamera(float roll);
 	bool isBufferEmpty();
 };
