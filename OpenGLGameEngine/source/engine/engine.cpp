@@ -211,4 +211,5 @@ void Engine::setDefaultKeyInputs() {
 	// CONFIG
 	inputHandler.setNewKey(GLFW_KEY_T, "T", true, 2, 0.1, [this](float v) { render.setTest(v); }, nullptr);
 	inputHandler.setNewKey(GLFW_KEY_L, "L", true, 2, 0.1, [this](float v) { camInputControl.toggleLock(v); }, nullptr);
+	inputHandler.setNewKey(GLFW_KEY_F, "F", true, 2, 0.1, [this](float v) { camInputControl.toggleFPSMode(v); }, nullptr);
 }

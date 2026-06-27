@@ -120,7 +120,7 @@ int main() {
 	cam.setLockTargetPos(glm::vec3{ 0.0f, 0.0f, 0.0f });
 	
 	engine.processInput();
-	cam.setView(glm::vec3{ 0.0f, 0.0f, 10.0f }, glm::vec3{ 0.0f, 0.0f, 0.0f }, 0.0f);
+	cam.setView(glm::vec3{ 0.0f, -9.0f, 0.0f }, glm::vec3{ 0.0f, 0.0f, 0.0f }, 0.0f);
 
 ///////////////// END TEST AREA
 

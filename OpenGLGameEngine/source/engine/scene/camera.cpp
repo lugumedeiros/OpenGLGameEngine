@@ -41,7 +41,8 @@ void Camera::movePosCam(float deltaTime) {
 	pos += movement * deltaTime * inputBufferMovSpeed;
 }
 
-void Camera::rotateCam(float deltaTime) {
+
+void Camera::rotateCamFree(float deltaTime) {
 	float pitchDelta = inputBufferRotation.x * inputBufferRotSpeed * deltaTime;
 	float yawDelta = inputBufferRotation.y * inputBufferRotSpeed * deltaTime;
 	float rollDelta = inputBufferRotation.z * inputBufferRotSpeed * deltaTime;
@@ -51,6 +52,18 @@ void Camera::rotateCam(float deltaTime) {
 	glm::quat rollRotation = glm::angleAxis(glm::radians(rollDelta), front);
 
 	orientation = glm::normalize(yawRotation * pitchRotation * rollRotation * orientation);
+}
+
+void Camera::rotateCamFPS(float delta) {
+	glm::quat pitchDelta = glm::angleAxis(glm::radians(inputBufferRotation.x * inputBufferRotSpeed * delta), glm::vec3(1.0f, 0.0f, 0.0f));
+	glm::quat yawDelta = glm::angleAxis(glm::radians(inputBufferRotation.y * inputBufferRotSpeed * -delta), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::quat rollDelta = glm::angleAxis(glm::radians(inputBufferRotation.z * inputBufferRotSpeed * delta), glm::vec3(0.0f, 0.0f, 1.0f));
+
+	pitch *= pitchDelta;
+	yaw *= yawDelta;
+	roll *= rollDelta;
+
+	orientation = glm::normalize(yaw * pitch * roll);
 }
 
 void Camera::rotateToTarget(float deltaTime, glm::vec3 target) {
@@ -87,16 +100,30 @@ void Camera::rollCamera(float roll) {
 	orientation = glm::normalize(rollQuat * orientation);
 }
 
+void Camera::rotate(float delta) {
+	if (isTargetLocked) {
+		rotateToTarget(delta, lockTargetPos);
+		return;
+	}
+	if (isFPSCamMode) {
+		rotateCamFPS(delta);
+	} 
+	else {
+		rotateCamFree(delta);
+	}
+}
+
 void Camera::update(float deltaTime) {
 	if (isBufferEmpty() && deltaTime != 0.0f) { //deltaTime = 0 is always an internal call
 		return;
 	}
-	movePosCam(deltaTime);
-	if (isTargetLocked) {
-		rotateToTarget(deltaTime, lockTargetPos);
-	} else {
-		rotateCam(deltaTime);
+	if (isFPSCamMode && isTargetLocked) {
+		isTargetLocked = false;
+		std::cerr << "LOCKED AND FPS MODE IS UNVAILABLE FOR NOW..." << std::endl;
+		return;
 	}
+	movePosCam(deltaTime);
+	rotate(deltaTime);
 	updateAxis();
 	view = glm::lookAt(pos, pos + front, up);
 	clearBuffer();
@@ -121,6 +148,20 @@ void Camera::lockTarget(bool isLocked) {
 void Camera::setFOV(float fov) {
 	this->fov = fov;
 	setProjection();
+}
+
+void Camera::setFPSCamMode(bool enable) {
+	// Conversion is not necessary from fps to free
+	if (enable && !isFPSCamMode) {
+		glm::vec3 euler = glm::eulerAngles(orientation);
+		pitch = glm::angleAxis( euler.x, glm::vec3(1.0f, 0.0f, 0.0f) );
+		yaw = glm::angleAxis( euler.y, glm::vec3(0.0f, 1.0f, 0.0f) );
+		roll = glm::angleAxis( euler.z, glm::vec3(0.0f, 0.0f, 1.0f) );
+		orientation = glm::normalize(roll * pitch * yaw); // the order is the inverse of what is used in FPS Cam
+	}
+	isFPSCamMode = enable;
+	update(0.0f);
+	std::cout << "CAMERA MODE SET TO '" << (enable ? "FPS" : "FREE") << std::endl;
 }
 
 void Camera::setRes(float width, float height) {

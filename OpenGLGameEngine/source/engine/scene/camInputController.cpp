@@ -82,6 +82,10 @@ void CameraInputControl::toggleLock(float press){
 	cam.lockTarget(!cam.getIsTargetLocked());
 }
 
+void CameraInputControl::toggleFPSMode(float press) {
+	cam.setFPSCamMode(!cam.getFPSCamMode());
+}
+
 // INTERNAL
 
 void CameraInputControl::rot(glm::vec3 rot) {

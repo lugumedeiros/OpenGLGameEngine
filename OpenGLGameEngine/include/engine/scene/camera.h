@@ -2,8 +2,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-//#include <glm/gtc/quaternion.hpp>
-//#include <glm/gtx/quaternion.hpp>
 
 // TODO: CONVERT TO QUARTERION
 
@@ -16,6 +14,7 @@ public:
 	void setFOV(float fov);
 	void setRes(float width, float height);
 	void setNearFarPlanes(float near, float far);
+	void setFPSCamMode(bool enable);
 
 	// TRANSLATION
 	void addTranslationToBuffer(glm::vec3 deltaPos);
@@ -36,7 +35,10 @@ public:
 	// LOCK
 	void setLockTargetPos(glm::vec3 targetPos) { lockTargetPos = targetPos; };
 	void lockTarget(bool isLocked);
+
+	// GETTERS
 	bool getIsTargetLocked() { return isTargetLocked; };
+	bool getFPSCamMode() { return isFPSCamMode; }
 
 private:
 	//PROJECTION ADN SPACE
@@ -56,6 +58,17 @@ private:
 	float inputBufferRotSpeed{ 60.0f };
 	float inputBufferRotSpeedInc{ 1.0f };
 	glm::vec3 inputBufferRotation{ 0.0f };
+	float isFPSCamMode{ false };
+
+	glm::quat pitch{ 1,0,0,0 };
+	glm::quat yaw{ 1,0,0,0 };
+	glm::quat roll{ 1,0,0,0 };
+
+
+	void rotateCamFree(float deltaTime);
+	void rotateCamFPS(float delta);
+	void rotateToTarget(float deltaTime, glm::vec3 targetPos);
+	void rotateToTargetWithRoll(float deltaTime, glm::vec3 target, float roll);
 
 	//TRANSLATION
 	glm::vec3 front{0.0f, 0.0f, -1.0f};
@@ -78,9 +91,7 @@ private:
 	float getYaw();
 	float getRoll();
 	void movePosCam(float deltaTime);
-	void rotateCam(float deltaTime);
-	void rotateToTarget(float deltaTime, glm::vec3 targetPos);
-	void rotateToTargetWithRoll(float deltaTime, glm::vec3 target, float roll);
 	void rollCamera(float roll);
+	void rotate(float delta);
 	bool isBufferEmpty();
 };

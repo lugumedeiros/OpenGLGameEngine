@@ -42,6 +42,7 @@ public:
 	void decSpeed(float press);
 
 	void toggleLock(float press);
+	void toggleFPSMode(float press);
 
 private:
 	Camera& cam;
