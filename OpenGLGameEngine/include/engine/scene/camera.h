@@ -3,7 +3,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-// TODO: CONVERT TO QUARTERION
+#include "../../support/supportClasses.h"
 
 class Camera {
 public:
@@ -17,8 +17,8 @@ public:
 	void setFPSCamMode(bool enable);
 
 	// TRANSLATION
-	void addTranslationToBuffer(glm::vec3 deltaPos);
 	void setTranslateBufferSpeed(float speed) { inputBufferMovSpeed = speed; }
+	void addTranslationToBuffer(glm::vec3 deltaPos);
 	void incrementTranslateBufferSpeed(float inc) { inputBufferMovSpeed += inc * inputBufferMovSpeed; }
 
 	// ROTATION
@@ -39,6 +39,7 @@ public:
 	// GETTERS
 	bool getIsTargetLocked() { return isTargetLocked; };
 	bool getFPSCamMode() { return isFPSCamMode; }
+	float getFOV() { return fov; }
 
 private:
 	//PROJECTION ADN SPACE

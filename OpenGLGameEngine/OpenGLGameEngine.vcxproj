@@ -183,6 +183,7 @@
     <ClInclude Include="include\engine\scene\camera.h" />
     <ClInclude Include="include\engine\render\shaderCompiler.h" />
     <ClInclude Include="include\engine\render\render.h" />
+    <ClInclude Include="include\support\supportClasses.h" />
     <ClInclude Include="include\support\supportFuncions.h" />
     <ClInclude Include="include\window\window.h" />
     <ClInclude Include="include\engine\render\textureService.h" />
