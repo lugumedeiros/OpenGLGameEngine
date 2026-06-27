@@ -71,11 +71,11 @@ void CameraInputControl::yaw(float press) {
 // CONFIG
 
 void CameraInputControl::incSpeed(float press) {
-	cam.incrementTranslateBufferSpeed(press);
+	cam.transBufferSpeedIncrement(press);
 }
 
 void CameraInputControl::decSpeed(float press) {
-	cam.incrementTranslateBufferSpeed(-press);
+	cam.transBufferSpeedIncrement(-press);
 }
 
 void CameraInputControl::toggleLock(float press){
@@ -86,6 +86,23 @@ void CameraInputControl::toggleFPSMode(float press) {
 	cam.setFPSCamMode(!cam.getFPSCamMode());
 }
 
+// ZOOM
+void CameraInputControl::zoomIncrease(float press) {
+	cam.fOVIncrement(true);
+}
+
+void CameraInputControl::zoomDecrease(float press) {
+	cam.fOVIncrement(false);
+}
+
+void CameraInputControl::zoomSet(float press) {
+	cam.fOVSet();
+}
+
+void CameraInputControl::zoomUnset(float press) {
+	cam.fOVRestore();
+}
+
 // INTERNAL
 
 void CameraInputControl::rot(glm::vec3 rot) {
@@ -93,5 +110,5 @@ void CameraInputControl::rot(glm::vec3 rot) {
 }
 
 void CameraInputControl::mov(glm::vec3 dir) {
-	cam.addTranslationToBuffer(dir);
+	cam.transBufferAddTranslation(dir);
 }

@@ -35,8 +35,8 @@ public:
 	// ----------- INPUT -----------  //
 
 	void processInput();
-	void configKeyInput(int glfwKey, bool shouldRepeat, int firstRepeatDelay, int repeatDelay);
-	void setKeyInputAction(int glfwKey, int glfwPressType, std::function<void(float)> action);
+	void configKeyInput(InputDevice device, int glfwKey, bool shouldRepeat, int firstRepeatDelay, int repeatDelay);
+	void setKeyInputAction(InputDevice device, int glfwKey, int glfwPressType, std::function<void(float)> action);
 	void setDefaultKeyInputs();
 
 	// ----------- CAMERA -----------  //

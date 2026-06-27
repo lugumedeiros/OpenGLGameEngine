@@ -44,6 +44,12 @@ public:
 	void toggleLock(float press);
 	void toggleFPSMode(float press);
 
+	// ZOOM
+	void zoomIncrease(float press);
+	void zoomDecrease(float press);
+	void zoomSet(float press);
+	void zoomUnset(float press);
+
 private:
 	Camera& cam;
 	double mouseSensitivity{ 0.1f };

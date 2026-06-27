@@ -171,45 +171,55 @@ void Engine::processInput() {
 	selectedCamera.update(static_cast<float>(newFrameTime - olderTime));
 }
 
-void Engine::configKeyInput(int glfwKey, bool shouldRepeat, int firstRepeatDelay, int repeatDelay) {
-	inputHandler.configKey(glfwKey, shouldRepeat, firstRepeatDelay, repeatDelay);
+void Engine::configKeyInput(InputDevice device, int glfwKey, bool shouldRepeat, int firstRepeatDelay, int repeatDelay) {
+	inputHandler.configKey(device, glfwKey, shouldRepeat, firstRepeatDelay, repeatDelay);
 }
 
-void Engine::setKeyInputAction(int glfwKey, int glfwPressType, std::function<void(float)> action) {
+void Engine::setKeyInputAction(InputDevice device, int glfwKey, int glfwPressType, std::function<void(float)> action) {
 	if (glfwPressType == GLFW_PRESS) {
-		inputHandler.setKeyPress(glfwKey, action);
+		inputHandler.setKeyPress(device, glfwKey, action);
 	}
 	else if (glfwPressType == GLFW_RELEASE) {
-		inputHandler.setKeyRelease(glfwKey, action);
+		inputHandler.setKeyRelease(device, glfwKey, action);
 	}
 }
 
 void Engine::setDefaultKeyInputs() {
-	// MOUSE
+	// ----- MOUSE ------- //
+	
 	window->enableCursor(false); //disable mouse
-	//inputHandler.setNewKey(GLFW_MOUSE_BUTTON_LEFT, "mLeft", true, 0.01, 0, [this](float v) { camInputControl.movXNegative(v); }, nullptr);
-	//inputHandler.setNewKey(GLFW_MOUSE_BUTTON_RIGHT, "mRight", true, 0.01, 0, [this](float v) { camInputControl.movXPositive(v); }, nullptr);
 	inputHandler.setMouseMovX([this](float v) {camInputControl.yaw(v); });
 	inputHandler.setMouseMovY([this](float v) {camInputControl.pitch(v); });
 
+	// ZOOM
+	//inputHandler.setNewKey(GLFW_KEY_F, "F", true, 2, 0.1, [this](float v) { camInputControl.zoomIncrease(v); }, nullptr);
+	//inputHandler.setNewKey(GLFW_KEY_F, "F", true, 2, 0.1, [this](float v) { camInputControl.zoomDecrease(v); }, nullptr);
+	inputHandler.setNewKey(DEVICE_MOUSE, GLFW_MOUSE_BUTTON_RIGHT, "MouseClickR", true, 2, 0.1,
+		[this](float v) { camInputControl.zoomSet(v); },
+		[this](float v) { camInputControl.zoomUnset(v);}
+	);
+	//inputHandler.setNewKey(DEVICE_MOUSE, GLFW_MOUSE_BUTTON_LEFT, "MouseClickL", true, 2, 0.1, [this](float v) { camInputControl.zoomUnset(v); }, nullptr);
+
+
+	// ----- KEYBOARD ------- //
 	// MOVEMENT
-	inputHandler.setNewKey(GLFW_KEY_A, "A", true, 0.01, 0, [this](float v) { camInputControl.movXNegative(v); }, nullptr);
-	inputHandler.setNewKey(GLFW_KEY_D, "D", true, 0.01, 0, [this](float v) { camInputControl.movXPositive(v); }, nullptr);
-	inputHandler.setNewKey(GLFW_KEY_S, "S", true, 0.01, 0, [this](float v) { camInputControl.movZNegative(v); }, nullptr);
-	inputHandler.setNewKey(GLFW_KEY_W, "W", true, 0.01, 0, [this](float v) { camInputControl.movZPositive(v); }, nullptr);
-	inputHandler.setNewKey(GLFW_KEY_LEFT_CONTROL, "LCTRL", true, 0.1, 0, [this](float v) { camInputControl.movYNegative(v); }, nullptr);
-	inputHandler.setNewKey(GLFW_KEY_LEFT_SHIFT, "LSHIFT", true, 0.1, 0, [this](float v) { camInputControl.movYPositive(v); }, nullptr);
+	inputHandler.setNewKey(DEVICE_KEYBOARD ,GLFW_KEY_A, "A", true, 0.01, 0, [this](float v) { camInputControl.movXNegative(v); }, nullptr);
+	inputHandler.setNewKey(DEVICE_KEYBOARD, GLFW_KEY_D, "D", true, 0.01, 0, [this](float v) { camInputControl.movXPositive(v); }, nullptr);
+	inputHandler.setNewKey(DEVICE_KEYBOARD, GLFW_KEY_S, "S", true, 0.01, 0, [this](float v) { camInputControl.movZNegative(v); }, nullptr);
+	inputHandler.setNewKey(DEVICE_KEYBOARD, GLFW_KEY_W, "W", true, 0.01, 0, [this](float v) { camInputControl.movZPositive(v); }, nullptr);
+	inputHandler.setNewKey(DEVICE_KEYBOARD, GLFW_KEY_LEFT_CONTROL, "LCTRL", true, 0.1, 0, [this](float v) { camInputControl.movYNegative(v); }, nullptr);
+	inputHandler.setNewKey(DEVICE_KEYBOARD, GLFW_KEY_LEFT_SHIFT, "LSHIFT", true, 0.1, 0, [this](float v) { camInputControl.movYPositive(v); }, nullptr);
 	
 	// CAMERA ROTATION
-	inputHandler.setNewKey(GLFW_KEY_KP_8, "n8", true, 0.01, 0, [this](float v) { camInputControl.pitchPositive(v); }, nullptr);
-	inputHandler.setNewKey(GLFW_KEY_KP_4, "n4", true, 0.01, 0, [this](float v) { camInputControl.yawNegative(v); }, nullptr);
-	inputHandler.setNewKey(GLFW_KEY_KP_6, "n6", true, 0.01, 0, [this](float v) { camInputControl.yawPositive(v); }, nullptr);
-	inputHandler.setNewKey(GLFW_KEY_KP_5, "n5", true, 0.01, 0, [this](float v) { camInputControl.pitchNegative(v); }, nullptr);
-	inputHandler.setNewKey(GLFW_KEY_E, "E", true, 0.01, 0, [this](float v) { camInputControl.rollPositive(v); }, nullptr);
-	inputHandler.setNewKey(GLFW_KEY_Q, "Q", true, 0.01, 0, [this](float v) { camInputControl.rollNegative(v); }, nullptr);
+	inputHandler.setNewKey(DEVICE_KEYBOARD, GLFW_KEY_KP_8, "n8", true, 0.01, 0, [this](float v) { camInputControl.pitchPositive(v); }, nullptr);
+	inputHandler.setNewKey(DEVICE_KEYBOARD, GLFW_KEY_KP_4, "n4", true, 0.01, 0, [this](float v) { camInputControl.yawNegative(v); }, nullptr);
+	inputHandler.setNewKey(DEVICE_KEYBOARD, GLFW_KEY_KP_6, "n6", true, 0.01, 0, [this](float v) { camInputControl.yawPositive(v); }, nullptr);
+	inputHandler.setNewKey(DEVICE_KEYBOARD, GLFW_KEY_KP_5, "n5", true, 0.01, 0, [this](float v) { camInputControl.pitchNegative(v); }, nullptr);
+	inputHandler.setNewKey(DEVICE_KEYBOARD, GLFW_KEY_E, "E", true, 0.01, 0, [this](float v) { camInputControl.rollPositive(v); }, nullptr);
+	inputHandler.setNewKey(DEVICE_KEYBOARD, GLFW_KEY_Q, "Q", true, 0.01, 0, [this](float v) { camInputControl.rollNegative(v); }, nullptr);
 
 	// CONFIG
-	inputHandler.setNewKey(GLFW_KEY_T, "T", true, 2, 0.1, [this](float v) { render.setTest(v); }, nullptr);
-	inputHandler.setNewKey(GLFW_KEY_L, "L", true, 2, 0.1, [this](float v) { camInputControl.toggleLock(v); }, nullptr);
-	inputHandler.setNewKey(GLFW_KEY_F, "F", true, 2, 0.1, [this](float v) { camInputControl.toggleFPSMode(v); }, nullptr);
+	inputHandler.setNewKey(DEVICE_KEYBOARD, GLFW_KEY_T, "T", true, 2, 0.1, [this](float v) { render.setTest(v); }, nullptr);
+	inputHandler.setNewKey(DEVICE_KEYBOARD, GLFW_KEY_L, "L", true, 2, 0.1, [this](float v) { camInputControl.toggleLock(v); }, nullptr);
+	inputHandler.setNewKey(DEVICE_KEYBOARD, GLFW_KEY_F, "F", true, 2, 0.1, [this](float v) { camInputControl.toggleFPSMode(v); }, nullptr);
 }

@@ -4,12 +4,12 @@
 
 Camera::Camera(float fov, float width, float height, float near, float far) 
 	: fov(fov), width(width), height(height), near(near), far(far) {
-	setProjection();
+	projectionUpdate();
 }
 
 // MOVEMENT
 
-void Camera::addTranslationToBuffer(glm::vec3 deltaPos) {
+void Camera::transBufferAddTranslation(glm::vec3 deltaPos) {
 	inputBufferTranslation += deltaPos;
 }
 
@@ -29,8 +29,8 @@ const glm::mat4& Camera::getProjection() {
 	return projection;
 }
 
-void Camera::setProjection() {
-	projection = glm::perspective(glm::radians(fov), width / height, near, far);
+void Camera::projectionUpdate() {
+	projection = glm::perspective(glm::radians(fov.get()), width / height, near, far);
 }
 
 void Camera::movePosCam(float deltaTime) {
@@ -38,7 +38,7 @@ void Camera::movePosCam(float deltaTime) {
 	movement += front * inputBufferTranslation.z;
 	movement += right * inputBufferTranslation.x;
 	movement += up * inputBufferTranslation.y;
-	pos += movement * deltaTime * inputBufferMovSpeed;
+	pos += movement * deltaTime * inputBufferMovSpeed.get();
 }
 
 
@@ -145,11 +145,6 @@ void Camera::lockTarget(bool isLocked) {
 	update(0.0f);
 }
 
-void Camera::setFOV(float fov) {
-	this->fov = fov;
-	setProjection();
-}
-
 void Camera::setFPSCamMode(bool enable) {
 	// Conversion is not necessary from fps to free
 	if (enable && !isFPSCamMode) {
@@ -167,13 +162,41 @@ void Camera::setFPSCamMode(bool enable) {
 void Camera::setRes(float width, float height) {
 	this->width = width;
 	this->height = height;
-	setProjection();
+	projectionUpdate();
 }
 
 void Camera::setNearFarPlanes(float near, float far) {
 	this->near = near;
 	this->far = far;
-	setProjection();
+	projectionUpdate();
+}
+
+// FOV
+void Camera::fOVIncrement(bool isPos) {
+	if (isPos) {
+		fov.inc();
+	} else {
+		fov.dec();
+	}
+	projectionUpdate();
+}
+
+void Camera::fOVSet(float val) {
+	fov.set(val);
+	projectionUpdate();
+}
+
+void Camera::fOVRestore() {
+	fov.restore();
+	projectionUpdate();
+}
+
+float Camera::getFOV() {
+	return fov.get();
+}
+
+void Camera::fOVSetLimit(float max, float min){
+	fov.setMinMax(min, max);
 }
 
 // INTERNAL

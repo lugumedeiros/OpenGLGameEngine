@@ -16,15 +16,24 @@ public:
 	void setNearFarPlanes(float near, float far);
 	void setFPSCamMode(bool enable);
 
+	// TODO CREATE BUFFER CLASS
 	// TRANSLATION
-	void setTranslateBufferSpeed(float speed) { inputBufferMovSpeed = speed; }
-	void addTranslationToBuffer(glm::vec3 deltaPos);
-	void incrementTranslateBufferSpeed(float inc) { inputBufferMovSpeed += inc * inputBufferMovSpeed; }
+	void transBufferAddTranslation(glm::vec3 deltaPos);
+	void transBufferSpeedSet(float speed) { inputBufferMovSpeed.set(speed); }
+	void transBufferSpeedIncrement(float inc) { inputBufferMovSpeed.inc(inc); }
 
 	// ROTATION
 	void addRotationToBuffer(glm::vec3 rotation);
-	void setRotationBufferSpeed(float speed) { inputBufferRotSpeed = speed; }
-	void incrementRotationBufferSpeed(float inc) { inputBufferRotSpeed += inc * inputBufferRotSpeedInc; }
+	void rotBufferSpeedSet(float speed) { inputBufferRotSpeed.set(speed); }
+	void rotBufferSpeedIncrement(float inc) { inputBufferRotSpeed.inc(inc); }
+
+	// FOV
+	void fOVIncrement(bool isPos);
+	void fOVSet() { fOVSet(zoomDefault); }
+	void fOVSet(float val);
+	void fOVRestore();
+	float getFOV();
+	void fOVSetLimit(float max, float min);
 
 	// VIEW
 	const glm::mat4& getView();
@@ -39,11 +48,11 @@ public:
 	// GETTERS
 	bool getIsTargetLocked() { return isTargetLocked; };
 	bool getFPSCamMode() { return isFPSCamMode; }
-	float getFOV() { return fov; }
 
 private:
-	//PROJECTION ADN SPACE
-	float fov{45.0f};
+	//PROJECTION AND SPACE
+	ConfigValue<float> fov{45.0f, 1.0f, 10.0f, 80.0f};
+	float zoomDefault = 20.0f;
 	float width{800.0f};
 	float height{600};
 	float near{1.0f};
@@ -51,15 +60,14 @@ private:
 	glm::vec3 pos{ 0.0f };
 	glm::mat4 projection{ 1.0f };
 
-	void setProjection();
+	void projectionUpdate();
 
 	glm::quat orientation{ 1.0f, 0.0f, 0.0f, 0.0f };
 
 	//ROTATION
-	float inputBufferRotSpeed{ 60.0f };
-	float inputBufferRotSpeedInc{ 1.0f };
 	glm::vec3 inputBufferRotation{ 0.0f };
-	float isFPSCamMode{ false };
+	ConfigValue<float> inputBufferRotSpeed{ 60.0f, 1.0f };
+	bool isFPSCamMode{ false };
 
 	glm::quat pitch{ 1,0,0,0 };
 	glm::quat yaw{ 1,0,0,0 };
@@ -75,9 +83,8 @@ private:
 	glm::vec3 front{0.0f, 0.0f, -1.0f};
 	glm::vec3 right{1.0f, 0.0f, 0.0f,};
 	glm::vec3 up{ 0.0f, 1.0f, 0.0f };
-	float inputBufferMovSpeed{ 5.0f };
-	float inputBufferMovSpeedInc{ 0.5f };
 	glm::vec3 inputBufferTranslation{ 0.0f };
+	ConfigValue<float> inputBufferMovSpeed{ 5.0f, 0.5f};
 
 	// LOCK
 	glm::mat4 view{};
