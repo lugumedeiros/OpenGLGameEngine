@@ -87,6 +87,10 @@ void CameraInputControl::toggleFPSMode(float press) {
 }
 
 // ZOOM
+void CameraInputControl::zoom(float press) {
+	cam.fOVIncrement(press >= 0.0f);
+}
+
 void CameraInputControl::zoomIncrease(float press) {
 	cam.fOVIncrement(true);
 }

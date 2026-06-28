@@ -44,7 +44,9 @@ public:
 	void toggleLock(float press);
 	void toggleFPSMode(float press);
 
+
 	// ZOOM
+	void zoom(float press);
 	void zoomIncrease(float press);
 	void zoomDecrease(float press);
 	void zoomSet(float press);

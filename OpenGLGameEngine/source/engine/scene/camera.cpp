@@ -3,7 +3,8 @@
 #include <iostream>
 
 Camera::Camera(float fov, float width, float height, float near, float far) 
-	: fov(fov), width(width), height(height), near(near), far(far) {
+	: width(width), height(height), near(near), far(far) {
+	fov = ConfigValue{ fov, 1.0f, 0.0f, 90.0f };
 	projectionUpdate();
 }
 
@@ -173,7 +174,7 @@ void Camera::setNearFarPlanes(float near, float far) {
 
 // FOV
 void Camera::fOVIncrement(bool isPos) {
-	if (isPos) {
+	if (!isPos) {
 		fov.inc();
 	} else {
 		fov.dec();

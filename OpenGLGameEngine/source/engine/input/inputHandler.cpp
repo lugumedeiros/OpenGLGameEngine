@@ -22,9 +22,7 @@ void InputHandler::processKeys(InputDevice device, GLFWwindow* window, double ev
 	}
 }
 
-void InputHandler::processInput(GLFWwindow* window, double eventTime) {
-	
-	// MOUSE
+void InputHandler::processMouseMovement(GLFWwindow* window, double evenTime) {
 	double newXMov;
 	double newYMov;
 	glfwGetCursorPos(window, &newXMov, &newYMov);
@@ -36,9 +34,22 @@ void InputHandler::processInput(GLFWwindow* window, double eventTime) {
 	}
 	xMov = newXMov;
 	yMov = newYMov;
+}
 
+void InputHandler::processMouseScroll(GLFWwindow* window, double evenTime) {
+	if (mouseScrollDelta != 0.0f) {
+		float normalized = mouseScrollDelta >= 0.0f ? 1.0f : -1.0f;
+		mouseScrollAction(static_cast<float>(normalized));
+		mouseScrollDelta = 0.0f;
+	}
+}
+
+void InputHandler::processInput(GLFWwindow* window, double eventTime) {
+	
+	processMouseMovement(window, eventTime);
 	processKeys(DEVICE_MOUSE, window, eventTime);
 	processKeys(DEVICE_KEYBOARD, window, eventTime);
+	processMouseScroll(window, eventTime);
 	//process(DEVICE_JOYSTICK, window, eventTime);
 }
 
@@ -87,9 +98,14 @@ void InputHandler::setMouseMovY(std::function<void(float)> action) {
 	 movYAction = action;
 }
 
-
 void InputHandler::setMouseMovX(std::function<void(float)> action) {
 	movXAction = action;
+}
+
+void InputHandler::setScrollAction(GLFWwindow* window, std::function<void(float)> action) {
+	glfwSetWindowUserPointer(window, this);
+	glfwSetScrollCallback(window, mouseScrollCallback);
+	mouseScrollAction = action;
 }
 
 std::unordered_map<int, KeyBinding>& InputHandler::getMap(InputDevice device) {
@@ -106,7 +122,6 @@ std::unordered_map<int, KeyBinding>& InputHandler::getMap(InputDevice device) {
 	default:
 		throw("INVALID INPUT DEVICE.\n");
 	}
-
 }
 
 int InputHandler::getKeyStatus(InputDevice device, GLFWwindow* window, int key) {
@@ -122,5 +137,11 @@ int InputHandler::getKeyStatus(InputDevice device, GLFWwindow* window, int key) 
 
 	default:
 		throw("INVALID INPUT DEVICE.\n");
+	}
+}
+
+void InputHandler::mouseScrollCallback(GLFWwindow* window, double xOffset, double yOffset) {
+	if (auto* inputHandler = static_cast<InputHandler*>(glfwGetWindowUserPointer(window))) {
+		inputHandler->mouseScrollDelta += yOffset;
 	}
 }

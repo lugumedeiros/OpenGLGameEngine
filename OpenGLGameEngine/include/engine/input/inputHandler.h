@@ -32,21 +32,30 @@ public:
 	// MOUSE MOV
 	void setMouseMovX(std::function<void(float)> action);
 	void setMouseMovY(std::function<void(float)> action);
+	void setScrollAction(GLFWwindow* window, std::function<void(float)> action); // Only event so far, linked to window
 
 private:
 	void processKeys(InputDevice device, GLFWwindow* window, double evenTime);
+	void processMouseMovement(GLFWwindow* window, double evenTime);
+	void processMouseScroll(GLFWwindow* window, double evenTime);
 
 	std::unordered_map<int, KeyBinding> keyboardMapping;
 	std::unordered_map<int, KeyBinding> mouseMapping;
 	std::unordered_map<int, KeyBinding> joystickMapping;
 	std::unordered_map<int, KeyBinding>& getMap(InputDevice device);
+	double mouseScrollDelta{ 0.0f };
 
 	int getKeyStatus(InputDevice device, GLFWwindow* window, int key);
 
 	std::function<void(float)> movXAction{ nullptr };
 	std::function<void(float)> movYAction{ nullptr };
+	std::function<void(float)> mouseScrollAction{ nullptr };
 
 	// MOUSE MOV
 	double xMov{ 0.0 };
 	double yMov{ 0.0 };
+
+	// Mouse Scroll Callback
+	static void mouseScrollCallback(GLFWwindow* window, double xDelta, double yDelta);
+
 };
