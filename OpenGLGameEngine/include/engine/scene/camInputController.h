@@ -9,8 +9,8 @@
 
 class CameraInputControl {
 public:
-	CameraInputControl(Camera& camera);
-	void setCamera(Camera& camera);
+	CameraInputControl(BaseCamera& camera);
+	void setCamera(BaseCamera& camera);
 
 	// CAM INPUT CONTROLS
 	
@@ -53,7 +53,7 @@ public:
 	void zoomUnset(float press);
 
 private:
-	Camera& cam;
+	BaseCamera& cam;
 	double mouseSensitivity{ 0.1f };
 	void rot(glm::vec3 rot);
 	void mov(glm::vec3 dir);

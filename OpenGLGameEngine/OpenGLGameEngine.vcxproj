@@ -150,6 +150,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\engine\scene\camera\camBase.cpp" />
     <ClCompile Include="source\engine\scene\camera.cpp" />
     <ClCompile Include="source\engine\engine.cpp" />
     <ClCompile Include="source\engine\render\material.cpp" />
@@ -174,7 +175,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\effecs\uniqueColorChange.h" />
+    <ClInclude Include="include\engine\scene\cam6DOF.h" />
+    <ClInclude Include="include\engine\scene\camera\camBase.h" />
+    <ClInclude Include="include\engine\scene\camFPS.h" />
     <ClInclude Include="include\engine\scene\camInputController.h" />
+    <ClInclude Include="include\engine\scene\camera\projection.h" />
     <ClInclude Include="Include\Glad\glad.h" />
     <ClInclude Include="include\engine\input\keys.h" />
     <ClInclude Include="include\engine\input\inputHandler.h" />

@@ -63,6 +63,9 @@
     <ClCompile Include="source\engine\scene\camInputController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="include\engine\scene\camera\camBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\window\window.h">
@@ -105,6 +108,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\support\supportClasses.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine\scene\camFPS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine\scene\camera\camBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine\scene\cam6DOF.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine\scene\camera\projection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -21,7 +21,7 @@
 
 class Engine {
 public:
-	Engine(MainWindow* window, Camera& cam);
+	Engine(MainWindow* window, BaseCamera& cam);
 
 	// ----------- RENDER -----------  //
 
@@ -30,7 +30,7 @@ public:
 	Material* createMaterial(const ShaderProgram& shaderProgram);
 	Texture* createTexture(std::string_view texturePath);
 	Texture* getTexture(std::string_view textureName);
-	void setActiveCamera(Camera& camera);
+	void setActiveCamera(BaseCamera& camera);
 
 	// ----------- INPUT -----------  //
 
@@ -47,7 +47,7 @@ public:
 
 	//TODO: REnder and Camera pass as REF
 
-	Camera* getCamera() { return &selectedCamera; }
+	BaseCamera* getCamera() { return &selectedCamera; }
 	Render* getRender() { return &render; }
 
 	// ----------- WINDOW -----------  //
@@ -59,7 +59,7 @@ private:
 	// ----------- RENDER -----------  //
 
 	Render render;
-	void setUniforms(Mesh& mesh, Material& material, Camera& camera);
+	void setUniforms(Mesh& mesh, Material& material, BaseCamera& camera);
 
 	ShaderProgram* getShaderProgram(GLuint shaderProgramID);
 	std::map<GLuint, ShaderProgram> shaderPrograms;
@@ -84,7 +84,7 @@ private:
 
 	// ----------- CAMERA -----------  //
 
-	Camera& selectedCamera;
+	BaseCamera& selectedCamera;
 
 	// ----------- WINDOW -----------  //
 

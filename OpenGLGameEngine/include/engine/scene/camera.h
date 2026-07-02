@@ -5,10 +5,10 @@
 
 #include "../../support/supportClasses.h"
 
-class Camera {
+class BaseCamera {
 public:
-	Camera() = default;
-	Camera(float fov, float widht, float height, float near, float far);
+	BaseCamera() = default;
+	BaseCamera(float fov, float widht, float height, float near, float far);
 
 	// CONFIG
 	void setFOV(float fov);

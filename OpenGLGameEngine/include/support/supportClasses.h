@@ -14,7 +14,6 @@
  * speed.restore();   // Back to 5.0
  * @endcode
  */
-
 template<typename T>
 class ConfigValue {
 public:
@@ -82,4 +81,22 @@ private:
 		}
 		return val;
 	}
+};
+
+class VectorChangeBuffer {
+public:
+	VectorChangeBuffer() = default;
+	const glm::vec3& add(glm::vec3 val) { value += val; return value; }
+	const glm::vec3& sub(glm::vec3 val) { value -= val; return value; }
+	const glm::vec3& clear() { value = glm::vec3{ 0.0f }; return value; }
+	const glm::vec3& normalize() { value = glm::normalize(value); return value; }
+	const glm::vec3& clamp(float min, float max) { value = glm::clamp(value, glm::vec3{ min }, glm::vec3{ max }); return value; }
+	const glm::vec3& addX(float val) { value.x += val; return value; }
+	const glm::vec3& addY(float val) { value.y += val; return value; }
+	const glm::vec3& addZ(float val) { value.z += val; return value; }
+
+	const glm::vec3& get() const { return value; }
+
+private:
+	glm::vec3 value{ 0.0f };
 };
