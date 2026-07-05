@@ -4,7 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "camera.h";
+#include "camera/camBase.h"
 #include "../../../include/engine/render/mesh.h"
 
 class CameraInputControl {
@@ -43,7 +43,6 @@ public:
 
 	void toggleLock(float press);
 	void toggleFPSMode(float press);
-
 
 	// ZOOM
 	void zoom(float press);

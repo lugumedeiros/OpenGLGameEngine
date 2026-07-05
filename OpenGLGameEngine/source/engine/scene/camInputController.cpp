@@ -1,10 +1,10 @@
 #pragma once
 #include "../../../include/engine/scene/camInputController.h"
 
-CameraInputControl::CameraInputControl(Camera& camera) : cam(camera) {
+CameraInputControl::CameraInputControl(BaseCamera& camera) : cam(camera) {
 }
 
-void CameraInputControl::setCamera(Camera& camera) {
+void CameraInputControl::setCamera(BaseCamera& camera) {
 	cam = camera;
 }
 
@@ -70,49 +70,42 @@ void CameraInputControl::yaw(float press) {
 
 // CONFIG
 
-void CameraInputControl::incSpeed(float press) {
-	cam.transBufferSpeedIncrement(press);
-}
-
-void CameraInputControl::decSpeed(float press) {
-	cam.transBufferSpeedIncrement(-press);
-}
-
 void CameraInputControl::toggleLock(float press){
 	cam.lockTarget(!cam.getIsTargetLocked());
 }
 
 void CameraInputControl::toggleFPSMode(float press) {
-	cam.setFPSCamMode(!cam.getFPSCamMode());
+	return;
+	//TODO
 }
 
 // ZOOM
 void CameraInputControl::zoom(float press) {
-	cam.fOVIncrement(press >= 0.0f);
+	cam.configIncrement(CAM_CONFIG::FOV);
 }
 
 void CameraInputControl::zoomIncrease(float press) {
-	cam.fOVIncrement(true);
+	cam.configIncrement(CAM_CONFIG::FOV);
 }
 
 void CameraInputControl::zoomDecrease(float press) {
-	cam.fOVIncrement(false);
+	cam.configDecrement(CAM_CONFIG::FOV);
 }
 
 void CameraInputControl::zoomSet(float press) {
-	cam.fOVSet();
+	cam.configDecrement(CAM_CONFIG::FOV);
 }
 
 void CameraInputControl::zoomUnset(float press) {
-	cam.fOVRestore();
+	cam.configRestore(CAM_CONFIG::FOV);
 }
 
 // INTERNAL
 
 void CameraInputControl::rot(glm::vec3 rot) {
-	cam.addRotationToBuffer(rot);
+	cam.addRotation(rot);
 }
 
 void CameraInputControl::mov(glm::vec3 dir) {
-	cam.transBufferAddTranslation(dir);
+	cam.addTranslation(dir);
 }

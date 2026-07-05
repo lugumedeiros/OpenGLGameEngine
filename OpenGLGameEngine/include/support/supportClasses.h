@@ -96,6 +96,7 @@ public:
 	const glm::vec3& addZ(float val) { value.z += val; return value; }
 
 	const glm::vec3& get() const { return value; }
+	bool isZero() const { return glm::length(value) < 1e-12f; }
 
 private:
 	glm::vec3 value{ 0.0f };

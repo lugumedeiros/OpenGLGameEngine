@@ -150,8 +150,8 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="include\engine\scene\camera\camBase.cpp" />
-    <ClCompile Include="source\engine\scene\camera.cpp" />
+    <ClCompile Include="source\engine\scene\camera\camBase.cpp" />
+    <ClCompile Include="source\engine\scene\camera\camFPS.cpp" />
     <ClCompile Include="source\engine\engine.cpp" />
     <ClCompile Include="source\engine\render\material.cpp" />
     <ClCompile Include="include\engine\render\material.h" />
@@ -175,9 +175,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\effecs\uniqueColorChange.h" />
-    <ClInclude Include="include\engine\scene\cam6DOF.h" />
     <ClInclude Include="include\engine\scene\camera\camBase.h" />
-    <ClInclude Include="include\engine\scene\camFPS.h" />
+    <ClInclude Include="include\engine\scene\camera\camFPS.h" />
     <ClInclude Include="include\engine\scene\camInputController.h" />
     <ClInclude Include="include\engine\scene\camera\projection.h" />
     <ClInclude Include="Include\Glad\glad.h" />
@@ -185,7 +184,6 @@
     <ClInclude Include="include\engine\input\inputHandler.h" />
     <ClInclude Include="Include\KHR\khrplatform.h" />
     <ClInclude Include="include\engine\engine.h" />
-    <ClInclude Include="include\engine\scene\camera.h" />
     <ClInclude Include="include\engine\render\shaderCompiler.h" />
     <ClInclude Include="include\engine\render\render.h" />
     <ClInclude Include="include\support\supportClasses.h" />

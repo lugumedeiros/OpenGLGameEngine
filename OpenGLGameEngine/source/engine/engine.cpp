@@ -190,6 +190,7 @@ void Engine::setDefaultKeyInputs() {
 	window->enableCursor(false); //disable mouse
 	inputHandler.setMouseMovX([this](float v) {camInputControl.yaw(v); });
 	inputHandler.setMouseMovY([this](float v) {camInputControl.pitch(v); });
+
 	inputHandler.setScrollAction(window->getWindow(), [this](float v) {camInputControl.zoom(v); });
 
 	// ZOOM

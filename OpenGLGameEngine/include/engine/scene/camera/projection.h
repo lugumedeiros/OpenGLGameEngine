@@ -4,11 +4,15 @@
 
 class Projection {
 public:
-	Projection(float fov, float widht, float height, float near, float far);
+	Projection() = default;
+	Projection(float fov, float width, float heigth, float near, float far)
+		: fov(fov), width(width), heigth(heigth), near(near), far(far) {
+		update();
+	};
 
 	void update() {
-		projection = glm::perspective(glm::radians(fov), width / height, near, far);
-	}
+		projection = glm::perspective(glm::radians(fov), width / heigth, near, far);
+	};
 
 	// SETTER
 	void setFOV(float fov) {
@@ -18,7 +22,7 @@ public:
 	
 	void setRes(float width, float height) {
 		this->width = width;
-		this->height = height;
+		this->heigth = height;
 		update();
 	}
 	
@@ -31,16 +35,16 @@ public:
 	// GETTER
 	float getFOV() const { return fov; }
 	float getWidth() const { return width; }
-	float getHeight() const { return height; }
+	float getHeight() const { return heigth; }
 	float getNear() const { return near; }
 	float getFar() const { return far; }
-	float getAspectRatio() const { return width / height; }
+	float getAspectRatio() const { return width / heigth; }
 	const glm::mat4& getMatrix() const { return projection; }
 
 private:
 	float fov{ 45.0f };
 	float width{ 800.0f };
-	float height{ 600 };
+	float heigth{ 600 };
 	float near{ 1.0f };
 	float far{ 100.0f };
 	glm::mat4 projection{ 1.0f };

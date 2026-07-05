@@ -16,7 +16,7 @@
 #include "render/shaderCompiler.h"
 #include "render/textureService.h"
 #include "input/inputHandler.h"
-#include "scene/camera.h"
+#include "scene/camera/camBase.h"
 #include "scene/camInputController.h"
 
 class Engine {
