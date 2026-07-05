@@ -4,15 +4,15 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "projection.h"
-#include "../../../support/supportClasses.h"
+#include "../../support/supportClasses.h"
 
 enum class CAM_CONFIG {
 	FOV, MOV_SPEED, ROT_SPEED
 };
 
-class BaseCamera {
+class CamBase {
 public:
-	BaseCamera(float fov, float widht, float height, float near, float far);
+	CamBase(float fov, float widht, float height, float near, float far);
 
 	virtual void update(float deltaTime) = 0;
 	virtual void setView(glm::vec3 CamPos, glm::vec3 targetPos, float roll) = 0;

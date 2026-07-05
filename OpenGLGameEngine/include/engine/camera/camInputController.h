@@ -4,13 +4,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "camera/camBase.h"
+#include "camBase.h"
 #include "../../../include/engine/render/mesh.h"
 
 class CameraInputControl {
 public:
-	CameraInputControl(BaseCamera& camera);
-	void setCamera(BaseCamera& camera);
+	CameraInputControl(CamBase& camera);
+	void setCamera(CamBase& camera);
 
 	// CAM INPUT CONTROLS
 	
@@ -52,7 +52,7 @@ public:
 	void zoomUnset(float press);
 
 private:
-	BaseCamera& cam;
+	CamBase& cam;
 	double mouseSensitivity{ 0.1f };
 	void rot(glm::vec3 rot);
 	void mov(glm::vec3 dir);

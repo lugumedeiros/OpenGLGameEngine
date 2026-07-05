@@ -1,6 +1,6 @@
 #include "../../include/engine/engine.h"
 
-Engine::Engine(MainWindow* window, BaseCamera& cam) :
+Engine::Engine(MainWindow* window, CamBase& cam) :
 	window(window),
 	render(Render(window)),
 	selectedCamera(cam),
@@ -101,12 +101,12 @@ Material* Engine::getMaterial(GLuint materialID) {
 
 // ------------ CAMERA ------------ 
 
-void Engine::setActiveCamera(BaseCamera& camera) {
+void Engine::setActiveCamera(CamBase& camera) {
 	selectedCamera = camera;
 	camInputControl.setCamera(selectedCamera);
 }
 
-void Engine::setUniforms(Mesh& mesh, Material& mat, BaseCamera& camera) {
+void Engine::setUniforms(Mesh& mesh, Material& mat, CamBase& camera) {
 	ShaderProgram* shader = getShaderProgram(mat.shaderProgramID);
 	//if (!mat.uniformChanged) {
 	//	return;

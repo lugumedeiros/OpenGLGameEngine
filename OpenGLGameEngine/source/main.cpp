@@ -53,7 +53,7 @@ std::string_view textureSmilePath = "assets/textures/awesomeface.png";
 
 int main() {
 	MainWindow mainWindow(width, height, title);
-	FPSCamera cam{ 45.0f, float(width), float(height), 0.1f, 100.0f };
+	CamFPS cam{ 45.0f, float(width), float(height), 0.1f, 100.0f };
 	Engine engine(&mainWindow, cam);
 	//engine.setActiveCamera(cam);
 

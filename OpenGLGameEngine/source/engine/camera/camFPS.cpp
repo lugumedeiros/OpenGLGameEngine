@@ -1,6 +1,6 @@
-#include "../../../../include/engine/scene/camera/camFPS.h"
+#include "../../../include/engine/camera/camFPS.h"
 
-void FPSCamera::update(float deltaTime) {
+void CamFPS::update(float deltaTime) {
 	if (isBufferEmpty() && deltaTime != 0.0f) { //deltaTime = 0 is always an internal call
 		return;
 	}
@@ -17,7 +17,7 @@ void FPSCamera::update(float deltaTime) {
 	printPosInfo();
 }
 
-void FPSCamera::setView(glm::vec3 camPos, glm::vec3 targetPos, float roll) {
+void CamFPS::setView(glm::vec3 camPos, glm::vec3 targetPos, float roll) {
 	this->roll = glm::clamp(roll, minRoll, maxRoll);
 	pos = camPos;
 	movePos(0.0f);
@@ -28,7 +28,7 @@ void FPSCamera::setView(glm::vec3 camPos, glm::vec3 targetPos, float roll) {
 	printPosInfo();
 }
 
-void FPSCamera::rotate(float delta) {
+void CamFPS::rotate(float delta) {
 	glm::quat qPitch = glm::angleAxis(glm::radians(pitch), worldRight);
 	glm::quat qYaw = glm::angleAxis(glm::radians(-yaw), worldUp);
 	glm::quat qRoll = glm::angleAxis(glm::radians(roll), worldFront);
@@ -36,7 +36,7 @@ void FPSCamera::rotate(float delta) {
 }
 
 
-void FPSCamera::rotateToTarget(float delta, glm::vec3 target) {
+void CamFPS::rotateToTarget(float delta, glm::vec3 target) {
 	roll = glm::clamp((rotationBuffer.get().z * delta * rotSpeed) + roll, minRoll, maxRoll);
 	glm::vec3 offset = posLockTarget - pos;
 	if (glm::length(offset) < 1e-8f) { // lockpos and campos are equal
@@ -53,7 +53,7 @@ void FPSCamera::rotateToTarget(float delta, glm::vec3 target) {
 	orientation = glm::normalize(rollQuat * lookOrientation);
 }
 
-void FPSCamera::movePos(float delta) {
+void CamFPS::movePos(float delta) {
 	glm::vec3 input = movementBuffer.get();
 	glm::vec3 horizontal = glm::normalize(glm::cross(front, worldUp));
 	glm::vec3 depth = -glm::normalize(glm::cross(horizontal, worldUp));
@@ -61,7 +61,7 @@ void FPSCamera::movePos(float delta) {
 	pos += movement * delta * movSpeed.get();
 }
 
-void FPSCamera::lockTarget(bool isLocked) {
+void CamFPS::lockTarget(bool isLocked) {
 	if (isTargetLocked && !isLocked) {
 		updateRotationFromAxis();
 	}
@@ -70,7 +70,7 @@ void FPSCamera::lockTarget(bool isLocked) {
 	update(0.0f);
 }
 
-void FPSCamera::updateRotation(float delta) {
+void CamFPS::updateRotation(float delta) {
 	glm::vec3 rot = rotationBuffer.get() * delta * rotSpeed.get();
 
 	float rollRad = glm::radians(roll);
@@ -85,7 +85,7 @@ void FPSCamera::updateRotation(float delta) {
 	roll = glm::clamp(roll + rot.z, minRoll, maxRoll);
 }
 
-void FPSCamera::updateRotationFromAxis() {
+void CamFPS::updateRotationFromAxis() {
 	yaw = getYaw();
 	pitch = getPitch();
 	roll = getRoll();

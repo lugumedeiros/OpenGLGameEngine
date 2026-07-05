@@ -150,8 +150,9 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="source\engine\scene\camera\camBase.cpp" />
-    <ClCompile Include="source\engine\scene\camera\camFPS.cpp" />
+    <ClCompile Include="source\engine\camera\cam6DOF.cpp" />
+    <ClCompile Include="source\engine\camera\camBase.cpp" />
+    <ClCompile Include="source\engine\camera\camFPS.cpp" />
     <ClCompile Include="source\engine\engine.cpp" />
     <ClCompile Include="source\engine\render\material.cpp" />
     <ClCompile Include="include\engine\render\material.h" />
@@ -162,7 +163,7 @@
     <ClCompile Include="source\engine\input\keys.cpp" />
     <ClCompile Include="source\engine\render\render.cpp" />
     <ClCompile Include="source\engine\input\inputHandler.cpp" />
-    <ClCompile Include="source\engine\scene\camInputController.cpp" />
+    <ClCompile Include="source\engine\camera\camInputController.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\engine\render\shaderCompiler.cpp" />
     <ClCompile Include="source\libs\stb.cpp">
@@ -175,10 +176,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\effecs\uniqueColorChange.h" />
-    <ClInclude Include="include\engine\scene\camera\camBase.h" />
-    <ClInclude Include="include\engine\scene\camera\camFPS.h" />
-    <ClInclude Include="include\engine\scene\camInputController.h" />
-    <ClInclude Include="include\engine\scene\camera\projection.h" />
+    <ClInclude Include="include\engine\camera\camBase.h" />
+    <ClInclude Include="include\engine\camera\camFPS.h" />
+    <ClInclude Include="include\engine\camera\cam6DOF.h" />
+    <ClInclude Include="include\engine\camera\camInputController.h" />
+    <ClInclude Include="include\engine\camera\projection.h" />
     <ClInclude Include="Include\Glad\glad.h" />
     <ClInclude Include="include\engine\input\keys.h" />
     <ClInclude Include="include\engine\input\inputHandler.h" />

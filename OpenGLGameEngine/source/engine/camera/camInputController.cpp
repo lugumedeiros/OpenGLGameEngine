@@ -1,10 +1,10 @@
 #pragma once
-#include "../../../include/engine/scene/camInputController.h"
+#include "../../../include/engine/camera/camInputController.h"
 
-CameraInputControl::CameraInputControl(BaseCamera& camera) : cam(camera) {
+CameraInputControl::CameraInputControl(CamBase& camera) : cam(camera) {
 }
 
-void CameraInputControl::setCamera(BaseCamera& camera) {
+void CameraInputControl::setCamera(CamBase& camera) {
 	cam = camera;
 }
 

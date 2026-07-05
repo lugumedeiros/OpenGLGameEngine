@@ -1,9 +1,9 @@
 #pragma once
 #include "camBase.h"
 
-class FPSCamera : public BaseCamera {
+class CamFPS : public CamBase {
 public:
-	using BaseCamera::BaseCamera;
+	using CamBase::CamBase;
 	void update(float deltaTime) override;
 	void setView(glm::vec3 CamPos, glm::vec3 targetPos, float roll) override;
 
