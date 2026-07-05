@@ -17,21 +17,21 @@ public:
 	virtual void update(float deltaTime) = 0;
 	virtual void setView(glm::vec3 CamPos, glm::vec3 targetPos, float roll) = 0;
 
-	void addRotation(glm::vec3 rotation);
-	void addTranslation(glm::vec3 translation);
+	virtual void addRotation(glm::vec3 rotation);
+	virtual void addTranslation(glm::vec3 translation);
 
 	// CONFIG
-	void configSet(CAM_CONFIG config, float val, float inc, float min, float max);
-	void configIncrement(CAM_CONFIG config);
-	void configDecrement(CAM_CONFIG config);
-	void configRestore(CAM_CONFIG config);
-	void lockTarget(bool isLocked);
-	void setLockTargetPos(glm::vec3 targetPos) { posLockTarget = targetPos; };
+	virtual void configSet(CAM_CONFIG config, float val, float inc, float min, float max);
+	virtual void configIncrement(CAM_CONFIG config);
+	virtual void configDecrement(CAM_CONFIG config);
+	virtual void configRestore(CAM_CONFIG config);
+	virtual void lockTarget(bool isLocked);
+	virtual void setLockTargetPos(glm::vec3 targetPos) { posLockTarget = targetPos; };
 
 	// GETTERS
-	bool getIsTargetLocked() { return isTargetLocked; };
-	glm::mat4 getProjection() const { return projection.getMatrix(); }
-	glm::mat4 getView() const { return view; }
+	virtual bool getIsTargetLocked() { return isTargetLocked; };
+	virtual glm::mat4 getProjection() const { return projection.getMatrix(); }
+	virtual glm::mat4 getView() const { return view; }
 
 protected:
 	virtual void rotate(float delta) = 0;
@@ -55,13 +55,13 @@ protected:
 	glm::vec3 right{ 1.0f, 0.0f, 0.0f, };
 
 	ConfigValue<float>& getConfig(CAM_CONFIG config);
-	void printPosInfo();
-	float getPitch() const;
-	float getYaw() const;
-	float getRoll() const;
+	virtual void printPosInfo();
+	virtual float getPitch() const;
+	virtual float getYaw() const;
+	virtual float getRoll() const;
 	
-	bool isBufferEmpty() const;
-	void clearBuffers();
-	void updateAxis();
-	void updateViewMatrix();
+	virtual bool isBufferEmpty() const;
+	virtual void clearBuffers();
+	virtual void updateAxis();
+	virtual void updateViewMatrix();
 };

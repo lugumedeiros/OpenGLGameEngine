@@ -74,7 +74,7 @@ float BaseCamera::getRoll() const {
 	glm::vec3 upNoRoll = glm::cross(rightNoRoll, front);
 	float angle = std::atan2(glm::dot(right, upNoRoll), glm::dot(up, upNoRoll));
 
-	return glm::degrees(angle);
+	return glm::degrees(-angle);
 }
 
 void BaseCamera::clearBuffers() {
