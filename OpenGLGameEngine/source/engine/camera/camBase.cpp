@@ -15,24 +15,32 @@ void CamBase::addTranslation(glm::vec3 translation) {
 	movementBuffer.add(translation);
 }
 
-void CamBase::configSet(CAM_CONFIG config, float val, float inc, float min, float max) {
-	ConfigValue<float>& cfg = getConfig(config);
-	cfg = ConfigValue<float>{ val, inc, min, max };
-}
-
-void CamBase::configIncrement(CAM_CONFIG config) {
-	ConfigValue<float>& cfg = getConfig(config);
-	cfg.inc();
-}
-
-void CamBase::configDecrement(CAM_CONFIG config) {
-	ConfigValue<float>& cfg = getConfig(config);
-	cfg.dec();
-}
-
-void CamBase::configRestore(CAM_CONFIG config) {
-	ConfigValue<float>& cfg = getConfig(config);
-	cfg.restore();
+void CamBase::config(CAM_CONFIG configuration, CAM_CONFIG_OP operation, float val1) {
+	// val2 is here for future use, currently not used
+	ConfigValue<float>& cfg = getConfig(configuration);
+	switch (operation) {
+	case CAM_CONFIG_OP::RESTORE:
+		cfg.restore();
+		break;
+	case CAM_CONFIG_OP::INCREMENT:
+		cfg.inc();
+		break;
+	case CAM_CONFIG_OP::DECREMENT:
+		cfg.dec();
+		break;
+	case CAM_CONFIG_OP::SET:
+		cfg.set(val1);
+		break;
+	case CAM_CONFIG_OP::SET_INC:
+		cfg.setInc(val1);
+		break;
+	default:
+		throw std::invalid_argument("Invalid CAM_CONFIG operation enum value.");
+	}
+	
+	if (configuration == CAM_CONFIG::FOV) {
+		projection.setFOV(fov.get());
+	}
 }
 
 void CamBase::lockTarget(bool isLocked) {
@@ -54,6 +62,10 @@ void CamBase::printPosInfo() {
 	std::cout << "FOV: " << fov.get() << std::endl;
 	std::cout << "PROJECTION: " << projection.getMatrix()[0][0] << " " << projection.getMatrix()[1][1] << " " << projection.getMatrix()[2][2] << " " << projection.getMatrix()[3][3] << '\n';
 	std::cout << "--------------------------------------------------" << std::endl;
+}
+
+float CamBase::getConfigVal(CAM_CONFIG cfg) {
+	return getConfig(cfg).get();
 }
 
 float CamBase::getPitch() const {
@@ -104,6 +116,22 @@ ConfigValue<float>& CamBase::getConfig(CAM_CONFIG config) {
 		return movSpeed;
 	case CAM_CONFIG::ROT_SPEED:
 		return rotSpeed;
+	case CAM_CONFIG::ZOOM:
+		return zoom1;
+	default:
+		throw std::invalid_argument("Invalid CAM_CONFIG enum value.");
+	}
+}
+
+void CamBase::configUpdate(CAM_CONFIG config) {
+	switch (config) {
+	case CAM_CONFIG::FOV:
+		projection.setFOV(fov.get());
+		break;
+	case CAM_CONFIG::MOV_SPEED:
+		break;
+	case CAM_CONFIG::ROT_SPEED:
+		break;
 	default:
 		throw std::invalid_argument("Invalid CAM_CONFIG enum value.");
 	}

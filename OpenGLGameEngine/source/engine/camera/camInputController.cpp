@@ -81,23 +81,24 @@ void CameraInputControl::toggleFPSMode(float press) {
 
 // ZOOM
 void CameraInputControl::zoom(float press) {
-	cam.configIncrement(CAM_CONFIG::FOV);
+	CAM_CONFIG_OP op = (press <= 0.0f) ? CAM_CONFIG_OP::INCREMENT : CAM_CONFIG_OP::DECREMENT;
+	cam.config(CAM_CONFIG::FOV, op, 0.0f);
 }
 
 void CameraInputControl::zoomIncrease(float press) {
-	cam.configIncrement(CAM_CONFIG::FOV);
+	cam.config(CAM_CONFIG::FOV, CAM_CONFIG_OP::SET, 0.0f);
 }
 
 void CameraInputControl::zoomDecrease(float press) {
-	cam.configDecrement(CAM_CONFIG::FOV);
+	cam.config(CAM_CONFIG::FOV, CAM_CONFIG_OP::DECREMENT, 0.0f);
 }
 
 void CameraInputControl::zoomSet(float press) {
-	cam.configDecrement(CAM_CONFIG::FOV);
+	cam.config(CAM_CONFIG::FOV, CAM_CONFIG_OP::SET, cam.getConfigVal(CAM_CONFIG::ZOOM));
 }
 
 void CameraInputControl::zoomUnset(float press) {
-	cam.configRestore(CAM_CONFIG::FOV);
+	cam.config(CAM_CONFIG::FOV, CAM_CONFIG_OP::RESTORE, 0.0f);
 }
 
 // INTERNAL

@@ -17,7 +17,7 @@
 template<typename T>
 class ConfigValue {
 public:
-	ConfigValue(T val) :val(val), defVal(val), incVal(val) {}
+	ConfigValue(T val) :val(val), defVal(val), incVal(val-val) {}
 	ConfigValue(T val, T increment) :val(val), defVal(val), incVal(increment) {}
 	ConfigValue(T val, T increment, T min, T max) :val(val), defVal(val), incVal(increment), min(min), max(max) {
 		hasMinMax = true;
