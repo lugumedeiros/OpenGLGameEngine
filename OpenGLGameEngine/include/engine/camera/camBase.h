@@ -43,8 +43,8 @@ protected:
 	ConfigValue<float> fov{ 45.0f, 1.0f, 10.0f, 80.0f };
 	ConfigValue<float> movSpeed{ 20.0f, 5.0f };
 	ConfigValue<float> rotSpeed{ 100.0f, 10.0f };
-	VectorChangeBuffer movementBuffer{};
-	VectorChangeBuffer rotationBuffer{};
+	VectorChangeBuffer movementBuffer{}; // x = right, y = up, z = forward/backward
+	VectorChangeBuffer rotationBuffer{}; // x = pitch, y = yaw, z = roll
 	glm::vec3 pos{ 0.0f };
 	glm::quat orientation{ 1.0f, 0.0f, 0.0f, 0.0f };
 	glm::vec3 posLockTarget{ 0.0f };

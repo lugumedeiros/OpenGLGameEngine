@@ -16,8 +16,8 @@
 #include "render/shaderCompiler.h"
 #include "render/textureService.h"
 #include "input/inputHandler.h"
-#include "scene/camera/camBase.h"
-#include "scene/camInputController.h"
+#include "camera/camBase.h"
+#include "camera/camInputController.h"
 
 class Engine {
 public:

@@ -13,7 +13,8 @@
 #include "../include/engine/input/inputHandler.h"
 #include "../include/engine/engine.h"
 #include "../include/effecs/uniqueColorChange.h"
-#include "../include/engine/scene/camera/camFPS.h"
+#include "../include/engine/camera/camFPS.h"
+#include "../include/engine/camera/cam6DOF.h"
 
 // test
 #include <thread>
@@ -53,7 +54,8 @@ std::string_view textureSmilePath = "assets/textures/awesomeface.png";
 
 int main() {
 	MainWindow mainWindow(width, height, title);
-	CamFPS cam{ 45.0f, float(width), float(height), 0.1f, 100.0f };
+	Cam6DOF cam{ 45.0f, float(width), float(height), 0.1f, 100.0f };
+	//CamFPS cam{ 45.0f, float(width), float(height), 0.1f, 100.0f };
 	Engine engine(&mainWindow, cam);
 	//engine.setActiveCamera(cam);
 
@@ -120,13 +122,13 @@ int main() {
 	cam.setLockTargetPos(glm::vec3{ 0.0f, 0.0f, 0.0f });
 	
 	engine.processInput();
-	cam.setView(glm::vec3{ 0.0f, 0.0f, -10.0f }, glm::vec3{ 0.0f, 0.0f, 0.0f }, 0.0f);
+	cam.setView(glm::vec3{ 0.0f, -10.0f, 0.0f }, glm::vec3{ 0.0f, 0.0f, 0.0f }, 0.0f);
 
 ///////////////// END TEST AREA
 
 	while (!mainWindow.shouldClose()) {
 		engine.processInput();
-		
+
 		//effect update
 		effectColor.advance();
 		materiaMainTriangle->setColorOverlay(glm::vec4( effectColor.r, effectColor.g, effectColor.b, 1.0f ), colorOverlayFactor);

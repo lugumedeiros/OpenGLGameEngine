@@ -12,4 +12,9 @@ private:
 	void rotateToTarget(float delta, glm::vec3 target) override;
 	void movePos(float delta) override;
 	void lockTarget(bool isLocked) override;
+
+	void rotateToTarget(float delta, glm::vec3 target, float roll);
+	void reset();
+
+	const glm::vec3 worldUp{ 0.0f, 1.0f, 0.0f };
 };
