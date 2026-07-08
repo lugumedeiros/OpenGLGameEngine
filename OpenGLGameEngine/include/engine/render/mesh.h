@@ -5,6 +5,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include "../../window/window.h"
 #include "shaderCompiler.h"
 
@@ -19,6 +20,10 @@ public:
 
 	const glm::mat4 getTransform() const { return transform; }
 	void setTransform(glm::mat4 transform);
+	void resetTransform();
+	void scale(glm::vec3 scale3);
+	void translate(glm::vec3 pos3);
+
 private:
 	glm::mat4 transform{glm::mat4(1.0f)};
 };

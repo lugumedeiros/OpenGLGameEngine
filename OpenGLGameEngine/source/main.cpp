@@ -89,9 +89,8 @@ int main() {
 	for (auto pos : cubePositions) {
 		Mesh* mesh = engine.createMesh(verticesTriangle, sizeof(verticesTriangle), verticesTriangleMiddle, sizeof(verticesTriangleMiddle));
 		cubes.push_back(mesh);
-		glm::mat4 translation = glm::translate(model, pos);
-		translation = glm::scale(translation, glm::vec3(0.5, 0.5, 0.5));
-		mesh->setTransform(translation);
+		mesh->translate(pos);
+		mesh->scale(glm::vec3(0.5, 0.5, 0.5));
 	}
 
 	// TEXTURE
