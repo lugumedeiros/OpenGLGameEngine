@@ -3,7 +3,7 @@
 in vec3 defColor;
 in vec2 defTexCoord;
 
-uniform vec3 lightSourceColor;
+//uniform vec3 lightSourceColor;
 
 uniform vec4 colorOverlay;
 uniform float colorOverlayFactor;

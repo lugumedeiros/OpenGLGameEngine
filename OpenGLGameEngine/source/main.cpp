@@ -48,14 +48,15 @@ unsigned int verticesTriangleMiddle[] = {
 
 std::string_view vertexPath = "source/shaders/vs_basic.glsl";
 std::string_view fragmentColorPath = "source/shaders/fs_complex.glsl";
+	std::string_view fragmentLightPath = "source/shaders/fs_light.glsl";
 
 std::string_view textureWallPath = "assets/textures/woodcontainer.jpg";
 std::string_view textureSmilePath = "assets/textures/awesomeface.png";
 
 int main() {
 	MainWindow mainWindow(width, height, title);
-	Cam6DOF cam{ 45.0f, float(width), float(height), 0.1f, 100.0f };
-	//CamFPS cam{ 45.0f, float(width), float(height), 0.1f, 100.0f };
+	//Cam6DOF cam{ 45.0f, float(width), float(height), 0.1f, 100.0f };
+	CamFPS cam{ 45.0f, float(width), float(height), 0.1f, 100.0f };
 	Engine engine(&mainWindow, cam);
 	//engine.setActiveCamera(cam);
 
@@ -93,6 +94,17 @@ int main() {
 		mesh->scale(glm::vec3(0.5, 0.5, 0.5));
 	}
 
+	// LIGHT CUBE
+	ShaderProgram* shaderProgram_LightSource = engine.createShaderProgram(vertexPath, fragmentLightPath);
+	if (shaderProgram_LightSource == nullptr) {
+		return 2;
+	}
+	Mesh* meshLightSource = engine.createMesh(verticesTriangle, sizeof(verticesTriangle), verticesTriangleMiddle, sizeof(verticesTriangleMiddle));
+	meshLightSource->translate(glm::vec3(10.0f, 10.0f, -20.0f));
+	meshLightSource->scale(glm::vec3(0.5f));
+	//cubes.push_back(meshLightSource);
+	Material* materialLightSource = engine.createMaterial(*shaderProgram_Texture);
+
 	// TEXTURE
 	Texture* textureBase = engine.getTexture("brickwall");
 	if (textureBase == nullptr) {
@@ -109,10 +121,8 @@ int main() {
 	float baseTextureFactor = 1.0f;
 	float ovelayTextureFactor = 1.0f;
 
-	Material* materiaMainTriangle = engine.createMaterial(*shaderProgram_Texture);
-	materiaMainTriangle->setColorOverlay(colorOverlay, colorOverlayFactor);
-	materiaMainTriangle->setBaseTexture(*textureBase, baseTextureFactor);
-	materiaMainTriangle->setOverlayTexture(*textureOverlay, ovelayTextureFactor);
+	Material* materiaMainTriangle = engine.createMaterial(*shaderProgram_LightSource);
+	//materiaMainTriangle->setColorOverlay(colorOverlay, colorOverlayFactor);
 	
 	UniqueColorChange effectColor(1.0f, 0.0f, 0.0f, 1.0f);
 
@@ -121,7 +131,7 @@ int main() {
 	cam.setLockTargetPos(glm::vec3{ 0.0f, 0.0f, 0.0f });
 	
 	engine.processInput();
-	cam.setView(glm::vec3{ 0.0f, -10.0f, 0.0f }, glm::vec3{ 0.0f, 0.0f, 0.0f }, 0.0f);
+	cam.setView(glm::vec3{ 0.0f, 0.0f, 10.0f }, glm::vec3{ 0.0f, 0.0f, 0.0f }, 0.0f);
 
 ///////////////// END TEST AREA
 
@@ -150,6 +160,10 @@ int main() {
 		
 		// rendering start
 		engine.clearRender();
+
+		// RENDER LIGHT SOURCE TESTE
+		engine.renderMesh(meshLightSource, materialLightSource);
+		// END TETSE
 
 		// Render all cubes
 		for (auto& cube : cubes) {
