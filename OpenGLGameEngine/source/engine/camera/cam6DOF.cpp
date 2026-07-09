@@ -13,7 +13,7 @@ void Cam6DOF::update(float deltaTime) {
 	updateAxis();
 	updateViewMatrix();
 	clearBuffers();
-	printPosInfo();
+	//printPosInfo();
 }
 
 void Cam6DOF::setView(glm::vec3 CamPos, glm::vec3 targetPos, float roll) {

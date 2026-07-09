@@ -14,7 +14,7 @@ void CamFPS::update(float deltaTime) {
 	updateAxis();
 	updateViewMatrix();
 	clearBuffers();
-	printPosInfo();
+	//printPosInfo();
 }
 
 void CamFPS::setView(glm::vec3 camPos, glm::vec3 targetPos, float roll) {

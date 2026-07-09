@@ -48,7 +48,7 @@ unsigned int verticesTriangleMiddle[] = {
 
 std::string_view vertexPath = "source/shaders/vs_basic.glsl";
 std::string_view fragmentColorPath = "source/shaders/fs_complex.glsl";
-	std::string_view fragmentLightPath = "source/shaders/fs_light.glsl";
+std::string_view fragmentLightPath = "source/shaders/fs_lightsource.glsl";
 
 std::string_view textureWallPath = "assets/textures/woodcontainer.jpg";
 std::string_view textureSmilePath = "assets/textures/awesomeface.png";
@@ -68,7 +68,7 @@ int main() {
 	////////////////// TEST AREA
 	ShaderProgram* shaderProgram_Texture = engine.createShaderProgram( vertexPath, fragmentColorPath );
 	if (shaderProgram_Texture == nullptr) {
-		return 2;
+		return 20;
 	}
 
 	// MULTIPLE CUBES
@@ -97,13 +97,13 @@ int main() {
 	// LIGHT CUBE
 	ShaderProgram* shaderProgram_LightSource = engine.createShaderProgram(vertexPath, fragmentLightPath);
 	if (shaderProgram_LightSource == nullptr) {
-		return 2;
+		return 21;
 	}
 	Mesh* meshLightSource = engine.createMesh(verticesTriangle, sizeof(verticesTriangle), verticesTriangleMiddle, sizeof(verticesTriangleMiddle));
 	meshLightSource->translate(glm::vec3(10.0f, 10.0f, -20.0f));
 	meshLightSource->scale(glm::vec3(0.5f));
 	//cubes.push_back(meshLightSource);
-	Material* materialLightSource = engine.createMaterial(*shaderProgram_Texture);
+	Material* materialLightSource = engine.createMaterial(*shaderProgram_LightSource);
 
 	// TEXTURE
 	Texture* textureBase = engine.getTexture("brickwall");
@@ -121,7 +121,7 @@ int main() {
 	float baseTextureFactor = 1.0f;
 	float ovelayTextureFactor = 1.0f;
 
-	Material* materiaMainTriangle = engine.createMaterial(*shaderProgram_LightSource);
+	Material* materiaMainTriangle = engine.createMaterial(*shaderProgram_Texture);
 	//materiaMainTriangle->setColorOverlay(colorOverlay, colorOverlayFactor);
 	
 	UniqueColorChange effectColor(1.0f, 0.0f, 0.0f, 1.0f);

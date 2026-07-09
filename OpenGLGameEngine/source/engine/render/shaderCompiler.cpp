@@ -8,6 +8,10 @@ ShaderProgram::ShaderProgram(std::string_view vertexSourcePath, std::string_view
 		return;
 	}
 	createShaderProgram(vertexSource, fragmentSource);
+	if (!success) {
+		std::cerr << "SHADER PROGRAM CREATION ABORTED" << std::endl;
+		return;
+	}
 
 	// load uniforms
 	for (const auto& name : uniformNamesToLoad) {

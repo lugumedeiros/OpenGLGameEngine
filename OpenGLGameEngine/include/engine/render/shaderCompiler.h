@@ -16,7 +16,8 @@ static const std::vector<std::string> uniformNamesToLoad{
 	"colorOverlay",				// Solid Color that blends with the gpu loaded mesh color
 	"baseTexture",				// Texture sample 0
 	"overlayTexture",			// Texture sample 1
-	"lightSourceColor",			// Color of the light hitting the mesh
+	"ambientColor",				// Color of the ambient light hitting the mesh
+	"ambientColorFactor",		// Blend Factor for the Ambient Light
 	"uModel",					// Mesh Space -> World Space 
 	"uView",					// World Space -> Camera Space
 	"uProjection",				// Camera Space -> Projection Space
