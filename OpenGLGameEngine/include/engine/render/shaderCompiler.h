@@ -10,32 +10,33 @@
 #include <vector>
 
 static const std::vector<std::string> uniformNamesToLoad{
-	"colorOverlayFactor",
-	"baseTexFactor",
-	"overlayTexFactor",
-	"colorOverlay",
-	"baseTexture",
-	"overlayTexture",
-	"uModel",
-	"uView",
-	"uProjection",
+	"colorOverlayFactor",		// Blend Factor for Color Overlay Texture
+	"baseTexFactor",			// Blend Factor for Base Texture
+	"overlayTexFactor",			// Blen Factor for Overlay Texture
+	"colorOverlay",				// Solid Color that blends with the gpu loaded mesh color
+	"baseTexture",				// Texture sample 0
+	"overlayTexture",			// Texture sample 1
+	"lightSourceColor",			// Color of the light hitting the mesh
+	"uModel",					// Mesh Space -> World Space 
+	"uView",					// World Space -> Camera Space
+	"uProjection",				// Camera Space -> Projection Space
 };
 
 class ShaderProgram {
 public:
 	ShaderProgram(std::string_view vertexSourcePath, std::string_view fragmentSourcePath);
 	
-	bool success{false};
+	int success{false};
 
 	GLuint getID() const;
-	GLuint getUniformID(std::string_view uniform);
+	GLint getUniformID(std::string_view uniform);
 
 private:
 	GLuint ID{ 0 };
 	std::string readShaderSource(std::string_view sourcePath);
 	GLuint createShaderProgram(std::string_view vertexSource, std::string_view fragmentSource);
-	static bool compileShader(unsigned int* shader, int shaderType, std::string_view src);
-	static bool linkProgramShader(unsigned int* shaderProgram, unsigned int vertexShader, unsigned int FragmentShader);
+	GLuint compileShader(GLenum shaderType, std::string_view src);
+	GLuint linkProgramShader(GLuint vertexShader, GLuint FragmentShader);
 	
-	std::map<std::string, GLuint> uniformCache;
+	std::map<std::string, GLint> uniformCache;
 };

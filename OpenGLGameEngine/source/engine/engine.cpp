@@ -108,9 +108,10 @@ void Engine::setActiveCamera(CamBase& camera) {
 
 void Engine::setUniforms(Mesh& mesh, Material& mat, CamBase& camera) {
 	ShaderProgram* shader = getShaderProgram(mat.shaderProgramID);
-	//if (!mat.uniformChanged) {
-	//	return;
-	//}
+
+	// TEST START --
+	glUniform3f(shader->getUniformID("lightSourceColor"), 0.0f, 1.0f, 0.0f);
+	// TEST END --
 
 	// View
 	glUniformMatrix4fv(shader->getUniformID("uProjection"), 1, GL_FALSE, glm::value_ptr(camera.getProjection()));
@@ -149,6 +150,7 @@ void Engine::renderMesh(Mesh* mesh, Material* material) {
 		std::cerr << "ERROR: SHADER PTR NULL FOR RENDERING" << std::endl;
 		return;
 	}
+	glUseProgram(shaderProgramPtr->getID());
 	setUniforms(*mesh, *material, selectedCamera);
 	render.render(*mesh, *material, *shaderProgramPtr);
 }

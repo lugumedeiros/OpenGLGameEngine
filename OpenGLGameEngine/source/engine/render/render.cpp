@@ -28,10 +28,7 @@ void Render::clear() {
 }
 
 void Render::render(const Mesh& mesh, Material& material, ShaderProgram& shaderProgram) {
+	// Render to current set shader program
 	glBindVertexArray(mesh.VAO);
-	
-	glUseProgram(shaderProgram.getID());
-
-	// Draw
 	glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
 };
