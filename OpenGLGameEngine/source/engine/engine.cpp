@@ -112,8 +112,13 @@ void Engine::setUniforms(Mesh& mesh, Material& mat, CamBase& camera) {
 	ShaderProgram* shader = getShaderProgram(mat.shaderProgramID);
 
 	// TEST START --
-	glUniform3f(shader->getUniformID("ambientColor"), 0.0f, 1.0f, 0.0f);
-	glUniform1f(shader->getUniformID("ambientColorFactor"), 1.0f);
+	glUniform3f(shader->getUniformID("ambientColor"), 1.0f, 1.0f, 1.0f);
+	glUniform1f(shader->getUniformID("ambientColorFactor"), 0.1f);
+
+
+	glUniform3f(shader->getUniformID("sourceLightPos"), 10.0f, 10.0f, -20.0f);
+	glUniform3f(shader->getUniformID("sourceLightColor"), 1.0f, 0.0f, 0.0f);
+	glUniform1f(shader->getUniformID("sourceLightFactor"), 1.0f);
 	// TEST END --
 
 	// View

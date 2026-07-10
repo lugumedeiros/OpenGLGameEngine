@@ -9,11 +9,22 @@ uniform mat4 uModel;
 uniform mat4 uView;
 uniform mat4 uProjection;
 
+out vec3 defPos;
 out vec3 defColor;
 out vec2 defTexCoord;
+out vec3 defNormal;
 
 void main(){
-	gl_Position = uProjection * uView * uModel * vec4(aPos, 1.0f);
+
+	// POS
+	vec4 worldPos = uModel * vec4(aPos, 1.0f);
+	gl_Position = uProjection * uView * worldPos;
+	
+	defPos = worldPos.xyz;
+	defNormal = mat3(uModel) * aNormal;
+
+	// TEXTURE
 	defColor = aColor;
 	defTexCoord = aTexCoord;
+
 }

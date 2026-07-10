@@ -14,10 +14,6 @@ uniform float baseTexFactor;
 uniform sampler2D overlayTexture;
 uniform float overlayTexFactor;
 
-// LIGHT
-uniform vec3 ambientColor;
-uniform float ambientColorFactor;
-
 // OUT
 out vec4 FragColor;
 
@@ -28,5 +24,4 @@ void main() {
 	FragColor = mix( vec4(defColor, 1.0), colorOverlay, colorOverlayFactor );
 	FragColor = mix( FragColor, baseTexVec, baseTexFactor );
 	FragColor = mix( FragColor, OverTexVec, overlayTexFactor );
-	FragColor = FragColor * vec4( ambientColor * ambientColorFactor, 1.0 );
 }

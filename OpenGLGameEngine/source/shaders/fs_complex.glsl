@@ -1,8 +1,10 @@
 #version 330 core
 
 // IN
+in vec3 defPos;
 in vec3 defColor;
 in vec2 defTexCoord;
+in vec3 defNormal;
 
 // TEXTURE
 uniform vec4 colorOverlay;
@@ -18,6 +20,10 @@ uniform float overlayTexFactor;
 uniform vec3 ambientColor;
 uniform float ambientColorFactor;
 
+uniform vec3 sourceLightPos;
+uniform vec3 sourceLightColor;
+uniform float sourceLightFactor;
+
 // OUT
 out vec4 FragColor;
 
@@ -28,5 +34,13 @@ void main() {
 	FragColor = mix( vec4(defColor, 1.0), colorOverlay, colorOverlayFactor );
 	FragColor = mix( FragColor, baseTexVec, baseTexFactor );
 	FragColor = mix( FragColor, OverTexVec, overlayTexFactor );
-	FragColor = FragColor * vec4( ambientColor * ambientColorFactor, 1.0 );
+
+	// LIGHT
+	vec3 normalizedNormal = normalize(defNormal);
+	vec3 lightDirection = normalize(sourceLightPos - defPos);
+	float diffusion = max(dot(normalizedNormal, lightDirection), 0.0);
+
+	vec3 sumLight = (ambientColor * ambientColorFactor) + (sourceLightColor * diffusion * sourceLightFactor);
+
+	FragColor = FragColor * vec4(sumLight, 1.0 );
 }

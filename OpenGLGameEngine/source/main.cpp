@@ -24,24 +24,75 @@ const int width = 800;
 const int height = 600;
 const char* title = "OpenGL Game Engine";
 
+const glm::vec3 leftNormal{ -1, 0, 0 };
+const glm::vec3 rightNormal{ 1, 0, 0 };
+const glm::vec3 topNormal{ 0, 1, 0 };
+const glm::vec3 downNormal{ 0, -1, 0 };
+const glm::vec3 backNormal{ 0, 0, -1 };
+const glm::vec3 frontNormal{ 0, 0, 1 };
+
 std::vector<MeshVertex> verticesTriangle = {
-	MeshVertex{ glm::vec3(-1.0f, -1.0f, -1.0f),	glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 0.0f), glm::vec3()},
-	MeshVertex{ glm::vec3(-1.0f, +1.0f, -1.0f),	glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 1.0f), glm::vec3()},
-	MeshVertex{ glm::vec3(+1.0f, -1.0f, -1.0f),	glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec3()},
-	MeshVertex{ glm::vec3(+1.0f, +1.0f, -1.0f),	glm::vec3(0.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f), glm::vec3()},
-	MeshVertex{ glm::vec3(-1.0f, -1.0f, +1.0f),	glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 0.0f), glm::vec3()},
-	MeshVertex{ glm::vec3(-1.0f, +1.0f, +1.0f),	glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 1.0f), glm::vec3()},
-	MeshVertex{ glm::vec3(+1.0f, -1.0f, +1.0f),	glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec3()},
-	MeshVertex{ glm::vec3(+1.0f, +1.0f, +1.0f),	glm::vec3(0.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f), glm::vec3()},
+	// FACE LEFT
+	MeshVertex{ glm::vec3(-1.0f, -1.0f, -1.0f),	glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 0.0f), leftNormal},
+	MeshVertex{ glm::vec3(-1.0f, +1.0f, -1.0f),	glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 1.0f), leftNormal},
+	MeshVertex{ glm::vec3(-1.0f, -1.0f, +1.0f),	glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.0f, 0.0f), leftNormal},
+	MeshVertex{ glm::vec3(-1.0f, +1.0f, +1.0f),	glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 1.0f), leftNormal},
+
+	// FACE RIGHT
+	MeshVertex{ glm::vec3(+1.0f, -1.0f, -1.0f),	glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f), rightNormal},
+	MeshVertex{ glm::vec3(+1.0f, +1.0f, -1.0f),	glm::vec3(0.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f), rightNormal},
+	MeshVertex{ glm::vec3(+1.0f, -1.0f, +1.0f),	glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f), rightNormal},
+	MeshVertex{ glm::vec3(+1.0f, +1.0f, +1.0f),	glm::vec3(0.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f), rightNormal},
+
+	// FACE TOP
+	MeshVertex{ glm::vec3(-1.0f, +1.0f, -1.0f),	glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f), topNormal},
+	MeshVertex{ glm::vec3(-1.0f, +1.0f, +1.0f),	glm::vec3(0.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f), topNormal},
+	MeshVertex{ glm::vec3(+1.0f, +1.0f, -1.0f),	glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f), topNormal},
+	MeshVertex{ glm::vec3(+1.0f, +1.0f, +1.0f),	glm::vec3(0.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f), topNormal},
+
+	// FACE DOWN
+	MeshVertex{ glm::vec3(-1.0f, -1.0f, -1.0f),	glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f), downNormal},
+	MeshVertex{ glm::vec3(-1.0f, -1.0f, +1.0f),	glm::vec3(0.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f), downNormal},
+	MeshVertex{ glm::vec3(+1.0f, -1.0f, -1.0f),	glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f), downNormal},
+	MeshVertex{ glm::vec3(+1.0f, -1.0f, +1.0f),	glm::vec3(0.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f), downNormal},
+
+	// FACE BACK
+	MeshVertex{ glm::vec3(-1.0f, -1.0f, -1.0f),	glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f), backNormal},
+	MeshVertex{ glm::vec3(-1.0f, +1.0f, -1.0f),	glm::vec3(0.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f), backNormal},
+	MeshVertex{ glm::vec3(+1.0f, -1.0f, -1.0f),	glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f), backNormal},
+	MeshVertex{ glm::vec3(+1.0f, +1.0f, -1.0f),	glm::vec3(0.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f), backNormal},
+
+	// FACE FRONT
+	MeshVertex{ glm::vec3(-1.0f, -1.0f, +1.0f),	glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f), frontNormal},
+	MeshVertex{ glm::vec3(-1.0f, +1.0f, +1.0f),	glm::vec3(0.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f), frontNormal},
+	MeshVertex{ glm::vec3(+1.0f, -1.0f, +1.0f),	glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f), frontNormal},
+	MeshVertex{ glm::vec3(+1.0f, +1.0f, +1.0f),	glm::vec3(0.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f), frontNormal},
 };
 
 unsigned int verticesTriangleMiddle[] = {
-	0, 2, 1, 1, 2, 3,
-	4, 5, 6, 5, 7, 6,
-	0, 1, 4, 1, 5, 4,
-	2, 6, 3, 3, 6, 7,
-	1, 3, 5, 3, 7, 5,
-	0, 4, 2, 2, 4, 6
+	// LEFT
+	0,  2,  1,
+	1,  2,  3,
+
+	// RIGHT
+	4,  6,  5,
+	5,  6,  7,
+
+	// TOP
+	8, 10,  9,
+	9, 10, 11,
+
+	// BOTTOM
+	12, 14, 13,
+	13, 14, 15,
+
+	// BACK (-Z)
+	16, 18, 17,
+	17, 18, 19,
+
+	// FRONT (+Z)
+	20, 22, 21,
+	21, 22, 23,
 };
 
 std::string_view vertexPath = "source/shaders/vs_basic.glsl";
@@ -102,6 +153,7 @@ int main() {
 	meshLightSource->scale(glm::vec3(0.5f));
 	//cubes.push_back(meshLightSource);
 	Material* materialLightSource = engine.createMaterial(*shaderProgram_LightSource);
+	materialLightSource->setColorOverlay(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), 1.0f);
 
 	// TEXTURE
 	Texture* textureBase = engine.getTexture("brickwall");
