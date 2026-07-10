@@ -24,18 +24,16 @@ const int width = 800;
 const int height = 600;
 const char* title = "OpenGL Game Engine";
 
-float verticesTriangle[] = {
-	// position				// color			// texture coords
-	-1.0f, -1.0f, -1.0f,	0.0f, 0.0f, 1.0f,	0.0f, 0.0f,	// 0 left down back
-	-1.0f, 1.0f, -1.0f,		0.0f, 1.0f, 0.0f,	0.0f, 1.0f,	// 1 left up back
-	1.0f, -1.0f, -1.0f,		1.0f, 0.0f, 0.0f,	1.0f, 0.0f,	// 2 right down back
-	1.0f, 1.0f, -1.0f,		0.0f, 1.0f, 1.0f,	1.0f, 1.0f,	// 3 right up back
-
-	-1.0f, -1.0f, 1.0f,		0.0f, 0.0f, 1.0f,	0.0f, 0.0f,	// 4 left down front
-	-1.0f, 1.0f, 1.0f,		0.0f, 1.0f, 0.0f,	0.0f, 1.0f,	// 5 left up front
-	1.0f, -1.0f, 1.0f,		1.0f, 0.0f, 0.0f,	1.0f, 0.0f,	// 6 right down front
-	1.0f, 1.0f, 1.0f,		0.0f, 1.0f, 1.0f,	1.0f, 1.0f,	// 7 right up front
-	};
+std::vector<MeshVertex> verticesTriangle = {
+	MeshVertex{ glm::vec3(-1.0f, -1.0f, -1.0f),	glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 0.0f), glm::vec3()},
+	MeshVertex{ glm::vec3(-1.0f, +1.0f, -1.0f),	glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 1.0f), glm::vec3()},
+	MeshVertex{ glm::vec3(+1.0f, -1.0f, -1.0f),	glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec3()},
+	MeshVertex{ glm::vec3(+1.0f, +1.0f, -1.0f),	glm::vec3(0.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f), glm::vec3()},
+	MeshVertex{ glm::vec3(-1.0f, -1.0f, +1.0f),	glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 0.0f), glm::vec3()},
+	MeshVertex{ glm::vec3(-1.0f, +1.0f, +1.0f),	glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 1.0f), glm::vec3()},
+	MeshVertex{ glm::vec3(+1.0f, -1.0f, +1.0f),	glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec3()},
+	MeshVertex{ glm::vec3(+1.0f, +1.0f, +1.0f),	glm::vec3(0.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f), glm::vec3()},
+};
 
 unsigned int verticesTriangleMiddle[] = {
 	0, 2, 1, 1, 2, 3,
@@ -88,7 +86,7 @@ int main() {
 	glm::mat4 model = glm::mat4(1.0f); // Model POS base
 	std::vector<Mesh*> cubes{};
 	for (auto pos : cubePositions) {
-		Mesh* mesh = engine.createMesh(verticesTriangle, sizeof(verticesTriangle), verticesTriangleMiddle, sizeof(verticesTriangleMiddle));
+		Mesh* mesh = engine.createMesh(verticesTriangle, verticesTriangleMiddle, sizeof(verticesTriangleMiddle));
 		cubes.push_back(mesh);
 		mesh->translate(pos);
 		mesh->scale(glm::vec3(0.5, 0.5, 0.5));
@@ -99,7 +97,7 @@ int main() {
 	if (shaderProgram_LightSource == nullptr) {
 		return 21;
 	}
-	Mesh* meshLightSource = engine.createMesh(verticesTriangle, sizeof(verticesTriangle), verticesTriangleMiddle, sizeof(verticesTriangleMiddle));
+	Mesh* meshLightSource = engine.createMesh(verticesTriangle, verticesTriangleMiddle, sizeof(verticesTriangleMiddle));
 	meshLightSource->translate(glm::vec3(10.0f, 10.0f, -20.0f));
 	meshLightSource->scale(glm::vec3(0.5f));
 	//cubes.push_back(meshLightSource);

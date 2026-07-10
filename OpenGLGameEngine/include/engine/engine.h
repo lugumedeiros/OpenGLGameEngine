@@ -25,7 +25,7 @@ public:
 
 	// ----------- RENDER -----------  //
 
-	Mesh* createMesh(float* vertices, unsigned int verticesSize, unsigned int* indices, unsigned int indicesSize);
+	Mesh* createMesh(const std::vector<MeshVertex>& vertices, unsigned int* indices, unsigned int indicesSize);
 	ShaderProgram* createShaderProgram(std::string_view vertexSourcePath, std::string_view fragmentSourcePath);
 	Material* createMaterial(const ShaderProgram& shaderProgram);
 	Texture* createTexture(std::string_view texturePath);
