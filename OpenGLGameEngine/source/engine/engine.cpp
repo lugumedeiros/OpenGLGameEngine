@@ -127,6 +127,7 @@ void Engine::setUniforms(Mesh& mesh, Material& mat, CamBase& camera) {
 
 	// Mesh
 	glUniformMatrix4fv(shader->getUniformID("uModel"), 1, GL_FALSE, glm::value_ptr(mesh.getTransform()));
+	glUniformMatrix3fv(shader->getUniformID("uNormalMatrix"), 1, GL_FALSE, glm::value_ptr(mesh.getNormalMatrix()));
 
 	// Textures
 	glUniform1f(shader->getUniformID("colorOverlayFactor"), mat.getColorOverlayFactor());

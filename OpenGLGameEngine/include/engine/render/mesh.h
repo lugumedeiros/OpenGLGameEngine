@@ -27,11 +27,14 @@ public:
 	GLuint EBO{0};
 
 	const glm::mat4 getTransform() const { return transform; }
+	const glm::mat3 getNormalMatrix() const { return normalMatrix; }
 	void setTransform(glm::mat4 transform);
 	void resetTransform();
 	void scale(glm::vec3 scale3);
 	void translate(glm::vec3 pos3);
 
 private:
-	glm::mat4 transform{glm::mat4(1.0f)};
+	void updateNormalMatrix();
+	glm::mat4 transform{ glm::mat4(1.0f) };
+	glm::mat3 normalMatrix{ glm::mat3(1.0f) };
 };

@@ -24,6 +24,7 @@ static const std::vector<std::string> uniformNamesToLoad{
 	"uModel",					// Mesh Space -> World Space 
 	"uView",					// World Space -> Camera Space
 	"uProjection",				// Camera Space -> Projection Space
+	"uNormalMatrix",			// Normal Matrix Model
 };
 
 class ShaderProgram {

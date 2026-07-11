@@ -8,6 +8,7 @@ layout(location = 3) in vec3 aNormal;
 uniform mat4 uModel;
 uniform mat4 uView;
 uniform mat4 uProjection;
+uniform mat3 uNormalMatrix;
 
 out vec3 defPos;
 out vec3 defColor;
@@ -21,10 +22,12 @@ void main(){
 	gl_Position = uProjection * uView * worldPos;
 	
 	defPos = worldPos.xyz;
-	defNormal = mat3(uModel) * aNormal;
 
 	// TEXTURE
 	defColor = aColor;
 	defTexCoord = aTexCoord;
+
+	// NORMAL
+	defNormal = normalize(uNormalMatrix * aNormal);
 
 }
