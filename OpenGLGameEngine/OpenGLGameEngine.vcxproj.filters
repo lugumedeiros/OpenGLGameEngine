@@ -36,9 +36,6 @@
     <ClCompile Include="include\engine\render\mesh.h">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\engine\render\mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\effecs\uniqueColorChange.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -120,6 +117,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\engine\camera\cam6DOF.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine\render\Objects\gameObjectBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine\render\gameScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine\render\Objects\gameLightSourcePoint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine\render\Objects\gameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

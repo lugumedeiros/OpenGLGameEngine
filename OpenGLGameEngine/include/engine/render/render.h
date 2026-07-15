@@ -13,6 +13,7 @@
 #include "mesh.h"
 #include "textureService.h"
 #include "material.h"
+#include "Objects/gameObject.h"
 
 class Render {
 public:
@@ -23,7 +24,7 @@ public:
 	void setTest(float pres);
 	void setTest(bool isTest);
 	void clear();
-	void render(const Mesh& mesh, Material& material, ShaderProgram& shaderProgram);
+	void render(GameObject& gameObject);
 
 	bool isTest{ false };
 private:

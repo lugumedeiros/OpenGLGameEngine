@@ -158,7 +158,6 @@
     <ClCompile Include="include\engine\render\material.h" />
     <ClCompile Include="source\engine\render\textureService.cpp" />
     <ClCompile Include="source\effecs\uniqueColorChange.cpp" />
-    <ClCompile Include="source\engine\render\mesh.cpp" />
     <ClCompile Include="include\engine\render\mesh.h" />
     <ClCompile Include="source\engine\input\keys.cpp" />
     <ClCompile Include="source\engine\render\render.cpp" />
@@ -181,6 +180,10 @@
     <ClInclude Include="include\engine\camera\cam6DOF.h" />
     <ClInclude Include="include\engine\camera\camInputController.h" />
     <ClInclude Include="include\engine\camera\projection.h" />
+    <ClInclude Include="include\engine\render\Objects\gameObjectBase.h" />
+    <ClInclude Include="include\engine\render\gameScene.h" />
+    <ClInclude Include="include\engine\render\Objects\gameLightSourcePoint.h" />
+    <ClInclude Include="include\engine\render\Objects\gameObject.h" />
     <ClInclude Include="Include\Glad\glad.h" />
     <ClInclude Include="include\engine\input\keys.h" />
     <ClInclude Include="include\engine\input\inputHandler.h" />

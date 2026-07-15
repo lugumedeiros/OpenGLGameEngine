@@ -17,10 +17,8 @@ static const std::vector<std::string> uniformNamesToLoad{
 	"baseTexture",				// Texture sample 0
 	"overlayTexture",			// Texture sample 1
 	"ambientColor",				// Color of the ambient light hitting the mesh
-	"ambientColorFactor",		// Blend Factor for the Ambient Light
 	"sourceLightPos",			// Main Source Light Pos
 	"sourceLightColor",			// Main Source Light Color
-	"sourceLightFactor",		// Main Source Light Factor
 	"uModel",					// Mesh Space -> World Space 
 	"uView",					// World Space -> Camera Space
 	"uProjection",				// Camera Space -> Projection Space

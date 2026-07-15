@@ -108,60 +108,76 @@ void Engine::setActiveCamera(CamBase& camera) {
 	camInputControl.setCamera(selectedCamera);
 }
 
-void Engine::setUniforms(Mesh& mesh, Material& mat, CamBase& camera) {
-	ShaderProgram* shader = getShaderProgram(mat.shaderProgramID);
+void Engine::setUniforms(GameObject& gameObject, CamBase& camera) {
+	Material& material = gameObject.getMaterial();
 
-	// TEST START --
-	glUniform3f(shader->getUniformID("ambientColor"), 1.0f, 1.0f, 1.0f);
-	glUniform1f(shader->getUniformID("ambientColorFactor"), 0.1f);
-
-
-	glUniform3f(shader->getUniformID("sourceLightPos"), 10.0f, 10.0f, -20.0f);
-	glUniform3f(shader->getUniformID("sourceLightColor"), 1.0f, 0.0f, 0.0f);
-	glUniform1f(shader->getUniformID("sourceLightFactor"), 1.0f);
-	// TEST END --
+	ShaderProgram* shader = getShaderProgram(material.shaderProgramID);
 
 	// View
 	glUniformMatrix4fv(shader->getUniformID("uProjection"), 1, GL_FALSE, glm::value_ptr(camera.getProjection()));
 	glUniformMatrix4fv(shader->getUniformID("uView"), 1, GL_FALSE, glm::value_ptr(camera.getView()));
 
 	// Mesh
-	glUniformMatrix4fv(shader->getUniformID("uModel"), 1, GL_FALSE, glm::value_ptr(mesh.getTransform()));
-	glUniformMatrix3fv(shader->getUniformID("uNormalMatrix"), 1, GL_FALSE, glm::value_ptr(mesh.getNormalMatrix()));
+	glUniformMatrix4fv(shader->getUniformID("uModel"), 1, GL_FALSE, glm::value_ptr(gameObject.getTransform()));
+	glUniformMatrix3fv(shader->getUniformID("uNormalMatrix"), 1, GL_FALSE, glm::value_ptr(gameObject.getNormalMatrix()));
 
 	// Textures
-	glUniform1f(shader->getUniformID("colorOverlayFactor"), mat.getColorOverlayFactor());
-	glUniform1f(shader->getUniformID("baseTexFactor"), mat.getTextureBaseFactor());
-	glUniform1f(shader->getUniformID("overlayTexFactor"), mat.getTextureOverlayFactor());
+	glUniform1f(shader->getUniformID("colorOverlayFactor"), material.getColorOverlayFactor());
+	glUniform1f(shader->getUniformID("baseTexFactor"), material.getTextureBaseFactor());
+	glUniform1f(shader->getUniformID("overlayTexFactor"), material.getTextureOverlayFactor());
 
-	const glm::vec4& color = mat.getColorOverlay();
+	const glm::vec4& color = material.getColorOverlay();
 	glUniform4f(shader->getUniformID("colorOverlay"), color.x, color.y, color.z, color.w);
 	
 	glUniform1i(shader->getUniformID("baseTexture"), 0);
 	glUniform1i(shader->getUniformID("overlayTexture"), 1);
 	
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, mat.getTextureBaseID());
+	glBindTexture(GL_TEXTURE_2D, material.getTextureBaseID());
 
 	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, mat.getTextureOverlayID());
-
-	mat.uniformChanged = false;
+	glBindTexture(GL_TEXTURE_2D, material.getTextureOverlayID());
 }
 
-void Engine::renderMesh(Mesh* mesh, Material* material) {
-	if (mesh == nullptr || material == nullptr) {
-		std::cerr << "ERROR: MESH OR MATERIAL PTR NULL FOR RENDERING" << std::endl;
-		return;
-	}
-	ShaderProgram* shaderProgramPtr = getShaderProgram(material->shaderProgramID);
+void Engine::renderMesh(GameObject& gameObject, GameScene& scene) {
+	Mesh& mesh = gameObject.getMesh();
+	Material& material = gameObject.getMaterial();
+
+	// LIGH UNIFORMS - REMOVE/TRANSFER LATER
+	ShaderProgram* shaderProgramPtr = getShaderProgram(material.shaderProgramID);
 	if (shaderProgramPtr == nullptr) {
 		std::cerr << "ERROR: SHADER PTR NULL FOR RENDERING" << std::endl;
 		return;
 	}
 	glUseProgram(shaderProgramPtr->getID());
-	setUniforms(*mesh, *material, selectedCamera);
-	render.render(*mesh, *material, *shaderProgramPtr);
+
+	LightSourcePoint& ambientLight = scene.getAmbientLight();
+	glm::vec3 ambientColor = ambientLight.getColor();
+
+	LightSourcePoint& sourceLight = scene.getLightObjects()[0];
+	glm::vec3 sourceColor = sourceLight.getColor();
+	glm::vec3 sourcePos = sourceLight.getPos();
+
+	glUniform3f(shaderProgramPtr->getUniformID("ambientColor"), ambientColor.x, ambientColor.y, ambientColor.z);
+
+	glUniform3f(shaderProgramPtr->getUniformID("sourceLightPos"), sourcePos.x, sourcePos.y, sourcePos.z);
+	glUniform3f(shaderProgramPtr->getUniformID("sourceLightColor"), sourceColor.x, sourceColor.y, sourceColor.z);
+	//////////////////////////////////
+
+	setUniforms(gameObject, selectedCamera);
+	render.render(gameObject);
+}
+
+void Engine::renderGameScene(GameScene& scene) {
+	//// TODO set ambient and sources earlier instead of passing scene
+	//LightSourcePoint& ambientLight = scene.getAmbientLight();
+	//LightSourcePoint& sourceLight = scene.getLightObjects()[0];
+
+	//TODO getMesh and Material by ref instead of ptr
+	for (GameObject& obj : scene.getObjects()) {
+		renderMesh(obj, scene);
+	}
+	return;
 }
 
 void Engine::clearRender() {

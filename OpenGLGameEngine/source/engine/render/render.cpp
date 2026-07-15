@@ -27,8 +27,9 @@ void Render::clear() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Render::render(const Mesh& mesh, Material& material, ShaderProgram& shaderProgram) {
+void Render::render(GameObject& gameObject) {
 	// Render to current set shader program
+	Mesh& mesh = gameObject.getMesh();
 	glBindVertexArray(mesh.VAO);
 	glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
 };

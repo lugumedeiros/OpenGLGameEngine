@@ -15,6 +15,9 @@
 #include "../include/effecs/uniqueColorChange.h"
 #include "../include/engine/camera/camFPS.h"
 #include "../include/engine/camera/cam6DOF.h"
+#include "../include/engine/render//Objects/gameLightSourcePoint.h"
+#include "../include/engine/render//Objects/gameObject.h"
+#include "../include/engine/render/gameScene.h"
 
 // test
 #include <thread>
@@ -114,11 +117,32 @@ int main() {
 		return 1;
 	}
 
-	////////////////// TEST AREA
+	// TEXTURE
+	Texture* textureBase = engine.getTexture("brickwall");
+	if (textureBase == nullptr) {
+		return 4;
+	}
+
+	Texture* textureOverlay = engine.getTexture("awesomeface");
+	if (textureOverlay == nullptr) {
+		return 3;
+	}
+
+	GameScene gameScene{};
 	ShaderProgram* shaderProgram_Texture = engine.createShaderProgram( vertexPath, fragmentColorPath );
 	if (shaderProgram_Texture == nullptr) {
 		return 20;
 	}
+	ShaderProgram* shaderProgram_LightSource = engine.createShaderProgram(vertexPath, fragmentLightPath);
+	if (shaderProgram_LightSource == nullptr) {
+		return 21;
+	}
+
+	Material* materiaMainTriangle = engine.createMaterial(*shaderProgram_Texture);
+	materiaMainTriangle->setOverlayTexture(*textureOverlay, 1.0f);
+	Material* materialLightSource = engine.createMaterial(*shaderProgram_LightSource);
+	
+	Mesh* cubeMesh = engine.createMesh(verticesTriangle, verticesTriangleMiddle, sizeof(verticesTriangleMiddle));
 
 	// MULTIPLE CUBES
 	glm::vec3 cubePositions[] = {
@@ -134,45 +158,37 @@ int main() {
 	glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
 
-	glm::mat4 model = glm::mat4(1.0f); // Model POS base
-	std::vector<Mesh*> cubes{};
+	// CUBES
+	std::vector<GameObject> cubes;
 	for (auto pos : cubePositions) {
-		Mesh* mesh = engine.createMesh(verticesTriangle, verticesTriangleMiddle, sizeof(verticesTriangleMiddle));
-		cubes.push_back(mesh);
-		mesh->translate(pos);
-		mesh->scale(glm::vec3(0.5, 0.5, 0.5));
+		GameObject cube{ *cubeMesh, *materiaMainTriangle };
+		cube.translate(pos);
+		cube.scale(glm::vec3(0.5, 0.5, 0.5));
+		cubes.push_back(cube);
+		gameScene.addObject(cube);
 	}
 
-	// LIGHT CUBE
-	ShaderProgram* shaderProgram_LightSource = engine.createShaderProgram(vertexPath, fragmentLightPath);
-	if (shaderProgram_LightSource == nullptr) {
-		return 21;
-	}
-	Mesh* meshLightSource = engine.createMesh(verticesTriangle, verticesTriangleMiddle, sizeof(verticesTriangleMiddle));
-	meshLightSource->translate(glm::vec3(10.0f, 10.0f, -20.0f));
-	meshLightSource->scale(glm::vec3(0.5f));
-	//cubes.push_back(meshLightSource);
-	Material* materialLightSource = engine.createMaterial(*shaderProgram_LightSource);
-	materialLightSource->setColorOverlay(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), 1.0f);
-
-	// TEXTURE
-	Texture* textureBase = engine.getTexture("brickwall");
-	if (textureBase == nullptr) {
-		return 4;
+	for (GameObject& cube : cubes) {
+		gameScene.addObject(cube);
 	}
 
-	Texture* textureOverlay = engine.getTexture("awesomeface");
-	if (textureOverlay == nullptr) {
-		return 3;
-	}
+	// LIGHT SOURCE+CUBE
+	glm::vec3 color{ 0.0f, 1.0f, 0.0f };
+	materialLightSource->setColorOverlay(glm::vec4(color, 1.0f), 1.0f);
+	GameObject cube{ *cubeMesh, *materialLightSource };
+	cube.translate(glm::vec3(10.0f, 10.0f, -20.0f));
+	cube.scale(glm::vec3(0.5f));;
+	gameScene.addObject(cube);
+
+	LightSourcePoint lighSource{ color };
+	lighSource.translate(glm::vec3(10.0f, 10.0f, -20.0f));
+	lighSource.scale(glm::vec3(0.5f));
+	gameScene.addLightSource(lighSource);
 
 	glm::vec4 colorOverlay(0.0f, 1.0f, 0.0f, 1.0f);
 	float colorOverlayFactor = 1.0f;
 	float baseTextureFactor = 1.0f;
 	float ovelayTextureFactor = 1.0f;
-
-	Material* materiaMainTriangle = engine.createMaterial(*shaderProgram_Texture);
-	//materiaMainTriangle->setColorOverlay(colorOverlay, colorOverlayFactor);
 	
 	UniqueColorChange effectColor(1.0f, 0.0f, 0.0f, 1.0f);
 
@@ -182,6 +198,7 @@ int main() {
 	
 	engine.processInput();
 	cam.setView(glm::vec3{ 0.0f, 0.0f, 10.0f }, glm::vec3{ 0.0f, 0.0f, 0.0f }, 0.0f);
+	engine.renderGameScene(gameScene);
 
 ///////////////// END TEST AREA
 
@@ -190,9 +207,11 @@ int main() {
 
 		//effect update
 		effectColor.advance();
-		materiaMainTriangle->setColorOverlay(glm::vec4( effectColor.r, effectColor.g, effectColor.b, 1.0f ), colorOverlayFactor);
-		materiaMainTriangle->setBaseTexture(*textureBase, baseTextureFactor);
-		materiaMainTriangle->setOverlayTexture(*textureOverlay, ovelayTextureFactor);
+
+		materialLightSource->setColorOverlay(glm::vec4(effectColor.r, effectColor.g, effectColor.b, 1.0f), 1.0f);
+		lighSource.set(effectColor.r, effectColor.g, effectColor.b);
+
+
 		if (colorOverlayFactor < 1.0f) {
 			colorOverlayFactor += 0.004f;
 		}
@@ -211,14 +230,7 @@ int main() {
 		// rendering start
 		engine.clearRender();
 
-		// RENDER LIGHT SOURCE TESTE
-		engine.renderMesh(meshLightSource, materialLightSource);
-		// END TETSE
-
-		// Render all cubes
-		for (auto& cube : cubes) {
-			engine.renderMesh(cube, materiaMainTriangle);
-		}
+		engine.renderGameScene(gameScene);
 
 		//std::this_thread::sleep_for(std::chrono::milliseconds(60));
 

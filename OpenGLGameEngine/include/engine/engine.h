@@ -15,6 +15,7 @@
 #include "render/render.h"
 #include "render/shaderCompiler.h"
 #include "render/textureService.h"
+#include "render/gameScene.h"
 #include "input/inputHandler.h"
 #include "camera/camBase.h"
 #include "camera/camInputController.h"
@@ -40,8 +41,7 @@ public:
 	void setDefaultKeyInputs();
 
 	// ----------- CAMERA -----------  //
-
-	void renderMesh(Mesh* mesh, Material* material);
+	void renderGameScene(GameScene& scene);
 	void clearRender();
 	void setTest(bool isTest);
 
@@ -57,9 +57,10 @@ public:
 private:
 
 	// ----------- RENDER -----------  //
+	void renderMesh(GameObject& gameObject, GameScene& scene);
 
 	Render render;
-	void setUniforms(Mesh& mesh, Material& material, CamBase& camera);
+	void setUniforms(GameObject& gameObject, CamBase& camera);
 
 	ShaderProgram* getShaderProgram(GLuint shaderProgramID);
 	std::map<GLuint, ShaderProgram> shaderPrograms;

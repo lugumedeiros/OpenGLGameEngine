@@ -18,11 +18,9 @@ uniform float overlayTexFactor;
 
 // LIGHT
 uniform vec3 ambientColor;
-uniform float ambientColorFactor;
 
 uniform vec3 sourceLightPos;
 uniform vec3 sourceLightColor;
-uniform float sourceLightFactor;
 
 // OUT
 out vec4 FragColor;
@@ -40,7 +38,7 @@ void main() {
 	vec3 lightDirection = normalize(sourceLightPos - defPos);
 	float diffusion = max(dot(normalizedNormal, lightDirection), 0.0);
 
-	vec3 sumLight = (ambientColor * ambientColorFactor) + (sourceLightColor * diffusion * sourceLightFactor);
+	vec3 sumLight = (ambientColor) + (sourceLightColor * diffusion);
 
 	FragColor = FragColor * vec4(sumLight, 1.0 );
 }
