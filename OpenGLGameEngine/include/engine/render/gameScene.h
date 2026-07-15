@@ -9,25 +9,25 @@
 
 class GameScene {
 public:
-	void addObject(GameObject& object) {
+	void addObject(GameObject* object) {
 		objects.push_back(object);
 	}
 
-	void addLightSource(LightSourcePoint& light) {
+	void addLightSource(LightSourcePoint* light) {
 		lightObjects.push_back(light);
 	}
 
-	void setAmbientSource(LightSourcePoint& ambientLight) {
+	void setAmbientSource(LightSourcePoint ambientLight) {
 		this->ambientLight = ambientLight;
 	}
 
-	std::vector<std::reference_wrapper<GameObject>> getObjects() { return objects; }
-	std::vector<std::reference_wrapper<LightSourcePoint>> getLightObjects() { return lightObjects; }
+	std::vector<GameObject*>& getObjects() { return objects; }
+	std::vector<LightSourcePoint*>& getLightObjects() { return lightObjects; }
 	LightSourcePoint& getAmbientLight() { return ambientLight; }
 
 private:
 
-	std::vector<std::reference_wrapper<GameObject>> objects;
-	std::vector<std::reference_wrapper<LightSourcePoint>> lightObjects;
-	LightSourcePoint ambientLight{ glm::vec3{ 0.2f} };
+	std::vector<GameObject*> objects;
+	std::vector<LightSourcePoint*> lightObjects;
+	LightSourcePoint ambientLight{ glm::vec3{ 0.2f} }; // maybe change this to glm::vec3 
 };

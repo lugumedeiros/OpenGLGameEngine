@@ -4,12 +4,12 @@
 
 class GameObjectBase {
 public:
-	const glm::mat4 getTransform() const { return transform; }
+	const glm::mat4& getTransform() const { return transform; }
 	
-	const glm::mat3 getNormalMatrix() const { return normalMatrix; }
+	const glm::mat3& getNormalMatrix() const { return normalMatrix; }
 	
 	void setTransform(glm::mat4 transform) {
-		transform = transform;
+		this->transform = transform;
 		updateNormalMatrix();
 	}
 	

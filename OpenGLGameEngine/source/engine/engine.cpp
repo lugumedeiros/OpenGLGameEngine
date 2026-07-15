@@ -154,7 +154,7 @@ void Engine::renderMesh(GameObject& gameObject, GameScene& scene) {
 	LightSourcePoint& ambientLight = scene.getAmbientLight();
 	glm::vec3 ambientColor = ambientLight.getColor();
 
-	LightSourcePoint& sourceLight = scene.getLightObjects()[0];
+	LightSourcePoint& sourceLight = *scene.getLightObjects()[0];
 	glm::vec3 sourceColor = sourceLight.getColor();
 	glm::vec3 sourcePos = sourceLight.getPos();
 
@@ -174,8 +174,8 @@ void Engine::renderGameScene(GameScene& scene) {
 	//LightSourcePoint& sourceLight = scene.getLightObjects()[0];
 
 	//TODO getMesh and Material by ref instead of ptr
-	for (GameObject& obj : scene.getObjects()) {
-		renderMesh(obj, scene);
+	for (GameObject* obj : scene.getObjects()) {
+		renderMesh(*obj, scene);
 	}
 	return;
 }

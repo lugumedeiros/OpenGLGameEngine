@@ -165,11 +165,10 @@ int main() {
 		cube.translate(pos);
 		cube.scale(glm::vec3(0.5, 0.5, 0.5));
 		cubes.push_back(cube);
-		gameScene.addObject(cube);
 	}
 
 	for (GameObject& cube : cubes) {
-		gameScene.addObject(cube);
+		gameScene.addObject(&cube);
 	}
 
 	// LIGHT SOURCE+CUBE
@@ -178,12 +177,12 @@ int main() {
 	GameObject cube{ *cubeMesh, *materialLightSource };
 	cube.translate(glm::vec3(10.0f, 10.0f, -20.0f));
 	cube.scale(glm::vec3(0.5f));;
-	gameScene.addObject(cube);
+	gameScene.addObject(&cube);
 
 	LightSourcePoint lighSource{ color };
 	lighSource.translate(glm::vec3(10.0f, 10.0f, -20.0f));
 	lighSource.scale(glm::vec3(0.5f));
-	gameScene.addLightSource(lighSource);
+	gameScene.addLightSource(&lighSource);
 
 	glm::vec4 colorOverlay(0.0f, 1.0f, 0.0f, 1.0f);
 	float colorOverlayFactor = 1.0f;
