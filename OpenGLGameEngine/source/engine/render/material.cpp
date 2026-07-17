@@ -32,6 +32,15 @@ void Material::setOverlayTexture(const Texture& texture, float factor) {
 	uniformChanged = true;
 }
 
+void Material::setSpecularFactor(float factor) {
+	specularFactor = factor;
+}
+
+void Material::setShininess(float value) {
+	//shininess = std::clamp(value, 0.0f, 256.0f);
+	shininess = value;
+}
+
 void Material::normalize() {
 	normalizeScale(colorOverlayFactor);
 	normalizeScale(textureBaseFactor);

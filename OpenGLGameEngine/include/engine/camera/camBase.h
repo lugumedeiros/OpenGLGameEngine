@@ -34,6 +34,7 @@ public:
 	virtual glm::mat4 getProjection() const { return projection.getMatrix(); }
 	virtual glm::mat4 getView() const { return view; }
 	float getConfigVal(CAM_CONFIG cfg);
+	glm::vec3 getPos() const { return pos; }
 
 protected:
 	virtual void rotate(float delta) = 0;

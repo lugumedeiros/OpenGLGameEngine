@@ -162,6 +162,12 @@ void Engine::renderMesh(GameObject& gameObject, GameScene& scene) {
 
 	glUniform3f(shaderProgramPtr->getUniformID("sourceLightPos"), sourcePos.x, sourcePos.y, sourcePos.z);
 	glUniform3f(shaderProgramPtr->getUniformID("sourceLightColor"), sourceColor.x, sourceColor.y, sourceColor.z);
+	glUniform1f(shaderProgramPtr->getUniformID("specularFactor"), material.getSpecularFactor());
+	glUniform1f(shaderProgramPtr->getUniformID("shininess"), material.getShininess());
+
+	glm::vec3 viewPos = selectedCamera.getPos();
+	glUniform3f(shaderProgramPtr->getUniformID("viewPos"), viewPos.x, viewPos.y, viewPos.z);
+
 	//////////////////////////////////
 
 	setUniforms(gameObject, selectedCamera);

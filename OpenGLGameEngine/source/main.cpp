@@ -139,7 +139,10 @@ int main() {
 	}
 
 	Material* materiaMainTriangle = engine.createMaterial(*shaderProgram_Texture);
-	materiaMainTriangle->setOverlayTexture(*textureOverlay, 1.0f);
+	materiaMainTriangle->setColorOverlay(glm::vec4(1.0f, 1.0f, 1.0f, 0.0f), 1.0f);
+	materiaMainTriangle->setShininess(64.0f);
+	materiaMainTriangle->setSpecularFactor(0.5f);
+	//materiaMainTriangle->setOverlayTexture(*textureOverlay, 1.0f);
 	Material* materialLightSource = engine.createMaterial(*shaderProgram_LightSource);
 	
 	Mesh* cubeMesh = engine.createMesh(verticesTriangle, verticesTriangleMiddle, sizeof(verticesTriangleMiddle));
@@ -172,17 +175,17 @@ int main() {
 	}
 
 	// LIGHT SOURCE+CUBE
-	glm::vec3 color{ 0.0f, 1.0f, 0.0f };
+	glm::vec3 color{ 1.0f, 0.0f, 0.1f };
 	materialLightSource->setColorOverlay(glm::vec4(color, 1.0f), 1.0f);
 	GameObject cube{ *cubeMesh, *materialLightSource };
 	cube.translate(glm::vec3(10.0f, 10.0f, -20.0f));
 	cube.scale(glm::vec3(0.5f));;
 	gameScene.addObject(&cube);
 
-	LightSourcePoint lighSource{ color };
-	lighSource.translate(glm::vec3(10.0f, 10.0f, -20.0f));
-	lighSource.scale(glm::vec3(0.5f));
-	gameScene.addLightSource(&lighSource);
+	LightSourcePoint lightSource{ color };
+	lightSource.translate(glm::vec3(10.0f, 10.0f, -20.0f));
+	lightSource.scale(glm::vec3(0.5f));
+	gameScene.addLightSource(&lightSource);
 
 	glm::vec4 colorOverlay(0.0f, 1.0f, 0.0f, 1.0f);
 	float colorOverlayFactor = 1.0f;
@@ -207,8 +210,8 @@ int main() {
 		//effect update
 		effectColor.advance();
 
-		materialLightSource->setColorOverlay(glm::vec4(effectColor.r, effectColor.g, effectColor.b, 1.0f), 1.0f);
-		lighSource.set(effectColor.r, effectColor.g, effectColor.b);
+		//materialLightSource->setColorOverlay(glm::vec4(effectColor.r, effectColor.g, effectColor.b, 1.0f), 1.0f);
+		//lighSource.set(effectColor.r, effectColor.g, effectColor.b);
 
 
 		if (colorOverlayFactor < 1.0f) {

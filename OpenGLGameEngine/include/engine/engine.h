@@ -98,5 +98,5 @@ private:
 		lastFrameTime = glfwGetTime();
 		return lastFrameTime;
 	}
-	double getLastFrameTime() { return lastFrameTime; }
+	double getLastFrameTime() const { return lastFrameTime; }
 };

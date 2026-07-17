@@ -23,6 +23,9 @@ static const std::vector<std::string> uniformNamesToLoad{
 	"uView",					// World Space -> Camera Space
 	"uProjection",				// Camera Space -> Projection Space
 	"uNormalMatrix",			// Normal Matrix Model
+	"viewPos",					// Camera view Position
+	"specularFactor",			// Specular light Strenght
+	"shininess",				// Shininess of the material
 };
 
 class ShaderProgram {

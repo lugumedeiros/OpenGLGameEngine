@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -20,13 +21,17 @@ public:
 	void setColorOverlay(glm::vec4 color, float factor);
 	void setBaseTexture(const Texture& texture, float factor);
 	void setOverlayTexture(const Texture& texture, float factor);
+	void setSpecularFactor(float factor);
+	void setShininess(float value);
 
 	const glm::vec4& getColorOverlay() { return colorOverlay; }
-	float getColorOverlayFactor() { return colorOverlayFactor; }
-	GLuint getTextureBaseID() { return textureBaseID; }
-	float getTextureBaseFactor() { return textureBaseFactor; }
-	GLuint getTextureOverlayID() { return textureOverlayID; }
-	float getTextureOverlayFactor() { return textureOverlayFactor; }
+	float getColorOverlayFactor() const { return colorOverlayFactor; }
+	GLuint getTextureBaseID() const { return textureBaseID; }
+	float getTextureBaseFactor() const { return textureBaseFactor; }
+	GLuint getTextureOverlayID() const { return textureOverlayID; }
+	float getTextureOverlayFactor() const { return textureOverlayFactor; }
+	float getSpecularFactor() const { return specularFactor; }
+	float getShininess() const { return shininess; }
 
 	void normalize();
 	bool uniformChanged{false};
@@ -40,4 +45,7 @@ private:
 
 	GLuint textureOverlayID{ 0 };
 	float textureOverlayFactor{ 0.0f };
+
+	float specularFactor{ 0.5f };
+	float shininess{ 32 };
 };
