@@ -165,12 +165,12 @@ void Engine::renderGameScene(GameScene& scene) {
 	ShaderProgram* lastShaderPtr = nullptr;
 	for (GameObject* obj : scene.getObjects()) {
 		ShaderProgram* newShaderPtr = getShaderProgram(obj->getMaterial().shaderProgramID);
-		bool isSameShader = newShaderPtr != lastShaderPtr;
-		if (isSameShader) {
+		bool isDiffShader = newShaderPtr != lastShaderPtr;
+		if (isDiffShader) {
 			glUseProgram(newShaderPtr->getID());
 			lastShaderPtr = newShaderPtr;
 		}
-		setUniforms(*obj, scene, isSameShader);
+		setUniforms(*obj, scene, isDiffShader);
 		//renderMesh(*obj, scene);
 		render.render(*obj);
 	}
