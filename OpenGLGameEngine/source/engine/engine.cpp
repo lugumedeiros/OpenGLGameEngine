@@ -108,80 +108,71 @@ void Engine::setActiveCamera(CamBase& camera) {
 	camInputControl.setCamera(selectedCamera);
 }
 
-void Engine::setUniforms(GameObject& gameObject, CamBase& camera) {
-	Material& material = gameObject.getMaterial();
-
-	ShaderProgram* shader = getShaderProgram(material.shaderProgramID);
-
-	// View
-	glUniformMatrix4fv(shader->getUniformID("uProjection"), 1, GL_FALSE, glm::value_ptr(camera.getProjection()));
-	glUniformMatrix4fv(shader->getUniformID("uView"), 1, GL_FALSE, glm::value_ptr(camera.getView()));
-
-	// Mesh
-	glUniformMatrix4fv(shader->getUniformID("uModel"), 1, GL_FALSE, glm::value_ptr(gameObject.getTransform()));
-	glUniformMatrix3fv(shader->getUniformID("uNormalMatrix"), 1, GL_FALSE, glm::value_ptr(gameObject.getNormalMatrix()));
-
-	// Textures
-	glUniform1f(shader->getUniformID("colorOverlayFactor"), material.getColorOverlayFactor());
-	glUniform1f(shader->getUniformID("baseTexFactor"), material.getTextureBaseFactor());
-	glUniform1f(shader->getUniformID("overlayTexFactor"), material.getTextureOverlayFactor());
-
-	const glm::vec4& color = material.getColorOverlay();
-	glUniform4f(shader->getUniformID("colorOverlay"), color.x, color.y, color.z, color.w);
-	
-	glUniform1i(shader->getUniformID("baseTexture"), 0);
-	glUniform1i(shader->getUniformID("overlayTexture"), 1);
-	
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, material.getTextureBaseID());
-
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, material.getTextureOverlayID());
-}
-
-void Engine::renderMesh(GameObject& gameObject, GameScene& scene) {
+void Engine::setUniforms(GameObject& gameObject, GameScene& gameScene, bool setGlobal) {
 	Mesh& mesh = gameObject.getMesh();
 	Material& material = gameObject.getMaterial();
+	ShaderProgram* shader = getShaderProgram(material.shaderProgramID);
 
-	// LIGH UNIFORMS - REMOVE/TRANSFER LATER
-	ShaderProgram* shaderProgramPtr = getShaderProgram(material.shaderProgramID);
-	if (shaderProgramPtr == nullptr) {
-		std::cerr << "ERROR: SHADER PTR NULL FOR RENDERING" << std::endl;
-		return;
+	// Global is for uniforms shared between all shaders,
+	// When the same shader is called again it's not necessary to set those uniforms again
+	if (setGlobal) {
+		LightSourcePoint& lightSource = gameScene.getLightSource();
+		LightSourcePoint& lightAmbient = gameScene.getAmbientLight();
+
+		glm::vec3 ambientColor = lightAmbient.getColor();
+		glm::vec3 sourceColor = lightSource.getColor();
+		glm::vec3 sourcePos = lightSource.getPos();
+		const glm::vec4& materialColor = material.getColorOverlay();
+		glm::vec3 viewPos = selectedCamera.getPos();
+		const glm::mat4& projection = selectedCamera.getProjection();
+		const glm::mat4& view = selectedCamera.getView();
+		
+		// LIGHT RELATED
+		glUniform3f(shader->getUniformID("ambientColor"), ambientColor.x, ambientColor.y, ambientColor.z);
+		glUniform3f(shader->getUniformID("sourceLightPos"), sourcePos.x, sourcePos.y, sourcePos.z);
+		glUniform3f(shader->getUniformID("sourceLightColor"), sourceColor.x, sourceColor.y, sourceColor.z);
+
+		// MATERIAL RELATED
+		glUniform1f(shader->getUniformID("specularFactor"), material.getSpecularFactor());
+		glUniform1f(shader->getUniformID("shininess"), material.getShininess());
+
+		glUniform4f(shader->getUniformID("colorOverlay"), materialColor.x, materialColor.y, materialColor.z, materialColor.w);
+		glUniform1f(shader->getUniformID("colorOverlayFactor"), material.getColorOverlayFactor());
+		glUniform1i(shader->getUniformID("baseTexture"), 0);
+		glUniform1f(shader->getUniformID("baseTexFactor"), material.getTextureBaseFactor());
+		glUniform1i(shader->getUniformID("overlayTexture"), 1);
+		glUniform1f(shader->getUniformID("overlayTexFactor"), material.getTextureOverlayFactor());
+
+		// TEXTURE BINDING
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, material.getTextureBaseID());
+
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, material.getTextureOverlayID());
+
+		// VIEW RELATED
+		glUniform3f(shader->getUniformID("viewPos"), viewPos.x, viewPos.y, viewPos.z);
+		glUniformMatrix4fv(shader->getUniformID("uProjection"), 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(shader->getUniformID("uView"), 1, GL_FALSE, glm::value_ptr(view));
 	}
-	glUseProgram(shaderProgramPtr->getID());
 
-	LightSourcePoint& ambientLight = scene.getAmbientLight();
-	glm::vec3 ambientColor = ambientLight.getColor();
-
-	LightSourcePoint& sourceLight = *scene.getLightObjects()[0];
-	glm::vec3 sourceColor = sourceLight.getColor();
-	glm::vec3 sourcePos = sourceLight.getPos();
-
-	glUniform3f(shaderProgramPtr->getUniformID("ambientColor"), ambientColor.x, ambientColor.y, ambientColor.z);
-
-	glUniform3f(shaderProgramPtr->getUniformID("sourceLightPos"), sourcePos.x, sourcePos.y, sourcePos.z);
-	glUniform3f(shaderProgramPtr->getUniformID("sourceLightColor"), sourceColor.x, sourceColor.y, sourceColor.z);
-	glUniform1f(shaderProgramPtr->getUniformID("specularFactor"), material.getSpecularFactor());
-	glUniform1f(shaderProgramPtr->getUniformID("shininess"), material.getShininess());
-
-	glm::vec3 viewPos = selectedCamera.getPos();
-	glUniform3f(shaderProgramPtr->getUniformID("viewPos"), viewPos.x, viewPos.y, viewPos.z);
-
-	//////////////////////////////////
-
-	setUniforms(gameObject, selectedCamera);
-	render.render(gameObject);
+	// MESH
+	glUniformMatrix4fv(shader->getUniformID("uModel"), 1, GL_FALSE, glm::value_ptr(gameObject.getTransform()));
+	glUniformMatrix3fv(shader->getUniformID("uNormalMatrix"), 1, GL_FALSE, glm::value_ptr(gameObject.getNormalMatrix()));
 }
 
 void Engine::renderGameScene(GameScene& scene) {
-	//// TODO set ambient and sources earlier instead of passing scene
-	//LightSourcePoint& ambientLight = scene.getAmbientLight();
-	//LightSourcePoint& sourceLight = scene.getLightObjects()[0];
-
-	//TODO getMesh and Material by ref instead of ptr
+	ShaderProgram* lastShaderPtr = nullptr;
 	for (GameObject* obj : scene.getObjects()) {
-		renderMesh(*obj, scene);
+		ShaderProgram* newShaderPtr = getShaderProgram(obj->getMaterial().shaderProgramID);
+		bool isSameShader = newShaderPtr != lastShaderPtr;
+		if (isSameShader) {
+			glUseProgram(newShaderPtr->getID());
+			lastShaderPtr = newShaderPtr;
+		}
+		setUniforms(*obj, scene, isSameShader);
+		//renderMesh(*obj, scene);
+		render.render(*obj);
 	}
 	return;
 }

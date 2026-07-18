@@ -13,8 +13,8 @@ public:
 		objects.push_back(object);
 	}
 
-	void addLightSource(LightSourcePoint* light) {
-		lightObjects.push_back(light);
+	void setLightSource(LightSourcePoint light) {
+		lightSource = light;
 	}
 
 	void setAmbientSource(LightSourcePoint ambientLight) {
@@ -22,12 +22,12 @@ public:
 	}
 
 	std::vector<GameObject*>& getObjects() { return objects; }
-	std::vector<LightSourcePoint*>& getLightObjects() { return lightObjects; }
+	LightSourcePoint& getLightSource() { return lightSource; }
 	LightSourcePoint& getAmbientLight() { return ambientLight; }
 
 private:
 
 	std::vector<GameObject*> objects;
-	std::vector<LightSourcePoint*> lightObjects;
-	LightSourcePoint ambientLight{ glm::vec3{ 0.2f} }; // maybe change this to glm::vec3 
+	LightSourcePoint lightSource{ glm::vec3{ 0.2f} };
+	LightSourcePoint ambientLight{ glm::vec3{ 0.2f} };
 };

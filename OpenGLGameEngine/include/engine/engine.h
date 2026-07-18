@@ -57,10 +57,8 @@ public:
 private:
 
 	// ----------- RENDER -----------  //
-	void renderMesh(GameObject& gameObject, GameScene& scene);
-
 	Render render;
-	void setUniforms(GameObject& gameObject, CamBase& camera);
+	void setUniforms(GameObject& gameObject, GameScene& gameScene, bool setGlobal);
 
 	ShaderProgram* getShaderProgram(GLuint shaderProgramID);
 	std::map<GLuint, ShaderProgram> shaderPrograms;

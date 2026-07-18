@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <chrono>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -167,7 +168,7 @@ int main() {
 		GameObject cube{ *cubeMesh, *materiaMainTriangle };
 		cube.translate(pos);
 		cube.scale(glm::vec3(0.5, 0.5, 0.5));
-		cubes.push_back(cube);
+		cubes.emplace_back(cube);
 	}
 
 	for (GameObject& cube : cubes) {
@@ -185,7 +186,7 @@ int main() {
 	LightSourcePoint lightSource{ color };
 	lightSource.translate(glm::vec3(10.0f, 10.0f, -20.0f));
 	lightSource.scale(glm::vec3(0.5f));
-	gameScene.addLightSource(&lightSource);
+	gameScene.setLightSource(lightSource);
 
 	glm::vec4 colorOverlay(0.0f, 1.0f, 0.0f, 1.0f);
 	float colorOverlayFactor = 1.0f;
@@ -203,7 +204,7 @@ int main() {
 	engine.renderGameScene(gameScene);
 
 ///////////////// END TEST AREA
-
+	
 	while (!mainWindow.shouldClose()) {
 		engine.processInput();
 
@@ -231,10 +232,7 @@ int main() {
 		
 		// rendering start
 		engine.clearRender();
-
 		engine.renderGameScene(gameScene);
-
-		//std::this_thread::sleep_for(std::chrono::milliseconds(60));
 
 		// render end
 		mainWindow.swapBuffers();
