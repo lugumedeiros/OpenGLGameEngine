@@ -141,8 +141,8 @@ int main() {
 
 	Material* materiaMainTriangle = engine.createMaterial(*shaderProgram_Texture);
 	materiaMainTriangle->setColorOverlay(glm::vec4(1.0f, 1.0f, 1.0f, 0.0f), 1.0f);
-	materiaMainTriangle->setShininess(64.0f);
-	materiaMainTriangle->setSpecularFactor(0.5f);
+	materiaMainTriangle->setShininess(32.0f);
+	materiaMainTriangle->setSpecularFactor(1.1f);
 	//materiaMainTriangle->setOverlayTexture(*textureOverlay, 1.0f);
 	Material* materialLightSource = engine.createMaterial(*shaderProgram_LightSource);
 	
@@ -176,17 +176,17 @@ int main() {
 	}
 
 	// LIGHT SOURCE+CUBE
-	glm::vec3 color{ 1.0f, 0.0f, 0.1f };
+	glm::vec3 color{ 1.0f, 1.0f, 0.1f };
 	materialLightSource->setColorOverlay(glm::vec4(color, 1.0f), 1.0f);
-	GameObject cube{ *cubeMesh, *materialLightSource };
-	cube.translate(glm::vec3(10.0f, 10.0f, -20.0f));
-	cube.scale(glm::vec3(0.5f));;
-	gameScene.addObject(&cube);
+	GameObject lightSourceCube{ *cubeMesh, *materialLightSource };
+	lightSourceCube.translate(glm::vec3(10.0f, 10.0f, -20.0f));
+	lightSourceCube.scale(glm::vec3(0.5f));;
+	gameScene.addObject(&lightSourceCube);
 
-	LightSourcePoint lightSource{ color };
+	LightSourcePoint& lightSource = gameScene.getLightSource();
+	lightSource.set( color.x, color.y, color.z );
 	lightSource.translate(glm::vec3(10.0f, 10.0f, -20.0f));
 	lightSource.scale(glm::vec3(0.5f));
-	gameScene.setLightSource(lightSource);
 
 	glm::vec4 colorOverlay(0.0f, 1.0f, 0.0f, 1.0f);
 	float colorOverlayFactor = 1.0f;
@@ -205,34 +205,37 @@ int main() {
 
 ///////////////// END TEST AREA
 	
+	auto elapsed = std::chrono::microseconds(0);
+	int pc = 1;
+
 	while (!mainWindow.shouldClose()) {
 		engine.processInput();
 
 		//effect update
 		effectColor.advance();
+		float lightMov = pc > 300 ? 0.2f : -0.2f;
 
-		//materialLightSource->setColorOverlay(glm::vec4(effectColor.r, effectColor.g, effectColor.b, 1.0f), 1.0f);
-		//lighSource.set(effectColor.r, effectColor.g, effectColor.b);
-
-
-		if (colorOverlayFactor < 1.0f) {
-			colorOverlayFactor += 0.004f;
-		}
-		else if (baseTextureFactor < 1.0f) {
-			baseTextureFactor += 0.003f;
-		}
-		else if (ovelayTextureFactor < 1.0f) {
-			ovelayTextureFactor += 0.003f;
-		}
-		else {
-			colorOverlayFactor = 0.0f;
-			baseTextureFactor = 0.0f;
-			ovelayTextureFactor = 0.0f;
-		}
+		materialLightSource->setColorOverlay(glm::vec4(effectColor.r, effectColor.g, effectColor.b, 1.0f), 1.0f);
+		lightSource.set(effectColor.r, effectColor.g, effectColor.b);
+		lightSourceCube.translate(glm::vec3(lightMov, 0.0f, 0.0f));
+		lightSource.translate(glm::vec3(lightMov, 0, 0));
+		
+		auto start = std::chrono::steady_clock::now();
 		
 		// rendering start
 		engine.clearRender();
+
 		engine.renderGameScene(gameScene);
+		
+		auto end = std::chrono::steady_clock::now();
+		elapsed += std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+		pc += 1;
+
+		if (pc > 600) {
+			std::cout << "Performance: " << elapsed.count() / pc << " microseconds\n";
+			elapsed = std::chrono::microseconds(0);
+			pc = 1;
+		}
 
 		// render end
 		mainWindow.swapBuffers();
