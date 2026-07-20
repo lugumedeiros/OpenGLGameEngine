@@ -128,20 +128,20 @@ void Engine::setUniforms(GameObject& gameObject, GameScene& gameScene, bool setG
 		const glm::mat4& view = selectedCamera.getView();
 		
 		// LIGHT RELATED
-		glUniform3f(shader->getUniformID("ambientColor"), ambientColor.x, ambientColor.y, ambientColor.z);
-		glUniform3f(shader->getUniformID("sourceLightPos"), sourcePos.x, sourcePos.y, sourcePos.z);
-		glUniform3f(shader->getUniformID("sourceLightColor"), sourceColor.x, sourceColor.y, sourceColor.z);
+		glUniform3f(shader->getUniformID("scene.ambientColor"), ambientColor.x, ambientColor.y, ambientColor.z);
+		glUniform3f(shader->getUniformID("scene.sourceLightPos"), sourcePos.x, sourcePos.y, sourcePos.z);
+		glUniform3f(shader->getUniformID("scene.sourceLightColor"), sourceColor.x, sourceColor.y, sourceColor.z);
 
 		// MATERIAL RELATED
-		glUniform1f(shader->getUniformID("specularFactor"), material.getSpecularFactor());
-		glUniform1f(shader->getUniformID("shininess"), material.getShininess());
+		glUniform1f(shader->getUniformID("scene.specularFactor"), material.getSpecularFactor());
+		glUniform1f(shader->getUniformID("scene.shininess"), material.getShininess());
 
-		glUniform4f(shader->getUniformID("colorOverlay"), materialColor.x, materialColor.y, materialColor.z, materialColor.w);
-		glUniform1f(shader->getUniformID("colorOverlayFactor"), material.getColorOverlayFactor());
-		glUniform1i(shader->getUniformID("baseTexture"), 0);
-		glUniform1f(shader->getUniformID("baseTexFactor"), material.getTextureBaseFactor());
-		glUniform1i(shader->getUniformID("overlayTexture"), 1);
-		glUniform1f(shader->getUniformID("overlayTexFactor"), material.getTextureOverlayFactor());
+		glUniform4f(shader->getUniformID("material.colorOverlay"), materialColor.x, materialColor.y, materialColor.z, materialColor.w);
+		glUniform1f(shader->getUniformID("material.colorOverlayFactor"), material.getColorOverlayFactor());
+		glUniform1i(shader->getUniformID("material.baseTexture"), 0);
+		glUniform1f(shader->getUniformID("material.baseTexFactor"), material.getTextureBaseFactor());
+		glUniform1i(shader->getUniformID("material.overlayTexture"), 1);
+		glUniform1f(shader->getUniformID("material.overlayTexFactor"), material.getTextureOverlayFactor());
 
 		// TEXTURE BINDING
 		glActiveTexture(GL_TEXTURE0);

@@ -10,22 +10,22 @@
 #include <vector>
 
 static const std::vector<std::string> uniformNamesToLoad{
-	"colorOverlayFactor",		// Blend Factor for Color Overlay Texture
-	"baseTexFactor",			// Blend Factor for Base Texture
-	"overlayTexFactor",			// Blen Factor for Overlay Texture
-	"colorOverlay",				// Solid Color that blends with the gpu loaded mesh color
-	"baseTexture",				// Texture sample 0
-	"overlayTexture",			// Texture sample 1
-	"ambientColor",				// Color of the ambient light hitting the mesh
-	"sourceLightPos",			// Main Source Light Pos
-	"sourceLightColor",			// Main Source Light Color
+	"material.colorOverlayFactor",		// Blend Factor for Color Overlay Texture
+	"material.baseTexFactor",			// Blend Factor for Base Texture
+	"material.overlayTexFactor",			// Blen Factor for Overlay Texture
+	"material.colorOverlay",				// Solid Color that blends with the gpu loaded mesh color
+	"material.baseTexture",				// Texture sample 0
+	"material.overlayTexture",			// Texture sample 1
+	"scene.ambientColor",				// Color of the ambient light hitting the mesh
+	"scene.sourceLightPos",			// Main Source Light Pos
+	"scene.sourceLightColor",			// Main Source Light Color
+	"scene.specularFactor",			// Specular light Strenght
+	"scene.shininess",				// Shininess of the material
 	"uModel",					// Mesh Space -> World Space 
 	"uView",					// World Space -> Camera Space
 	"uProjection",				// Camera Space -> Projection Space
 	"uNormalMatrix",			// Normal Matrix Model
 	"viewPos",					// Camera view Position
-	"specularFactor",			// Specular light Strenght
-	"shininess",				// Shininess of the material
 };
 
 class ShaderProgram {
