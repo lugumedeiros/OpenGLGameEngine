@@ -47,10 +47,11 @@ void main() {
 	vec3 viewDir = normalize(viewPos - defPos);
 	vec3 reflectDir = reflect(-lightDirection, normalizedNormal);
 	float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
-	vec3 specular = specularFactor * spec * sourceLightColor;
+	vec3 specularLight = specularFactor * spec * sourceLightColor;
 	
-	vec3 sumLight = (ambientColor) + (sourceLightColor * diffusion) + specular;
+	vec3 sumLight = (ambientColor) + (sourceLightColor * diffusion);
+	vec3 finalColor = FragColor.rgb * sumLight + specularLight;
 
 	// END FRAG
-	FragColor = FragColor * vec4(sumLight, 1.0 );
+	FragColor = vec4(finalColor, FragColor.a);
 }
