@@ -58,7 +58,7 @@ private:
 
 	// ----------- RENDER -----------  //
 	Render render;
-	void setUniforms(GameObject& gameObject, GameScene& gameScene, bool setGlobal);
+	void setUniforms(GameObject& gameObject, GameScene& gameScene, bool setGlobal, bool setMaterial);
 
 	ShaderProgram* getShaderProgram(GLuint shaderProgramID);
 	std::map<GLuint, ShaderProgram> shaderPrograms;

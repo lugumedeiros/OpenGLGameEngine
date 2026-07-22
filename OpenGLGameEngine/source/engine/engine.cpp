@@ -108,70 +108,69 @@ void Engine::setActiveCamera(CamBase& camera) {
 	camInputControl.setCamera(selectedCamera);
 }
 
-void Engine::setUniforms(GameObject& gameObject, GameScene& gameScene, bool setGlobal) {
+void Engine::setUniforms(GameObject& gameObject, GameScene& gameScene, bool updateSharedUniform, bool updateMaterialUniform) {
 	Mesh& mesh = gameObject.getMesh();
 	Material& material = gameObject.getMaterial();
 	ShaderProgram* shader = getShaderProgram(material.shaderProgramID);
 
-	// Global is for uniforms shared between all shaders,
-	// When the same shader is called again it's not necessary to set those uniforms again
-	if (setGlobal) {
-		LightSourcePoint& lightSource = gameScene.getLightSource();
-		LightSourcePoint& lightAmbient = gameScene.getAmbientLight();
+	LightSourcePoint& lightSource = gameScene.getLightSource();
+	LightSourcePoint& lightAmbient = gameScene.getAmbientLight();
+	glm::vec3 ambientColor = lightAmbient.getColor();
+	glm::vec3 sourceColor = lightSource.getColor();
+	glm::vec3 sourcePos = lightSource.getPos();
+	const glm::vec4& materialColor = material.getColorOverlay();
+	glm::vec3 viewPos = selectedCamera.getPos();
+	const glm::mat4& projection = selectedCamera.getProjection();
+	const glm::mat4& view = selectedCamera.getView();
 
-		glm::vec3 ambientColor = lightAmbient.getColor();
-		glm::vec3 sourceColor = lightSource.getColor();
-		glm::vec3 sourcePos = lightSource.getPos();
-		const glm::vec4& materialColor = material.getColorOverlay();
-		glm::vec3 viewPos = selectedCamera.getPos();
-		const glm::mat4& projection = selectedCamera.getProjection();
-		const glm::mat4& view = selectedCamera.getView();
-		
+	if (updateSharedUniform) {
 		// LIGHT RELATED
-		glUniform3f(shader->getUniformID("scene.ambientColor"), ambientColor.x, ambientColor.y, ambientColor.z);
-		glUniform3f(shader->getUniformID("scene.sourceLightPos"), sourcePos.x, sourcePos.y, sourcePos.z);
-		glUniform3f(shader->getUniformID("scene.sourceLightColor"), sourceColor.x, sourceColor.y, sourceColor.z);
+		glUniform3f(shader->getUniformID(UNIFORM::SCENE::AMBIENT_COLOR), ambientColor.x, ambientColor.y, ambientColor.z);
+		glUniform3f(shader->getUniformID(UNIFORM::SCENE::SOURCE_LIGHT_POS), sourcePos.x, sourcePos.y, sourcePos.z);
+		glUniform3f(shader->getUniformID(UNIFORM::SCENE::SOURCE_LIGHT_COLOR), sourceColor.x, sourceColor.y, sourceColor.z);
 
+		// VIEW RELATED
+		glUniform3f(shader->getUniformID(UNIFORM::CAMERA::POSITION), viewPos.x, viewPos.y, viewPos.z);
+		glUniformMatrix4fv(shader->getUniformID(UNIFORM::CAMERA::PROJECTION), 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(shader->getUniformID(UNIFORM::CAMERA::VIEW), 1, GL_FALSE, glm::value_ptr(view));
+	}
+
+	if (updateMaterialUniform) {
 		// MATERIAL RELATED
-		glUniform1f(shader->getUniformID("scene.specularFactor"), material.getSpecularFactor());
-		glUniform1f(shader->getUniformID("scene.shininess"), material.getShininess());
+		glUniform1f(shader->getUniformID(UNIFORM::MATERIAL::SPECULAR_FACTOR), material.getSpecularFactor());
+		glUniform1f(shader->getUniformID(UNIFORM::MATERIAL::SHININESS), material.getShininess());
 
-		glUniform4f(shader->getUniformID("material.colorOverlay"), materialColor.x, materialColor.y, materialColor.z, materialColor.w);
-		glUniform1f(shader->getUniformID("material.colorOverlayFactor"), material.getColorOverlayFactor());
-		glUniform1i(shader->getUniformID("material.baseTexture"), 0);
-		glUniform1f(shader->getUniformID("material.baseTexFactor"), material.getTextureBaseFactor());
-		glUniform1i(shader->getUniformID("material.overlayTexture"), 1);
-		glUniform1f(shader->getUniformID("material.overlayTexFactor"), material.getTextureOverlayFactor());
+		glUniform4f(shader->getUniformID(UNIFORM::MATERIAL::COLOR_TINT), materialColor.x, materialColor.y, materialColor.z, materialColor.w);
+		glUniform1f(shader->getUniformID(UNIFORM::MATERIAL::COLOR_TINT_FACTOR), material.getColorOverlayFactor());
+		glUniform1i(shader->getUniformID(UNIFORM::MATERIAL::ALBEDO), 0);
+		glUniform1f(shader->getUniformID(UNIFORM::MATERIAL::ALBEDO_FACTOR), material.getTextureBaseFactor());
 
 		// TEXTURE BINDING
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, material.getTextureBaseID());
-
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, material.getTextureOverlayID());
-
-		// VIEW RELATED
-		glUniform3f(shader->getUniformID("viewPos"), viewPos.x, viewPos.y, viewPos.z);
-		glUniformMatrix4fv(shader->getUniformID("uProjection"), 1, GL_FALSE, glm::value_ptr(projection));
-		glUniformMatrix4fv(shader->getUniformID("uView"), 1, GL_FALSE, glm::value_ptr(view));
 	}
 
 	// MESH
-	glUniformMatrix4fv(shader->getUniformID("uModel"), 1, GL_FALSE, glm::value_ptr(gameObject.getTransform()));
-	glUniformMatrix3fv(shader->getUniformID("uNormalMatrix"), 1, GL_FALSE, glm::value_ptr(gameObject.getNormalMatrix()));
+	glUniformMatrix4fv(shader->getUniformID(UNIFORM::OBJECT::MODEL_MATRIX), 1, GL_FALSE, glm::value_ptr(gameObject.getTransform()));
+	glUniformMatrix3fv(shader->getUniformID(UNIFORM::OBJECT::NORMAL_MATRIX), 1, GL_FALSE, glm::value_ptr(gameObject.getNormalMatrix()));
 }
 
 void Engine::renderGameScene(GameScene& scene) {
 	ShaderProgram* lastShaderPtr = nullptr;
+	Material* lastMaterial = nullptr;
 	for (GameObject* obj : scene.getObjects()) {
-		ShaderProgram* newShaderPtr = getShaderProgram(obj->getMaterial().shaderProgramID);
+		Material* material = &obj->getMaterial();
+		ShaderProgram* newShaderPtr = getShaderProgram(material->shaderProgramID);
+		
 		bool isDiffShader = newShaderPtr != lastShaderPtr;
+		bool isDiffMaterial = material != lastMaterial;
+		lastMaterial = material;
+
 		if (isDiffShader) {
 			glUseProgram(newShaderPtr->getID());
 			lastShaderPtr = newShaderPtr;
 		}
-		setUniforms(*obj, scene, isDiffShader);
-		//renderMesh(*obj, scene);
+		setUniforms(*obj, scene, isDiffShader, isDiffMaterial);
 		render.render(*obj);
 	}
 	return;

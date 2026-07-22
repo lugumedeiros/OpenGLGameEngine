@@ -8,25 +8,38 @@
 #include <sstream>
 #include <string_view>
 #include <vector>
+#include <array>
 
-static const std::vector<std::string> uniformNamesToLoad{
-	"material.colorOverlayFactor",		// Blend Factor for Color Overlay Texture
-	"material.baseTexFactor",			// Blend Factor for Base Texture
-	"material.overlayTexFactor",			// Blen Factor for Overlay Texture
-	"material.colorOverlay",				// Solid Color that blends with the gpu loaded mesh color
-	"material.baseTexture",				// Texture sample 0
-	"material.overlayTexture",			// Texture sample 1
-	"scene.ambientColor",				// Color of the ambient light hitting the mesh
-	"scene.sourceLightPos",			// Main Source Light Pos
-	"scene.sourceLightColor",			// Main Source Light Color
-	"scene.specularFactor",			// Specular light Strenght
-	"scene.shininess",				// Shininess of the material
-	"uModel",					// Mesh Space -> World Space 
-	"uView",					// World Space -> Camera Space
-	"uProjection",				// Camera Space -> Projection Space
-	"uNormalMatrix",			// Normal Matrix Model
-	"viewPos",					// Camera view Position
+struct UNIFORM {
+	struct CAMERA {
+		static constexpr std::string_view PROJECTION = "camera.projection";
+		static constexpr std::string_view POSITION = "camera.pos";
+		static constexpr std::string_view VIEW = "camera.view";
+		static constexpr std::array names{PROJECTION, POSITION, VIEW};
+	};
+	struct OBJECT {
+		static constexpr std::string_view MODEL_MATRIX = "object.modelMatrix";
+		static constexpr std::string_view NORMAL_MATRIX = "object.normalMatrix";
+		static constexpr std::array names{ MODEL_MATRIX, NORMAL_MATRIX };
+	};
+	struct MATERIAL {
+		static constexpr std::string_view ALBEDO = "material.albedo";
+		static constexpr std::string_view ALBEDO_FACTOR = "material.albedoFactor";
+		static constexpr std::string_view COLOR_TINT = "material.colorTint";
+		static constexpr std::string_view COLOR_TINT_FACTOR = "material.colorTintFactor";
+		static constexpr std::string_view SPECULAR_FACTOR = "material.specularFactor";
+		static constexpr std::string_view SHININESS = "material.shininess";
+		static constexpr std::array names{ ALBEDO, ALBEDO_FACTOR, COLOR_TINT, COLOR_TINT_FACTOR, SPECULAR_FACTOR, SHININESS };
+
+	};
+	struct SCENE {
+		static constexpr std::string_view AMBIENT_COLOR = "scene.ambientColor";
+		static constexpr std::string_view SOURCE_LIGHT_POS = "scene.sourceLightPos";
+		static constexpr std::string_view SOURCE_LIGHT_COLOR = "scene.sourceLightColor";
+		static constexpr std::array names{ AMBIENT_COLOR, SOURCE_LIGHT_POS, SOURCE_LIGHT_COLOR };
+	};
 };
+
 
 class ShaderProgram {
 public:
@@ -43,6 +56,9 @@ private:
 	GLuint createShaderProgram(std::string_view vertexSource, std::string_view fragmentSource);
 	GLuint compileShader(GLenum shaderType, std::string_view src);
 	GLuint linkProgramShader(GLuint vertexShader, GLuint FragmentShader);
+
+	template <std::size_t N>
+	void loadUniforms(const std::array<std::string_view, N>& names);
 	
 	std::map<std::string, GLint> uniformCache;
 };

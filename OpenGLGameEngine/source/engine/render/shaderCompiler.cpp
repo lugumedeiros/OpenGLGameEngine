@@ -13,14 +13,10 @@ ShaderProgram::ShaderProgram(std::string_view vertexSourcePath, std::string_view
 		return;
 	}
 
-	// load uniforms
-	for (const auto& name : uniformNamesToLoad) {
-		GLint vertexLocation = glGetUniformLocation(ID, name.c_str());
-		uniformCache.insert({ name, vertexLocation });
-		if (vertexLocation < 0) {
-			std::cout << "SHADER UNIFORM '" << name << "' NOT FOUND" << std::endl;
-		}
-	}
+	loadUniforms(UNIFORM::CAMERA::names);
+	loadUniforms(UNIFORM::OBJECT::names);
+	loadUniforms(UNIFORM::MATERIAL::names);
+	loadUniforms(UNIFORM::SCENE::names);
 }
 
 GLuint ShaderProgram::getID() const {
@@ -102,4 +98,16 @@ GLuint ShaderProgram::createShaderProgram(std::string_view vertexSource, std::st
 	ID = shaderProgram;
 	std::cout << "SHADER PROGRAM '" << ID << "' CREATED" << std::endl;
 	return ID;
+}
+
+template <std::size_t N>
+void ShaderProgram::loadUniforms(const std::array<std::string_view, N>& names) {
+	for (std::string_view name : names) {
+		std::string uniform{ name };
+		GLint vertexLocation = glGetUniformLocation(ID, uniform.c_str());
+		uniformCache.insert({ uniform, vertexLocation });
+		if (vertexLocation < 0) {
+			std::cout << "SHADER UNIFORM '" << name << "' NOT FOUND" << std::endl;
+		}
+	}
 }
