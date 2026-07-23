@@ -27,9 +27,12 @@ struct UNIFORM {
 		static constexpr std::string_view ALBEDO_FACTOR = "material.albedoFactor";
 		static constexpr std::string_view COLOR_TINT = "material.colorTint";
 		static constexpr std::string_view COLOR_TINT_FACTOR = "material.colorTintFactor";
-		static constexpr std::string_view SPECULAR_FACTOR = "material.specularFactor";
 		static constexpr std::string_view SHININESS = "material.shininess";
-		static constexpr std::array names{ ALBEDO, ALBEDO_FACTOR, COLOR_TINT, COLOR_TINT_FACTOR, SPECULAR_FACTOR, SHININESS };
+		static constexpr std::string_view SPECULAR = "material.specular";
+		static constexpr std::string_view SPECULAR_FACTOR = "material.specularFactor";
+		static constexpr std::string_view DIFFUSE = "material.diffuse";
+		static constexpr std::string_view DIFFUSE_FACTOR = "material.diffuseFactor";
+		static constexpr std::array names{ ALBEDO, ALBEDO_FACTOR, COLOR_TINT, COLOR_TINT_FACTOR, SHININESS, SPECULAR, DIFFUSE, SPECULAR_FACTOR, DIFFUSE_FACTOR };
 
 	};
 	struct SCENE {

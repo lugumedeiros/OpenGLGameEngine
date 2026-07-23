@@ -119,13 +119,18 @@ int main() {
 	}
 
 	// TEXTURE
-	Texture* textureBase = engine.getTexture("brickwall");
+	Texture* textureBase = engine.getTexture("container2");
 	if (textureBase == nullptr) {
-		return 4;
+		return 3;
 	}
 
 	Texture* textureOverlay = engine.getTexture("awesomeface");
 	if (textureOverlay == nullptr) {
+		return 3;
+	}
+
+	Texture* whiteMask = engine.getTexture("container2_specMask");
+	if (whiteMask == nullptr) {
 		return 3;
 	}
 
@@ -139,11 +144,12 @@ int main() {
 		return 21;
 	}
 
-	Material* materiaMainTriangle = engine.createMaterial(*shaderProgram_Texture);
-	materiaMainTriangle->setColorOverlay(glm::vec4(1.0f, 1.0f, 1.0f, 0.0f), 1.0f);
-	materiaMainTriangle->setShininess(32.0f);
-	materiaMainTriangle->setSpecularFactor(1.1f);
-	//materiaMainTriangle->setOverlayTexture(*textureOverlay, 1.0f);
+	Material* materialMainTriangle = engine.createMaterial(*shaderProgram_Texture);
+	materialMainTriangle->setTint(glm::vec4(1.0f, 1.0f, 1.0f, 0.0f), 1.0f);
+	materialMainTriangle->setShininess(32.0f);
+	materialMainTriangle->setSpecular(*whiteMask);
+	materialMainTriangle->setAlbedo(*textureBase, 1.0f);
+
 	Material* materialLightSource = engine.createMaterial(*shaderProgram_LightSource);
 	
 	Mesh* cubeMesh = engine.createMesh(verticesTriangle, verticesTriangleMiddle, sizeof(verticesTriangleMiddle));
@@ -165,7 +171,7 @@ int main() {
 	// CUBES
 	std::vector<GameObject> cubes;
 	for (auto pos : cubePositions) {
-		GameObject cube{ *cubeMesh, *materiaMainTriangle };
+		GameObject cube{ *cubeMesh, *materialMainTriangle };
 		cube.translate(pos);
 		cube.scale(glm::vec3(0.5, 0.5, 0.5));
 		cubes.emplace_back(cube);
@@ -177,7 +183,7 @@ int main() {
 
 	// LIGHT SOURCE+CUBE
 	glm::vec3 color{ 1.0f, 1.0f, 0.1f };
-	materialLightSource->setColorOverlay(glm::vec4(color, 1.0f), 1.0f);
+	materialLightSource->setTint(glm::vec4(color, 1.0f), 1.0f);
 	GameObject lightSourceCube{ *cubeMesh, *materialLightSource };
 	lightSourceCube.translate(glm::vec3(10.0f, 10.0f, -20.0f));
 	lightSourceCube.scale(glm::vec3(0.5f));;
@@ -215,8 +221,8 @@ int main() {
 		effectColor.advance();
 		float lightMov = pc > 300 ? 0.2f : -0.2f;
 
-		materialLightSource->setColorOverlay(glm::vec4(effectColor.r, effectColor.g, effectColor.b, 1.0f), 1.0f);
-		lightSource.set(effectColor.r, effectColor.g, effectColor.b);
+		//materialLightSource->setTint(glm::vec4(effectColor.r, effectColor.g, effectColor.b, 1.0f), 1.0f);
+		//lightSource.set(effectColor.r, effectColor.g, effectColor.b);
 		lightSourceCube.translate(glm::vec3(lightMov, 0.0f, 0.0f));
 		lightSource.translate(glm::vec3(lightMov, 0, 0));
 		

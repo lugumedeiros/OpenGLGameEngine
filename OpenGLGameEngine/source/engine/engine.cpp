@@ -137,17 +137,21 @@ void Engine::setUniforms(GameObject& gameObject, GameScene& gameScene, bool upda
 
 	if (updateMaterialUniform) {
 		// MATERIAL RELATED
-		glUniform1f(shader->getUniformID(UNIFORM::MATERIAL::SPECULAR_FACTOR), material.getSpecularFactor());
-		glUniform1f(shader->getUniformID(UNIFORM::MATERIAL::SHININESS), material.getShininess());
-
 		glUniform4f(shader->getUniformID(UNIFORM::MATERIAL::COLOR_TINT), materialColor.x, materialColor.y, materialColor.z, materialColor.w);
+		
+		glUniform1f(shader->getUniformID(UNIFORM::MATERIAL::SHININESS), material.getShininess());
 		glUniform1f(shader->getUniformID(UNIFORM::MATERIAL::COLOR_TINT_FACTOR), material.getColorOverlayFactor());
+		glUniform1f(shader->getUniformID(UNIFORM::MATERIAL::ALBEDO_FACTOR), material.getAlbedoFactor());
+
 		glUniform1i(shader->getUniformID(UNIFORM::MATERIAL::ALBEDO), 0);
-		glUniform1f(shader->getUniformID(UNIFORM::MATERIAL::ALBEDO_FACTOR), material.getTextureBaseFactor());
+		glUniform1i(shader->getUniformID(UNIFORM::MATERIAL::SPECULAR), 1);
 
 		// TEXTURE BINDING
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, material.getTextureBaseID());
+		glBindTexture(GL_TEXTURE_2D, material.getAlbedo());
+
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, material.getSpecular());
 	}
 
 	// MESH

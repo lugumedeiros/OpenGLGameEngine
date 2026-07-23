@@ -5,7 +5,7 @@ struct Material {
 	float colorTintFactor;
 	sampler2D albedo;
 	float albedoFactor;
-	float specularFactor;
+	sampler2D specular;
 	float shininess;
 };
 struct Scene {
@@ -38,20 +38,26 @@ uniform Scene scene;
 out vec4 FragColor;
 
 void main() {
-	vec4 albedo = texture( material.albedo, defTexCoord );
+	// TEXTURE + TINT
+	vec4 albedo = vec4( texture( material.albedo, defTexCoord ).rgb, 1.0f );
 	FragColor = mix( vec4(defColor, 1.0), material.colorTint, material.colorTintFactor );
 	FragColor = mix( FragColor, albedo, material.albedoFactor );
 
 	// LIGHT
 	vec3 normalizedNormal = normalize(defNormal);
 	vec3 lightDirection = normalize(scene.sourceLightPos - defPos);
+	vec3 viewDir = normalize(camera.pos - defPos);
+
+	// LIGHT - SPECULAR
+	float specMask = texture( material.specular, defTexCoord ).r;
+	vec3 reflectDir = reflect(-lightDirection, normalizedNormal);
+	float specDir = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+	vec3 specularLight = specMask * specDir * scene.sourceLightColor;
+	
+	// LIGHT - DIFFUSION
 	float diffusion = max(dot(normalizedNormal, lightDirection), 0.0);
 
-	vec3 viewDir = normalize(camera.pos - defPos);
-	vec3 reflectDir = reflect(-lightDirection, normalizedNormal);
-	float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-	vec3 specularLight = material.specularFactor * spec * scene.sourceLightColor;
-	
+	// LIGHT - SUM
 	vec3 sumLight = (scene.ambientColor) + (scene.sourceLightColor * diffusion);
 	vec3 finalColor = FragColor.rgb * sumLight + specularLight;
 

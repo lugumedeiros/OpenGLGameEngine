@@ -14,35 +14,25 @@ Material::Material(GLuint materialID, GLuint shaderProgramID):
 	shaderProgramID(shaderProgramID) {
 }
 
-void Material::setColorOverlay(glm::vec4 color, float factor) {
-	colorOverlay = color;
-	colorOverlayFactor = factor;
-	uniformChanged = true;
+void Material::setTint(glm::vec4 color, float factor) {
+	colorTint = color;
+	colorTintFactor = factor;
 }
 
-void Material::setBaseTexture(const Texture& texture, float factor) {
-	textureBaseID = texture.ID;
-	textureBaseFactor = factor;
-	uniformChanged = true;
+void Material::setAlbedo(const Texture& texture, float factor) {
+	albedoTextureID = texture.ID;
+	albedoTextureFactor = factor;
 }
 
-void Material::setOverlayTexture(const Texture& texture, float factor) {
-	textureOverlayID = texture.ID;
-	textureOverlayFactor = factor;
-	uniformChanged = true;
-}
-
-void Material::setSpecularFactor(float factor) {
-	specularFactor = factor;
+void Material::setSpecular(const Texture& specularSample) {
+	specularTextureID = specularSample.ID;
 }
 
 void Material::setShininess(float value) {
-	//shininess = std::clamp(value, 0.0f, 256.0f);
 	shininess = value;
 }
 
-void Material::normalize() {
-	normalizeScale(colorOverlayFactor);
-	normalizeScale(textureBaseFactor);
-	normalizeScale(textureOverlayFactor);
+void Material::normalizeFactor() {
+	normalizeScale(colorTintFactor);
+	normalizeScale(albedoTextureFactor);
 }
