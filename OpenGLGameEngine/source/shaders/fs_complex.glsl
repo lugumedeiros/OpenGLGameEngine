@@ -12,6 +12,8 @@ struct Scene {
 	vec3 ambientColor;
 	vec3 sourceLightPos;
 	vec3 sourceLightColor;
+	vec3 directionalLightColor;
+	vec3 directionalLightDirection;
 };
 struct Camera {
 	vec3 pos;
@@ -45,21 +47,28 @@ void main() {
 
 	// LIGHT
 	vec3 normalizedNormal = normalize(defNormal);
-	vec3 lightDirection = normalize(scene.sourceLightPos - defPos);
 	vec3 viewDir = normalize(camera.pos - defPos);
-
-	// LIGHT - SPECULAR
 	float specMask = texture( material.specular, defTexCoord ).r;
-	vec3 reflectDir = reflect(-lightDirection, normalizedNormal);
-	float specDir = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-	vec3 specularLight = specMask * specDir * scene.sourceLightColor;
+
+	// LIGHT - SPECULAR - DIRECTIONAL
+	vec3 directionalReflectDir = reflect(scene.directionalLightDirection, normalizedNormal);
+	float directionalSpecDir = pow(max(dot(viewDir, directionalReflectDir), 0.0), material.shininess);
+	vec3 directionalSpecularLight = specMask * directionalSpecDir * scene.directionalLightColor;
+
+	// LIGHT - SPECULAR - SOURCE
+	vec3 sourceLightDirection = normalize(scene.sourceLightPos - defPos);
+	vec3 sourceReflectDir = reflect(-sourceLightDirection, normalizedNormal);
+	float sourceSpecDir = pow(max(dot(viewDir, sourceReflectDir), 0.0), material.shininess);
+	vec3 sourceSpecularLight = specMask * sourceSpecDir * scene.sourceLightColor;
 	
 	// LIGHT - DIFFUSION
-	float diffusion = max(dot(normalizedNormal, lightDirection), 0.0);
+	float sourceDiffusion = max(dot(normalizedNormal, sourceLightDirection), 0.0);
+	float directionalDiffusion = max(dot(normalizedNormal, -scene.directionalLightDirection), 0.0); 
 
 	// LIGHT - SUM
-	vec3 sumLight = (scene.ambientColor) + (scene.sourceLightColor * diffusion);
-	vec3 finalColor = FragColor.rgb * sumLight + specularLight;
+	vec3 specularSum =  sourceSpecularLight + directionalSpecularLight;
+	vec3 sumLight = (scene.ambientColor) + (scene.sourceLightColor * sourceDiffusion) + (scene.directionalLightColor * directionalDiffusion);
+	vec3 finalColor = FragColor.rgb * sumLight + specularSum;
 
 	// END FRAG
 	FragColor = vec4(finalColor, FragColor.a);

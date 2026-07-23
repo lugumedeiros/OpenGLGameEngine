@@ -13,21 +13,26 @@ public:
 		objects.push_back(object);
 	}
 
-	void setLightSource(LightSourcePoint light) {
+	void setLightSource(LightSource light) {
 		lightSource = light;
 	}
 
-	void setAmbientSource(LightSourcePoint ambientLight) {
+	void setAmbientSource(LightSource ambientLight) {
 		this->ambientLight = ambientLight;
 	}
 
+	void setDirectionalLight(LightSource directionalLight) {
+		this->directionalLight = directionalLight;
+	}
+
 	std::vector<GameObject*>& getObjects() { return objects; }
-	LightSourcePoint& getLightSource() { return lightSource; }
-	LightSourcePoint& getAmbientLight() { return ambientLight; }
+	LightSource& getLightSource() { return lightSource; }
+	LightSource& getAmbientLight() { return ambientLight; }
+	LightSource& getDirectionalLight() { return directionalLight; }
 
 private:
-
 	std::vector<GameObject*> objects;
-	LightSourcePoint lightSource{ glm::vec3{ 0.2f} };
-	LightSourcePoint ambientLight{ glm::vec3{ 0.2f} };
+	LightSource lightSource{ glm::vec3{ 0.2f} };
+	LightSource ambientLight{ glm::vec3{ 0.2f} };
+	LightSource directionalLight{ glm::vec3{0.0f} };
 };

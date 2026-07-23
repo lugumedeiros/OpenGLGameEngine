@@ -134,7 +134,6 @@ int main() {
 		return 3;
 	}
 
-	GameScene gameScene{};
 	ShaderProgram* shaderProgram_Texture = engine.createShaderProgram( vertexPath, fragmentColorPath );
 	if (shaderProgram_Texture == nullptr) {
 		return 20;
@@ -177,24 +176,37 @@ int main() {
 		cubes.emplace_back(cube);
 	}
 
+	// SCENE
+	GameScene gameScene{};
+
+	// DIRECTIONAL LIGHT
+	glm::vec3 directionalColor = glm::vec3(1.0f, 0.6f, 0.1f);
+	glm::vec3 directionalPos = glm::vec3(-10.0f, 40.0f, -90.0f);
+	LightSource& directionalLight = gameScene.getDirectionalLight();
+	directionalLight.setDirection(-directionalPos);
+	directionalLight.setColor(directionalColor);
+	GameObject directionalCube{ *cubeMesh, *materialLightSource };
+	directionalCube.translate(directionalPos);
+	gameScene.addObject(&directionalCube);
+
 	for (GameObject& cube : cubes) {
 		gameScene.addObject(&cube);
 	}
 
 	// LIGHT SOURCE+CUBE
-	glm::vec3 color{ 1.0f, 1.0f, 0.1f };
+	glm::vec3 color{ 1.0f, 1.0f, 1.0f };
 	materialLightSource->setTint(glm::vec4(color, 1.0f), 1.0f);
 	GameObject lightSourceCube{ *cubeMesh, *materialLightSource };
 	lightSourceCube.translate(glm::vec3(10.0f, 10.0f, -20.0f));
 	lightSourceCube.scale(glm::vec3(0.5f));;
 	gameScene.addObject(&lightSourceCube);
 
-	LightSourcePoint& lightSource = gameScene.getLightSource();
-	lightSource.set( color.x, color.y, color.z );
+	LightSource& lightSource = gameScene.getLightSource();
+	lightSource.setColor( color.x, color.y, color.z );
 	lightSource.translate(glm::vec3(10.0f, 10.0f, -20.0f));
 	lightSource.scale(glm::vec3(0.5f));
 
-	glm::vec4 colorOverlay(0.0f, 1.0f, 0.0f, 1.0f);
+	glm::vec4 colorOverlay(1.0f, 1.0f, 1.0f, 1.0f);
 	float colorOverlayFactor = 1.0f;
 	float baseTextureFactor = 1.0f;
 	float ovelayTextureFactor = 1.0f;

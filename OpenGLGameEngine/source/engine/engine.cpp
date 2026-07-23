@@ -113,11 +113,14 @@ void Engine::setUniforms(GameObject& gameObject, GameScene& gameScene, bool upda
 	Material& material = gameObject.getMaterial();
 	ShaderProgram* shader = getShaderProgram(material.shaderProgramID);
 
-	LightSourcePoint& lightSource = gameScene.getLightSource();
-	LightSourcePoint& lightAmbient = gameScene.getAmbientLight();
+	LightSource& lightSource = gameScene.getLightSource();
+	LightSource& lightAmbient = gameScene.getAmbientLight();
+	LightSource& lightDirectional = gameScene.getDirectionalLight();
 	glm::vec3 ambientColor = lightAmbient.getColor();
 	glm::vec3 sourceColor = lightSource.getColor();
 	glm::vec3 sourcePos = lightSource.getPos();
+	glm::vec3 directionalColor = lightDirectional.getColor();
+	glm::vec3 directionalDir = lightDirectional.getDirection();
 	const glm::vec4& materialColor = material.getColorOverlay();
 	glm::vec3 viewPos = selectedCamera.getPos();
 	const glm::mat4& projection = selectedCamera.getProjection();
@@ -128,6 +131,8 @@ void Engine::setUniforms(GameObject& gameObject, GameScene& gameScene, bool upda
 		glUniform3f(shader->getUniformID(UNIFORM::SCENE::AMBIENT_COLOR), ambientColor.x, ambientColor.y, ambientColor.z);
 		glUniform3f(shader->getUniformID(UNIFORM::SCENE::SOURCE_LIGHT_POS), sourcePos.x, sourcePos.y, sourcePos.z);
 		glUniform3f(shader->getUniformID(UNIFORM::SCENE::SOURCE_LIGHT_COLOR), sourceColor.x, sourceColor.y, sourceColor.z);
+		glUniform3f(shader->getUniformID(UNIFORM::SCENE::DIRECTIONAL_LIGHT_COLOR), directionalColor.x, directionalColor.y, directionalColor.z);
+		glUniform3f(shader->getUniformID(UNIFORM::SCENE::DIRECTIONAL_LIGHT_DIRECTION), directionalDir.x, directionalDir.y, directionalDir.z);
 
 		// VIEW RELATED
 		glUniform3f(shader->getUniformID(UNIFORM::CAMERA::POSITION), viewPos.x, viewPos.y, viewPos.z);

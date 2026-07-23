@@ -39,7 +39,9 @@ struct UNIFORM {
 		static constexpr std::string_view AMBIENT_COLOR = "scene.ambientColor";
 		static constexpr std::string_view SOURCE_LIGHT_POS = "scene.sourceLightPos";
 		static constexpr std::string_view SOURCE_LIGHT_COLOR = "scene.sourceLightColor";
-		static constexpr std::array names{ AMBIENT_COLOR, SOURCE_LIGHT_POS, SOURCE_LIGHT_COLOR };
+		static constexpr std::string_view DIRECTIONAL_LIGHT_COLOR = "scene.directionalLightColor";
+		static constexpr std::string_view DIRECTIONAL_LIGHT_DIRECTION = "scene.directionalLightDirection";
+		static constexpr std::array names{ AMBIENT_COLOR, SOURCE_LIGHT_POS, SOURCE_LIGHT_COLOR, DIRECTIONAL_LIGHT_COLOR, DIRECTIONAL_LIGHT_DIRECTION };
 	};
 };
 
