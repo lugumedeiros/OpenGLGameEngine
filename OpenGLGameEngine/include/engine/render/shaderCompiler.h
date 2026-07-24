@@ -36,12 +36,14 @@ struct UNIFORM {
 
 	};
 	struct SCENE {
-		static constexpr std::string_view AMBIENT_COLOR = "scene.ambientColor";
-		static constexpr std::string_view SOURCE_LIGHT_POS = "scene.sourceLightPos";
-		static constexpr std::string_view SOURCE_LIGHT_COLOR = "scene.sourceLightColor";
-		static constexpr std::string_view DIRECTIONAL_LIGHT_COLOR = "scene.directionalLightColor";
-		static constexpr std::string_view DIRECTIONAL_LIGHT_DIRECTION = "scene.directionalLightDirection";
-		static constexpr std::array names{ AMBIENT_COLOR, SOURCE_LIGHT_POS, SOURCE_LIGHT_COLOR, DIRECTIONAL_LIGHT_COLOR, DIRECTIONAL_LIGHT_DIRECTION };
+		struct LIGHT {
+			static constexpr std::string_view AMBIENT_COLOR = "scene.ambient.color";
+			static constexpr std::string_view SOURCE_POS = "scene.source.pos";
+			static constexpr std::string_view SOURCE_COLOR = "scene.source.color";
+			static constexpr std::string_view DIRECTIONAL_COLOR = "scene.directional.color";
+			static constexpr std::string_view DIRECTIONAL_DIRECTION = "scene.directional.direction";
+		};
+		static constexpr std::array names{ LIGHT::AMBIENT_COLOR, LIGHT::SOURCE_POS, LIGHT::SOURCE_COLOR, LIGHT::DIRECTIONAL_COLOR, LIGHT::DIRECTIONAL_DIRECTION };
 	};
 };
 

@@ -194,7 +194,7 @@ int main() {
 	}
 
 	// LIGHT SOURCE+CUBE
-	glm::vec3 color{ 1.0f, 1.0f, 1.0f };
+	glm::vec3 color{ 1.0f, 1.0f, 1.1f };
 	materialLightSource->setTint(glm::vec4(color, 1.0f), 1.0f);
 	GameObject lightSourceCube{ *cubeMesh, *materialLightSource };
 	lightSourceCube.translate(glm::vec3(10.0f, 10.0f, -20.0f));
