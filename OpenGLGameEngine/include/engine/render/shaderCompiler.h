@@ -39,15 +39,19 @@ struct UNIFORM {
 			static constexpr std::string_view COLOR = "scene.ambient.color";
 			static constexpr std::array all{ COLOR };
 		};
-		struct SOURCE {
-			static constexpr std::string_view POS = "scene.source.pos";
-			static constexpr std::string_view COLOR = "scene.source.color";
-			static constexpr std::array all{ POS, COLOR };
-		};
 		struct DIRECTIONAL {
 			static constexpr std::string_view COLOR = "scene.directional.color";
 			static constexpr std::string_view DIRECTION = "scene.directional.direction";
 			static constexpr std::array all{ COLOR, DIRECTION };
+		};
+		struct SOURCE {
+			static constexpr std::string_view POS = "scene.source.pos";
+			static constexpr std::string_view COLOR = "scene.source.color";
+			static constexpr std::string_view DIRECTION = "scene.source.direction";
+			static constexpr std::string_view CONSTANT = "scene.source.constant";
+			static constexpr std::string_view LINEAR = "scene.source.linear";
+			static constexpr std::string_view QUADRATIC = "scene.source.quadratic";
+			static constexpr std::array all{ POS, COLOR, DIRECTION, CONSTANT, LINEAR, QUADRATIC };
 		};
 	};
 };

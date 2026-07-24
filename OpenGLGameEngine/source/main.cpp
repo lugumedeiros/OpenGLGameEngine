@@ -175,12 +175,20 @@ int main() {
 		cube.scale(glm::vec3(0.5, 0.5, 0.5));
 		cubes.emplace_back(cube);
 	}
+	GameObject floor{ *cubeMesh, *materialMainTriangle };
+	floor.translate(glm::vec3(0.0f, -5.0f, 0.0f));
+	floor.scale(glm::vec3(50.0f, 1.0f, 50.0f));
+	cubes.emplace_back(floor);
+
 
 	// SCENE
 	GameScene gameScene{};
+	glm::vec3 ambientColor{ 0.0f };
+	LightSource& ambient = gameScene.getAmbientLight();
+	ambient.setColor(ambientColor);
 
 	// DIRECTIONAL LIGHT
-	glm::vec3 directionalColor = glm::vec3(1.0f, 0.6f, 0.1f);
+	glm::vec3 directionalColor = glm::vec3(0.2f, 0.1f, 0.0f);
 	glm::vec3 directionalPos = glm::vec3(-10.0f, 40.0f, -90.0f);
 	LightSource& directionalLight = gameScene.getDirectionalLight();
 	directionalLight.setDirection(-directionalPos);
@@ -194,7 +202,7 @@ int main() {
 	}
 
 	// LIGHT SOURCE+CUBE
-	glm::vec3 color{ 1.0f, 1.0f, 1.1f };
+	glm::vec3 color{ 1.0f, 1.0f, 1.0f };
 	materialLightSource->setTint(glm::vec4(color, 1.0f), 1.0f);
 	GameObject lightSourceCube{ *cubeMesh, *materialLightSource };
 	lightSourceCube.translate(glm::vec3(10.0f, 10.0f, -20.0f));

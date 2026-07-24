@@ -129,10 +129,14 @@ void Engine::setUniforms(GameObject& gameObject, GameScene& gameScene, bool upda
 	if (updateSharedUniform) {
 		// LIGHT RELATED
 		glUniform3f(shader->getUniformID(UNIFORM::SCENE::AMBIENT::COLOR), ambientColor.x, ambientColor.y, ambientColor.z);
-		glUniform3f(shader->getUniformID(UNIFORM::SCENE::SOURCE::POS), sourcePos.x, sourcePos.y, sourcePos.z);
-		glUniform3f(shader->getUniformID(UNIFORM::SCENE::SOURCE::COLOR), sourceColor.x, sourceColor.y, sourceColor.z);
 		glUniform3f(shader->getUniformID(UNIFORM::SCENE::DIRECTIONAL::COLOR), directionalColor.x, directionalColor.y, directionalColor.z);
 		glUniform3f(shader->getUniformID(UNIFORM::SCENE::DIRECTIONAL::DIRECTION), directionalDir.x, directionalDir.y, directionalDir.z);
+		
+		glUniform3f(shader->getUniformID(UNIFORM::SCENE::SOURCE::POS), sourcePos.x, sourcePos.y, sourcePos.z);
+		glUniform3f(shader->getUniformID(UNIFORM::SCENE::SOURCE::COLOR), sourceColor.x, sourceColor.y, sourceColor.z);
+		glUniform1f(shader->getUniformID(UNIFORM::SCENE::SOURCE::CONSTANT), lightSource.getConstant());
+		glUniform1f(shader->getUniformID(UNIFORM::SCENE::SOURCE::LINEAR), lightSource.getLinear());
+		glUniform1f(shader->getUniformID(UNIFORM::SCENE::SOURCE::QUADRATIC), lightSource.getQuadratic());
 
 		// VIEW RELATED
 		glUniform3f(shader->getUniformID(UNIFORM::CAMERA::POSITION), viewPos.x, viewPos.y, viewPos.z);

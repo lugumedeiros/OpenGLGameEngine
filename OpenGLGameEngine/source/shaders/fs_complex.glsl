@@ -4,6 +4,10 @@ struct Light {
 	vec3 color;
 	vec3 direction;
 	vec3 pos;
+
+	float constant;
+	float linear;
+	float quadratic;
 };
 
 struct Material {
@@ -53,7 +57,7 @@ vec3 normal = normalize(defNormal);
 
 ////////////////////////////////////////////////////////////////////
 
-vec3 getSpecularLight(vec3 color, vec3 direction) {
+vec3 getSpecularLight(in vec3 color, in vec3 direction) {
 	vec3 viewDirection = normalize(camera.pos - defPos);
 	float mask = texture( material.specular, defTexCoord ).r;
 	
@@ -62,10 +66,15 @@ vec3 getSpecularLight(vec3 color, vec3 direction) {
 	return mask * spec * color;
 }
 
-vec3 getDiffuseLight(vec3 color, vec3 direction) {
+vec3 getDiffuseLight(in vec3 color, in vec3 direction) {
 	float sourceDiffusion = max(dot(normal, -direction), 0.0);
 	return color * sourceDiffusion;
 }
+
+float getAttenuation(in Light light) {
+	float d = length(defPos - light.pos);
+	return 1.0f / (light.constant+1. + (light.linear * d) + (light.quadratic * d * d));
+};
 
 ////////////////////////////////////////////////////////////////////
 
@@ -79,11 +88,12 @@ void main() {
 	vec3 directionalSpecularLight = getSpecularLight( scene.directional.color, scene.directional.direction );
 
 	// LIGHT - SPECULAR - SOURCE
+	float sourceAttenuation = getAttenuation(scene.source);
 	vec3 sourceLightDirection = normalize(scene.source.pos - defPos);
-	vec3 sourceSpecularLight = getSpecularLight( scene.source.color, -sourceLightDirection );
+	vec3 sourceSpecularLight = getSpecularLight( scene.source.color, -sourceLightDirection ) * sourceAttenuation;
 	
 	// LIGHT - DIFFUSION
-	vec3 sourceDiffusion = getDiffuseLight(scene.source.color, -sourceLightDirection);
+	vec3 sourceDiffusion = getDiffuseLight(scene.source.color, -sourceLightDirection) * sourceAttenuation;
 	vec3 directionalDiffusion = getDiffuseLight(scene.directional.color, scene.directional.direction);
 
 	// LIGHT - SUM
