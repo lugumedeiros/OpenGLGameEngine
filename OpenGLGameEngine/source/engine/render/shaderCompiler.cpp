@@ -13,10 +13,12 @@ ShaderProgram::ShaderProgram(std::string_view vertexSourcePath, std::string_view
 		return;
 	}
 
-	loadUniforms(UNIFORM::CAMERA::names);
-	loadUniforms(UNIFORM::OBJECT::names);
-	loadUniforms(UNIFORM::MATERIAL::names);
-	loadUniforms(UNIFORM::SCENE::names);
+	loadUniforms(UNIFORM::CAMERA::all);
+	loadUniforms(UNIFORM::OBJECT::all);
+	loadUniforms(UNIFORM::MATERIAL::all);
+	loadUniforms(UNIFORM::SCENE::AMBIENT::all);
+	loadUniforms(UNIFORM::SCENE::SOURCE::all);
+	loadUniforms(UNIFORM::SCENE::DIRECTIONAL::all);
 }
 
 GLuint ShaderProgram::getID() const {

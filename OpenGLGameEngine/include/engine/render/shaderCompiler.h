@@ -15,12 +15,12 @@ struct UNIFORM {
 		static constexpr std::string_view PROJECTION = "camera.projection";
 		static constexpr std::string_view POSITION = "camera.pos";
 		static constexpr std::string_view VIEW = "camera.view";
-		static constexpr std::array names{PROJECTION, POSITION, VIEW};
+		static constexpr std::array all{ PROJECTION, POSITION, VIEW };
 	};
 	struct OBJECT {
 		static constexpr std::string_view MODEL_MATRIX = "object.modelMatrix";
 		static constexpr std::string_view NORMAL_MATRIX = "object.normalMatrix";
-		static constexpr std::array names{ MODEL_MATRIX, NORMAL_MATRIX };
+		static constexpr std::array all{ MODEL_MATRIX, NORMAL_MATRIX };
 	};
 	struct MATERIAL {
 		static constexpr std::string_view ALBEDO = "material.albedo";
@@ -32,18 +32,23 @@ struct UNIFORM {
 		static constexpr std::string_view SPECULAR_FACTOR = "material.specularFactor";
 		static constexpr std::string_view DIFFUSE = "material.diffuse";
 		static constexpr std::string_view DIFFUSE_FACTOR = "material.diffuseFactor";
-		static constexpr std::array names{ ALBEDO, ALBEDO_FACTOR, COLOR_TINT, COLOR_TINT_FACTOR, SHININESS, SPECULAR, DIFFUSE, SPECULAR_FACTOR, DIFFUSE_FACTOR };
-
+		static constexpr std::array all{ ALBEDO, ALBEDO_FACTOR, COLOR_TINT, COLOR_TINT_FACTOR, SHININESS, SPECULAR, DIFFUSE, SPECULAR_FACTOR, DIFFUSE_FACTOR };
 	};
 	struct SCENE {
-		struct LIGHT {
-			static constexpr std::string_view AMBIENT_COLOR = "scene.ambient.color";
-			static constexpr std::string_view SOURCE_POS = "scene.source.pos";
-			static constexpr std::string_view SOURCE_COLOR = "scene.source.color";
-			static constexpr std::string_view DIRECTIONAL_COLOR = "scene.directional.color";
-			static constexpr std::string_view DIRECTIONAL_DIRECTION = "scene.directional.direction";
+		struct AMBIENT {
+			static constexpr std::string_view COLOR = "scene.ambient.color";
+			static constexpr std::array all{ COLOR };
 		};
-		static constexpr std::array names{ LIGHT::AMBIENT_COLOR, LIGHT::SOURCE_POS, LIGHT::SOURCE_COLOR, LIGHT::DIRECTIONAL_COLOR, LIGHT::DIRECTIONAL_DIRECTION };
+		struct SOURCE {
+			static constexpr std::string_view POS = "scene.source.pos";
+			static constexpr std::string_view COLOR = "scene.source.color";
+			static constexpr std::array all{ POS, COLOR };
+		};
+		struct DIRECTIONAL {
+			static constexpr std::string_view COLOR = "scene.directional.color";
+			static constexpr std::string_view DIRECTION = "scene.directional.direction";
+			static constexpr std::array all{ COLOR, DIRECTION };
+		};
 	};
 };
 
