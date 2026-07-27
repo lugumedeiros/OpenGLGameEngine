@@ -4,6 +4,8 @@ struct Light {
 	vec3 color;
 	vec3 direction;
 	vec3 pos;
+	float cutOffInner;
+	float cutOffOuter;
 
 	float constant;
 	float linear;
@@ -71,9 +73,17 @@ vec3 getDiffuseLight(in vec3 color, in vec3 direction) {
 	return color * sourceDiffusion;
 }
 
+float getCutOff(in Light light, in vec3 direction) {
+	float cosAngle = dot(light.direction, normalize(-direction));
+	float inner = cos(radians(light.cutOffInner));
+	float outer = cos(radians(light.cutOffOuter));
+	float intensity = (cosAngle - outer) / (inner - outer);
+	return clamp(intensity, 0.0, 1.0);
+}
+
 float getAttenuation(in Light light) {
 	float d = length(defPos - light.pos);
-	return 1.0f / (light.constant+1. + (light.linear * d) + (light.quadratic * d * d));
+	return 1.0f / (light.constant + (light.linear * d) + (light.quadratic * d * d));
 };
 
 ////////////////////////////////////////////////////////////////////
@@ -88,12 +98,14 @@ void main() {
 	vec3 directionalSpecularLight = getSpecularLight( scene.directional.color, scene.directional.direction );
 
 	// LIGHT - SPECULAR - SOURCE
-	float sourceAttenuation = getAttenuation(scene.source);
 	vec3 sourceLightDirection = normalize(scene.source.pos - defPos);
-	vec3 sourceSpecularLight = getSpecularLight( scene.source.color, -sourceLightDirection ) * sourceAttenuation;
+	float sourceAttenuation = getAttenuation(scene.source);
+	float sourceCuttOff = getCutOff(scene.source, sourceLightDirection);
+	float SourceIntensity = sourceAttenuation * sourceCuttOff;
+	vec3 sourceSpecularLight = getSpecularLight( scene.source.color, -sourceLightDirection ) * SourceIntensity;
 	
 	// LIGHT - DIFFUSION
-	vec3 sourceDiffusion = getDiffuseLight(scene.source.color, -sourceLightDirection) * sourceAttenuation;
+	vec3 sourceDiffusion = getDiffuseLight(scene.source.color, -sourceLightDirection) * SourceIntensity;
 	vec3 directionalDiffusion = getDiffuseLight(scene.directional.color, scene.directional.direction);
 
 	// LIGHT - SUM

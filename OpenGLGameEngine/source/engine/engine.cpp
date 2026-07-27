@@ -119,6 +119,7 @@ void Engine::setUniforms(GameObject& gameObject, GameScene& gameScene, bool upda
 	glm::vec3 ambientColor = lightAmbient.getColor();
 	glm::vec3 sourceColor = lightSource.getColor();
 	glm::vec3 sourcePos = lightSource.getPos();
+	glm::vec3 sourceDir = lightSource.getDirection();
 	glm::vec3 directionalColor = lightDirectional.getColor();
 	glm::vec3 directionalDir = lightDirectional.getDirection();
 	const glm::vec4& materialColor = material.getColorOverlay();
@@ -137,6 +138,9 @@ void Engine::setUniforms(GameObject& gameObject, GameScene& gameScene, bool upda
 		glUniform1f(shader->getUniformID(UNIFORM::SCENE::SOURCE::CONSTANT), lightSource.getConstant());
 		glUniform1f(shader->getUniformID(UNIFORM::SCENE::SOURCE::LINEAR), lightSource.getLinear());
 		glUniform1f(shader->getUniformID(UNIFORM::SCENE::SOURCE::QUADRATIC), lightSource.getQuadratic());
+		glUniform3f(shader->getUniformID(UNIFORM::SCENE::SOURCE::DIRECTION), sourceDir.x, sourceDir.y, sourceDir.z);
+		glUniform1f(shader->getUniformID(UNIFORM::SCENE::SOURCE::CUTOFF_INNER), lightSource.getCutOffInner());
+		glUniform1f(shader->getUniformID(UNIFORM::SCENE::SOURCE::CUTOFF_OUTER), lightSource.getCutOffOuter());
 
 		// VIEW RELATED
 		glUniform3f(shader->getUniformID(UNIFORM::CAMERA::POSITION), viewPos.x, viewPos.y, viewPos.z);

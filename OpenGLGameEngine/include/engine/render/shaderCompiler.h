@@ -51,7 +51,9 @@ struct UNIFORM {
 			static constexpr std::string_view CONSTANT = "scene.source.constant";
 			static constexpr std::string_view LINEAR = "scene.source.linear";
 			static constexpr std::string_view QUADRATIC = "scene.source.quadratic";
-			static constexpr std::array all{ POS, COLOR, DIRECTION, CONSTANT, LINEAR, QUADRATIC };
+			static constexpr std::string_view CUTOFF_INNER = "scene.source.cutOffInner";
+			static constexpr std::string_view CUTOFF_OUTER = "scene.source.cutOffOuter";
+			static constexpr std::array all{ POS, COLOR, DIRECTION, CONSTANT, LINEAR, QUADRATIC, CUTOFF_INNER, CUTOFF_OUTER };
 		};
 	};
 };

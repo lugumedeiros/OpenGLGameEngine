@@ -205,14 +205,16 @@ int main() {
 	glm::vec3 color{ 1.0f, 1.0f, 1.0f };
 	materialLightSource->setTint(glm::vec4(color, 1.0f), 1.0f);
 	GameObject lightSourceCube{ *cubeMesh, *materialLightSource };
-	lightSourceCube.translate(glm::vec3(10.0f, 10.0f, -20.0f));
+	lightSourceCube.translate(glm::vec3(10.0f, 2.0f, -8.0f));
 	lightSourceCube.scale(glm::vec3(0.5f));;
 	gameScene.addObject(&lightSourceCube);
 
 	LightSource& lightSource = gameScene.getLightSource();
 	lightSource.setColor( color.x, color.y, color.z );
-	lightSource.translate(glm::vec3(10.0f, 10.0f, -20.0f));
+	lightSource.translate(glm::vec3(10.0f, 2.0f, -8.0f));
 	lightSource.scale(glm::vec3(0.5f));
+	lightSource.setDirection(glm::vec3(0.0f, -1.0f, 1.0f));
+	lightSource.setCutOff(30.0f, 35.0f);
 
 	glm::vec4 colorOverlay(1.0f, 1.0f, 1.0f, 1.0f);
 	float colorOverlayFactor = 1.0f;
